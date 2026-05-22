@@ -10,6 +10,10 @@
 //   - opacity:   0..1, multiplied into every pixel's alpha just before
 //                the badge is composited onto a publish.
 //
+// A live preview composites the watermark onto a simulated photo using the
+// real position/size (from the user's profile) + opacity (global), so the
+// effect is visible immediately — no publish needed.
+//
 // RLS on app_settings + storage.objects enforces 'sami@inclufy.com' on the
 // server. The UI gate via useIsSuperadmin() is purely cosmetic.
 // ────────────────────────────────────────────────────────────────────────
@@ -26,6 +30,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system/legacy';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { supabase } from '../services/supabase';
@@ -41,6 +46,13 @@ const STORAGE_BUCKET = 'media';
 const STORAGE_PREFIX = 'global/watermark';
 const PRESETS = [25, 50, 75, 100] as const;
 
+// Mirrors SIZE_PCT in supabase/functions/_shared/watermark.ts — keep in sync.
+// Used by the live preview to size the watermark exactly as the bake will.
+const SIZE_PCT: Record<string, number> = {
+  small: 0.06, medium: 0.10, large: 0.14, xlarge: 0.20,
+};
+const MARGIN_PCT = 0.025; // mirrors BADGE_MARGIN_PCT
+
 interface WatermarkValue {
   image_url: string | null;
   opacity: number; // 0..1
@@ -54,6 +66,10 @@ export default function WatermarkAdminEditor() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [opacityPct, setOpacityPct] = useState<number>(100); // 0..100 in UI
   const [dirty, setDirty] = useState(false);
+  // Per-user position/size from profiles — used so the live preview shows
+  // the watermark exactly where/how big the real bake will place it.
+  const [position, setPosition] = useState<string>('top-left');
+  const [size, setSize] = useState<string>('medium');
 
   // ── Load current settings ────────────────────────────────────────────
   const load = useCallback(async () => {
@@ -69,6 +85,18 @@ export default function WatermarkAdminEditor() {
       setImageUrl(typeof v.image_url === 'string' && v.image_url.length > 0 ? v.image_url : null);
       const op = typeof v.opacity === 'number' ? v.opacity : 1.0;
       setOpacityPct(Math.round(Math.max(0, Math.min(1, op)) * 100));
+
+      // Also pull this superadmin's own position/size so the preview is faithful.
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('watermark_position, watermark_size')
+          .eq('id', user.id)
+          .maybeSingle();
+        setPosition((prof as any)?.watermark_position ?? 'top-left');
+        setSize((prof as any)?.watermark_size ?? 'medium');
+      }
       setDirty(false);
     } catch (err: any) {
       Alert.alert('Fout', `Kon watermerk-instellingen niet laden: ${err?.message ?? err}`);
@@ -332,6 +360,72 @@ export default function WatermarkAdminEditor() {
           100% = volledig zichtbaar · 0% = volledig transparant (watermerk effectief verborgen)
         </Text>
       </View>
+
+      {/* ── Live preview ─────────────────────────────────────────────
+          Composites the watermark onto a simulated photo using the exact
+          position/size (from profile) + opacity (from app_settings) that
+          the server-side bake will use — so the superadmin sees the real
+          result without having to publish a post. */}
+      {(() => {
+        const [vert, horiz] = position.split('-');
+        const wPct = (SIZE_PCT[size] ?? 0.10) * 100;
+        const marginPct = MARGIN_PCT * 100;
+        const wmStyle = {
+          position: 'absolute' as const,
+          width: `${wPct}%` as `${number}%`,
+          aspectRatio: 1,
+          opacity: opacityPct / 100,
+          ...(vert === 'top'
+            ? { top: `${marginPct}%` as `${number}%` }
+            : vert === 'bottom'
+            ? { bottom: `${marginPct}%` as `${number}%` }
+            : { top: `${(100 - wPct) / 2}%` as `${number}%` }),
+          ...(horiz === 'left'
+            ? { left: `${marginPct}%` as `${number}%` }
+            : horiz === 'right'
+            ? { right: `${marginPct}%` as `${number}%` }
+            : { left: `${(100 - wPct) / 2}%` as `${number}%` }),
+        };
+        return (
+          <View style={{ gap: 4 }}>
+            <Text style={{ fontSize: fontSize.xs, color: colors.text, fontWeight: fontWeight.semibold }}>
+              Voorbeeld
+            </Text>
+            <View
+              style={{
+                aspectRatio: 1,
+                borderRadius: borderRadius.md,
+                overflow: 'hidden',
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            >
+              {/* Simulated photo background */}
+              <LinearGradient
+                colors={['#7c5cbf', '#3a4b8a', '#243056']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+              />
+              {/* Watermark composited at real position/size/opacity */}
+              <Image
+                key={`${imageUrl ?? 'default'}-${position}-${size}-${opacityPct}`}
+                source={
+                  imageUrl
+                    ? { uri: imageUrl }
+                    : require('../../assets/amos-logo-transparent.png')
+                }
+                resizeMode="contain"
+                style={wmStyle}
+              />
+            </View>
+            <Text style={{ fontSize: 10, color: colors.textTertiary, fontStyle: 'italic' }}>
+              Positie ({position}) + grootte ({size}) komen uit je profiel (Watermerk-instellingen hierboven).
+              Transparantie + afbeelding zijn globaal.
+            </Text>
+          </View>
+        );
+      })()}
 
       {/* ── Save button ──────────────────────────────────────────────── */}
       <TouchableOpacity
