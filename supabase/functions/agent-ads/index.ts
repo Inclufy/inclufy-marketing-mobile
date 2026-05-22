@@ -225,8 +225,9 @@ async function actionDraftCampaign(svc: SupabaseClient, body: ReqBody, aiCtx: Ai
   // Load social accounts available for this channel.
   const { data: accounts } = await svc
     .from('social_accounts')
-    .select('id, platform, account_name, is_active')
-    .eq('platform', body.channel);
+    .select('id, platform, account_name, status')
+    .eq('platform', body.channel)
+    .eq('status', 'active');
 
   const lmdpAllowed = body.channel === 'linkedin'
     ? await isLinkedInProgrammaticAllowed(svc, body.organization_id)
