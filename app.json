@@ -15,7 +15,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.inclufy.go",
-      "buildNumber": "322",
+      "buildNumber": "323",
       "infoPlist": {
         "NSCameraUsageDescription": "AMOS by Inclufy needs camera access to capture photos and videos at events.",
         "NSMicrophoneUsageDescription": "AMOS by Inclufy needs microphone access for video and audio recording.",

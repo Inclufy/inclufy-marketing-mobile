@@ -3,12 +3,14 @@
 // Superadmin-only global watermark editor.
 //
 // Lives inside Settings → DEVELOPER TOOLS card. Reads + writes the
-// `app_settings` row keyed 'watermark'. Two fields:
+// `app_settings` row keyed 'watermark'. Three fields:
 //   - image_url: superadmin-uploaded PNG/JPEG in media/global/watermark/.
 //                When null/empty the edge function falls back to its
 //                inlined default polygonal-A AMOS logo.
 //   - opacity:   0..1, multiplied into every pixel's alpha just before
 //                the badge is composited onto a publish.
+//   - size:      small|medium|large|xlarge — watermark width as % of the
+//                photo. Overrides the per-post/profile size in the bake.
 //
 // A live preview composites the watermark onto a simulated photo using the
 // real position/size (from the user's profile) + opacity (global), so the
@@ -53,9 +55,19 @@ const SIZE_PCT: Record<string, number> = {
 };
 const MARGIN_PCT = 0.025; // mirrors BADGE_MARGIN_PCT
 
+// Size options — value matches the WatermarkSize enum in the edge function
+// + the profiles.watermark_size CHECK constraint.
+const SIZE_OPTIONS: ReadonlyArray<{ value: string; label: string }> = [
+  { value: 'small',  label: 'Klein' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'large',  label: 'Groot' },
+  { value: 'xlarge', label: 'Extra groot' },
+];
+
 interface WatermarkValue {
   image_url: string | null;
   opacity: number; // 0..1
+  size?: string | null; // small|medium|large|xlarge — null → per-profile fallback
 }
 
 export default function WatermarkAdminEditor() {
@@ -66,8 +78,8 @@ export default function WatermarkAdminEditor() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [opacityPct, setOpacityPct] = useState<number>(100); // 0..100 in UI
   const [dirty, setDirty] = useState(false);
-  // Per-user position/size from profiles — used so the live preview shows
-  // the watermark exactly where/how big the real bake will place it.
+  // `size` is a GLOBAL setting (app_settings) editable here. `position` is
+  // still per-user (profiles) — pulled only so the live preview is faithful.
   const [position, setPosition] = useState<string>('top-left');
   const [size, setSize] = useState<string>('medium');
 
@@ -86,8 +98,15 @@ export default function WatermarkAdminEditor() {
       const op = typeof v.opacity === 'number' ? v.opacity : 1.0;
       setOpacityPct(Math.round(Math.max(0, Math.min(1, op)) * 100));
 
-      // Also pull this superadmin's own position/size so the preview is faithful.
+      const validSizes = SIZE_OPTIONS.map((s) => s.value);
+      const globalSize = typeof v.size === 'string' && validSizes.includes(v.size)
+        ? v.size
+        : null;
+
+      // Pull this superadmin's own profile for: position (preview only) and
+      // watermark_size as a fallback when the global size isn't set yet.
       const { data: { user } } = await supabase.auth.getUser();
+      let profileSize = 'medium';
       if (user) {
         const { data: prof } = await supabase
           .from('profiles')
@@ -95,8 +114,12 @@ export default function WatermarkAdminEditor() {
           .eq('id', user.id)
           .maybeSingle();
         setPosition((prof as any)?.watermark_position ?? 'top-left');
-        setSize((prof as any)?.watermark_size ?? 'medium');
+        if (validSizes.includes((prof as any)?.watermark_size)) {
+          profileSize = (prof as any).watermark_size;
+        }
       }
+      // Global size wins; else fall back to the profile size.
+      setSize(globalSize ?? profileSize);
       setDirty(false);
     } catch (err: any) {
       Alert.alert('Fout', `Kon watermerk-instellingen niet laden: ${err?.message ?? err}`);
@@ -181,6 +204,7 @@ export default function WatermarkAdminEditor() {
       const value: WatermarkValue = {
         image_url: imageUrl,
         opacity: Math.max(0, Math.min(1, opacityPct / 100)),
+        size,
       };
       const { error } = await supabase
         .from('app_settings')
@@ -361,6 +385,55 @@ export default function WatermarkAdminEditor() {
         </Text>
       </View>
 
+      {/* ── Grootte / size ───────────────────────────────────────────
+          Global size — overrides the per-post/profile size in the bake. */}
+      <View
+        style={{
+          padding: spacing.sm,
+          backgroundColor: colors.background,
+          borderRadius: borderRadius.md,
+          borderWidth: 1,
+          borderColor: colors.border,
+          gap: 6,
+        }}
+      >
+        <Text style={{ fontSize: fontSize.xs, color: colors.text, fontWeight: fontWeight.semibold }}>
+          Grootte
+        </Text>
+        <View style={{ flexDirection: 'row', gap: 6 }}>
+          {SIZE_OPTIONS.map((opt) => {
+            const active = size === opt.value;
+            const pct = Math.round((SIZE_PCT[opt.value] ?? 0.1) * 100);
+            return (
+              <TouchableOpacity
+                key={opt.value}
+                onPress={() => { setSize(opt.value); setDirty(true); }}
+                style={{
+                  flex: 1, paddingVertical: 6,
+                  borderRadius: borderRadius.sm,
+                  borderWidth: 1,
+                  borderColor: active ? colors.primary : colors.border,
+                  backgroundColor: active ? colors.primary + '20' : 'transparent',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{
+                  fontSize: fontSize.xs,
+                  color: active ? colors.primary : colors.textSecondary,
+                  fontWeight: active ? fontWeight.semibold : fontWeight.medium,
+                }}>
+                  {opt.label}
+                </Text>
+                <Text style={{ fontSize: 9, color: colors.textTertiary }}>{pct}%</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        <Text style={{ fontSize: 10, color: colors.textTertiary, fontStyle: 'italic' }}>
+          Breedte van het watermerk als % van de foto. Geldt globaal voor alle free-tier publishes.
+        </Text>
+      </View>
+
       {/* ── Live preview ─────────────────────────────────────────────
           Composites the watermark onto a simulated photo using the exact
           position/size (from profile) + opacity (from app_settings) that
@@ -420,8 +493,8 @@ export default function WatermarkAdminEditor() {
               />
             </View>
             <Text style={{ fontSize: 10, color: colors.textTertiary, fontStyle: 'italic' }}>
-              Positie ({position}) + grootte ({size}) komen uit je profiel (Watermerk-instellingen hierboven).
-              Transparantie + afbeelding zijn globaal.
+              Afbeelding, transparantie en grootte zijn globaal (hierboven). Positie ({position})
+              komt uit je profiel · Watermerk-instellingen.
             </Text>
           </View>
         );

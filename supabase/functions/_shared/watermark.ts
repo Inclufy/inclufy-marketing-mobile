@@ -148,6 +148,8 @@ async function getCustomBadgeSource(url: string): Promise<Image | null> {
 interface GlobalWatermarkSettings {
   imageUrl: string | null;
   opacity: number; // 0..1
+  /** Superadmin-configured global size. null → fall back to per-post/profile. */
+  size: WatermarkSize | null;
 }
 
 // Read the singleton app_settings row keyed 'watermark'. Returns sensible
@@ -163,18 +165,25 @@ async function loadGlobalWatermarkSettings(
       .eq('key', 'watermark')
       .maybeSingle();
     if (error || !data) {
-      return { imageUrl: null, opacity: 1.0 };
+      return { imageUrl: null, opacity: 1.0, size: null };
     }
-    const v = (data.value ?? {}) as { image_url?: string | null; opacity?: number };
+    const v = (data.value ?? {}) as {
+      image_url?: string | null;
+      opacity?: number;
+      size?: string | null;
+    };
     const opacity = typeof v.opacity === 'number' && v.opacity >= 0 && v.opacity <= 1
       ? v.opacity
       : 1.0;
     const imageUrl = typeof v.image_url === 'string' && v.image_url.length > 0
       ? v.image_url
       : null;
-    return { imageUrl, opacity };
+    const size = typeof v.size === 'string' && VALID_SIZES.has(v.size as WatermarkSize)
+      ? (v.size as WatermarkSize)
+      : null;
+    return { imageUrl, opacity, size };
   } catch {
-    return { imageUrl: null, opacity: 1.0 };
+    return { imageUrl: null, opacity: 1.0, size: null };
   }
 }
 
@@ -210,7 +219,8 @@ export async function bakeAmosWatermark(args: {
 }): Promise<string> {
   const { db, imageUrl, userId, tier } = args;
   const position = safeWatermarkPosition(args.position);
-  const size = safeWatermarkSize(args.size);
+  // `size` is resolved below — the superadmin-configured global size (from
+  // app_settings) takes precedence over the per-post/profile size in args.
 
   if (tier !== 'free') return imageUrl;
   if (!imageUrl) return imageUrl;
@@ -247,6 +257,8 @@ export async function bakeAmosWatermark(args: {
       : null;
     const source = customSource ?? (await getDefaultBadgeSource());
     const sourceAspect = source.height / source.width;
+    // Global size (superadmin) wins; else fall back to per-post/profile size.
+    const size = globalSettings.size ?? safeWatermarkSize(args.size);
     const targetW = Math.max(SIZE_MIN_W_PX[size], Math.round(decoded.width * SIZE_PCT[size]));
     const targetH = Math.round(targetW * sourceAspect);
 
