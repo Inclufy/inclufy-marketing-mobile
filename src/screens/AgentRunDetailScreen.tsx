@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: showInput ? 'chevron-up' : 'chevron-down'> | Ionicons name=<dynamic: showOutput ? 'chevron-up' : 'chevron-down'> | Ionicons name=<dynamic: showToolCalls ? 'chevron-up' : 'chevron-down'> | MaterialCommunityIcons name=<dynamic: m.role === 'tool' ? 'tools' : m.role === 'agent' ? 'robot-outline' : m.role === 'user' ? 'account-outline' : m.role === 'assistant' ? 'message-text-outline' : 'cog-outline'>
 // src/screens/AgentRunDetailScreen.tsx
 // One specific agent_runs row, showing:
 //   - Live Receipts (Tier-1 #1): the exact input, tool_calls, output, cost,
@@ -29,6 +30,7 @@ import { useTranslation } from '../i18n';
 import { supabase } from '../services/supabase';
 import { RootStackParamList } from '../types';
 
+import { CaretLeft } from 'phosphor-react-native';
 type AgentKind = 'content' | 'social' | 'ads' | 'analytics' | 'lead' | 'orchestrator';
 
 interface RunRow {
@@ -231,12 +233,28 @@ export default function AgentRunDetailScreen() {
         const days     = Number(pacing.days ?? 0);
         const budgetCents = dailyEur > 0 && days > 0 ? Math.round(dailyEur * days * 100) : undefined;
 
+        // Map Ads Agent's free-form draft.audience to one of BoostFlow's 4 preset
+        // keys (BUG-2026-14 — was always defaulting to lookalike_followers because
+        // the audience hint never made it into the navigation params).
+        const audience = (draft.audience ?? {}) as Record<string, unknown>;
+        const jobTitles  = Array.isArray(audience.job_titles)  ? audience.job_titles  : [];
+        const industries = Array.isArray(audience.industries) ? audience.industries : [];
+        const prefillAudienceKey =
+          jobTitles.length > 0
+            ? 'business_decisionmakers'
+            : industries.some((i) => typeof i === 'string' && /esg|dei|inclusion|sustainability/i.test(i))
+              ? 'esg_dei_interest'
+              : (audience.geo || (audience as { country?: unknown }).country) && jobTitles.length === 0 && industries.length === 0
+                ? 'geo_only'
+                : 'lookalike_followers';
+
         navigation.navigate('BoostFlow' as any, {
           postId: targetPost,
           channel,
           agentRunId: run.id,
           prefillBudgetCents: budgetCents,
           prefillDurationDays: days > 0 ? days : undefined,
+          prefillAudienceKey,
           prefillSourceLabel: isNl ? 'Voorgesteld door Ads Agent' : 'Suggested by Ads Agent',
         });
       }
@@ -374,7 +392,7 @@ export default function AgentRunDetailScreen() {
         <LinearGradient colors={gradient} style={styles.header}>
           <View style={styles.navRow}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-              <Ionicons name="chevron-back" size={20} color="#fff" />
+              <CaretLeft size={20} color="#fff" weight="bold" />
               <Text style={styles.backLabel}>{isNl ? 'Terug' : 'Back'}</Text>
             </TouchableOpacity>
             <View style={[styles.statusPill, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
