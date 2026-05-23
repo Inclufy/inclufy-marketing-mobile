@@ -94,3 +94,9 @@ verify_jwt = true
 # the Authorization header, not a user token.
 [functions.product-issue-lifecycle]
 verify_jwt = false
+
+# growth-blueprint: synchronous website scan + AI analysis for the
+# marketing-web Growth Blueprint feature. Called from authenticated SPA
+# (sami@inclufy.com etc.), so JWT required. Uses OpenAI gpt-4o-mini.
+[functions.growth-blueprint]
+verify_jwt = true
