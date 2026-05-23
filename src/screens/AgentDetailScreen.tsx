@@ -22,6 +22,7 @@ import { useTranslation } from '../i18n';
 import { supabase } from '../services/supabase';
 import { RootStackParamList } from '../types';
 
+import { CaretLeft } from 'phosphor-react-native';
 type AgentKind = 'content' | 'social' | 'ads' | 'analytics' | 'lead';
 
 interface AgentRow {
@@ -129,9 +130,9 @@ export default function AgentDetailScreen() {
       setDailyTokenCap(cfg.daily_token_cap != null ? String(cfg.daily_token_cap) : '');
       setDailySpendCapEur(cfg.daily_spend_cap_eur != null ? String(cfg.daily_spend_cap_eur) : '');
     }
-    // Filter runs to ones for this agent (and direct children).
-    const agentRunIds = new Set([agentRow?.id]);
-    setRuns((runRows ?? []).filter(r => agentRunIds.has(r.agent_id) || r.parent_run_id != null));
+    // Filter runs to ones for THIS agent only. The earlier `|| r.parent_run_id != null`
+    // clause leaked every other agent's child runs into this screen (BUG-2026-11).
+    setRuns((runRows ?? []).filter(r => r.agent_id === agentRow?.id));
     setLoading(false);
   }, [agentKind]);
 
@@ -321,7 +322,7 @@ export default function AgentDetailScreen() {
         <LinearGradient colors={theme.gradient} style={styles.header}>
           <View style={styles.navRow}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-              <Ionicons name="chevron-back" size={20} color="#fff" />
+              <CaretLeft size={20} color="#fff" weight="bold" />
               <Text style={styles.backLabel}>{isNl ? 'Terug' : 'Back'}</Text>
             </TouchableOpacity>
             <View style={{ width: 40 }} />
