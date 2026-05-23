@@ -100,3 +100,9 @@ verify_jwt = false
 # (sami@inclufy.com etc.), so JWT required. Uses OpenAI gpt-4o-mini.
 [functions.growth-blueprint]
 verify_jwt = true
+
+# ai-chat: generic conversational endpoint for the AICopilot widget in
+# the marketing-web SPA. Takes {messages, system_prompt}, returns
+# {response}. Uses OpenAI gpt-4o-mini, rate-limited via shared middleware.
+[functions.ai-chat]
+verify_jwt = true
