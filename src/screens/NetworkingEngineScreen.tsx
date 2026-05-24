@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: isExpanded ? 'chevron-up' : 'chevron-down'> | Ionicons name=<dynamic: src.icon as any> | Ionicons name=<dynamic: tab.icon as any>
 // NetworkingEngineScreen.tsx — Mirror of web Networking Engine
 // Shows captured contacts from go_contacts table with enrichment scores
 
@@ -6,7 +7,7 @@ import {
   View, Text, FlatList, TouchableOpacity,
   ActivityIndicator, RefreshControl, Alert, ScrollView,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
@@ -17,6 +18,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 import { useTranslation } from '../i18n';
 
+import { ArrowsClockwise, Envelope, FileText, LinkedinLogo, PaperPlaneTilt, Phone, QrCode, Scan, Users } from 'phosphor-react-native';
 interface Contact {
   id: string;
   name: string;
@@ -273,19 +275,19 @@ export default function NetworkingEngineScreen() {
           <View style={styles.expanded}>
             {item.email ? (
               <View style={styles.detailRow}>
-                <Ionicons name="mail-outline" size={14} color={colors.textSecondary} />
+                <Envelope size={14} color={colors.textSecondary} weight="duotone" />
                 <Text style={styles.detailText}>{item.email}</Text>
               </View>
             ) : null}
             {item.phone ? (
               <View style={styles.detailRow}>
-                <Ionicons name="call-outline" size={14} color={colors.textSecondary} />
+                <Phone size={14} color={colors.textSecondary} weight="duotone" />
                 <Text style={styles.detailText}>{item.phone}</Text>
               </View>
             ) : null}
             {item.notes ? (
               <View style={styles.detailRow}>
-                <Ionicons name="document-text-outline" size={14} color={colors.textSecondary} />
+                <FileText size={14} color={colors.textSecondary} weight="duotone" />
                 <Text style={styles.detailText} numberOfLines={3}>{item.notes}</Text>
               </View>
             ) : null}
@@ -294,14 +296,14 @@ export default function NetworkingEngineScreen() {
                 style={[styles.actionBtn, { backgroundColor: colors.primary }]}
                 onPress={() => Alert.alert('Follow-up', `${t.networkingEngine.followUpSend} ${item.name}`)}
               >
-                <Ionicons name="send-outline" size={14} color="#fff" />
+                <PaperPlaneTilt size={14} color="#fff" weight="duotone" />
                 <Text style={styles.actionBtnText}>Follow-up</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionBtn, { backgroundColor: '#0077b5' }]}
                 onPress={() => Alert.alert('LinkedIn', `${t.networkingEngine.linkedinConnect} ${item.name}`)}
               >
-                <MaterialCommunityIcons name="linkedin" size={14} color="#fff" />
+                <LinkedinLogo size={14} color="#fff" weight="fill" />
                 <Text style={styles.actionBtnText}>LinkedIn</Text>
               </TouchableOpacity>
             </View>
@@ -318,7 +320,7 @@ export default function NetworkingEngineScreen() {
   const renderScan = ({ item }: { item: any }) => (
     <View style={styles.scanCard}>
       <View style={styles.scanLeft}>
-        <Ionicons name="scan" size={18} color={colors.primary} />
+        <Scan size={18} color={colors.primary} weight="bold" />
         <View>
           <Text style={styles.scanName}>{item.name || t.networkingEngine.unknown}</Text>
           {item.company ? <Text style={styles.scanCompany}>{item.company}</Text> : null}
@@ -334,14 +336,14 @@ export default function NetworkingEngineScreen() {
       <LinearGradient colors={['#065F46', '#047857', '#10B981']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.header}>
         <View style={styles.headerTop}>
           <View style={styles.headerIcon}>
-            <MaterialCommunityIcons name="account-network" size={22} color="#fff" />
+            <Users size={22} color="#fff" weight="duotone" />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.headerTitle}>Networking Engine</Text>
             <Text style={styles.headerSub}>{t.networkingEngine.headerSub}</Text>
           </View>
           <TouchableOpacity onPress={() => refetch()} style={styles.refreshBtn}>
-            <Ionicons name="refresh" size={18} color="#fff" />
+            <ArrowsClockwise size={18} color="#fff" weight="bold" />
           </TouchableOpacity>
         </View>
         <View style={styles.statsRow}>
@@ -403,7 +405,7 @@ export default function NetworkingEngineScreen() {
             </View>
           ) : filtered.length === 0 ? (
             <View style={styles.empty}>
-              <MaterialCommunityIcons name="account-network" size={52} color={colors.textTertiary} />
+              <Users size={52} color={colors.textTertiary} weight="duotone" />
               <Text style={styles.emptyTitle}>{t.networkingEngine.noContacts}</Text>
               <Text style={styles.emptySub}>{t.networkingEngine.noContactsSub}</Text>
             </View>
@@ -427,7 +429,7 @@ export default function NetworkingEngineScreen() {
           contentContainerStyle={styles.list}
           ListEmptyComponent={
             <View style={styles.empty}>
-              <Ionicons name="qr-code-outline" size={52} color={colors.textTertiary} />
+              <QrCode size={52} color={colors.textTertiary} weight="duotone" />
               <Text style={styles.emptyTitle}>{t.networkingEngine.noQrScans}</Text>
               <Text style={styles.emptySub}>{t.networkingEngine.noQrScansSub}</Text>
             </View>

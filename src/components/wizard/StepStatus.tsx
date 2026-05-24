@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: meta.icon> | Ionicons name=<dynamic: stateIcon as any>
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -5,6 +6,7 @@ import { spacing, fontSize, fontWeight, borderRadius } from '../../theme';
 import { useTheme } from '../../context/ThemeContext';
 import type { PlatformKey, ConnectionStatus } from '../../hooks/useSocialWizard';
 
+import { CaretRight } from 'phosphor-react-native';
 const PLATFORM_META: Record<PlatformKey, { label: string; icon: keyof typeof import('@expo/vector-icons').Ionicons.glyphMap; color: string }> = {
   facebook:  { label: 'Facebook',  icon: 'logo-facebook',  color: '#1877F2' },
   instagram: { label: 'Instagram', icon: 'logo-instagram', color: '#E4405F' },
@@ -196,7 +198,7 @@ export default function StepStatus({ selectedPlatforms, socialAccounts, goNext, 
           }}
         >
           <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: fontWeight.semibold }}>Verder met verbinden</Text>
-          <Ionicons name="arrow-forward" size={18} color="#fff" />
+          <CaretRight size={18} color="#fff" weight="bold" />
         </TouchableOpacity>
       </View>
     </ScrollView>

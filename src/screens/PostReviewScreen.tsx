@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: cfg.icon as any> | Ionicons name=<dynamic: channelConfig[connectPlatform as Channel]?.icon as any || 'link-outline'> | Ionicons name=<dynamic: config?.icon as any> | Ionicons name=<dynamic: icon as any> | Ionicons name=<dynamic: icon> | Ionicons name=<dynamic: icons[corner]> | Ionicons name=<dynamic: isExpanded ? 'chevron-up-outline' : 'chevron-down-outline'> | Ionicons name=<dynamic: isLuxury ? 'sparkles' : 'text-outline'> | Ionicons name=<dynamic: isPreviewVideo ? 'videocam-outline' : 'image-outline'> | Ionicons name=<dynamic: opt.icon> | Ionicons name=<dynamic: pos === 'top' ? 'arrow-up-outline' : 'arrow-down-outline'>
 import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
@@ -38,6 +39,7 @@ import AIConsentModal from '../components/AIConsentModal';
 import { useAIConsent } from '../hooks/useAIConsent';
 import ViewShot, { captureRef } from 'react-native-view-shot';
 
+import { ArrowsClockwise, ArrowsLeftRight, ArrowsOutSimple, Bookmark, Buildings, Calendar, CaretRight, ChatCircle, Check, Crosshair, DotsThree, Eye, Globe, Heart, Hourglass, Image as ImageIcon, Images, Info, InstagramLogo, Lock, Microphone, PaintBrush, PaperPlaneTilt, PencilLine, Plus, Rocket, Trash, UploadSimple, User, UserCircle, X, XCircle } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'PostReview'>;
 
@@ -1916,7 +1918,7 @@ export default function PostReviewScreen() {
                       {uploadingImage
                         ? <ActivityIndicator size="small" color="#fff" />
                         : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                            <Ionicons name="image-outline" size={15} color="#fff" />
+                            <ImageIcon size={15} color="#fff" weight="duotone" />
                             <Text style={[styles.addImageBtnText, { color: '#fff' }]}>Thumbnail</Text>
                           </View>}
                     </TouchableOpacity>
@@ -1937,7 +1939,7 @@ export default function PostReviewScreen() {
                     backgroundColor: 'rgba(124,58,237,0.2)',
                     justifyContent: 'center', alignItems: 'center', marginBottom: 8,
                   }}>
-                    <Ionicons name="mic" size={32} color={colors.primary} />
+                    <Microphone size={32} color={colors.primary} weight="duotone" />
                   </View>
                   <Text style={[styles.imagePlaceholderText, { color: '#fff', fontWeight: fontWeight.semibold, fontSize: fontSize.md }]}>
                     Audio opname
@@ -1949,7 +1951,7 @@ export default function PostReviewScreen() {
                     {uploadingImage
                       ? <ActivityIndicator size="small" color={colors.primary} />
                       : <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                          <Ionicons name="image-outline" size={15} color={colors.primary} />
+                          <ImageIcon size={15} color={colors.primary} weight="duotone" />
                           <Text style={styles.addImageBtnText}>Afbeelding toevoegen</Text>
                         </View>}
                   </TouchableOpacity>
@@ -1989,7 +1991,7 @@ export default function PostReviewScreen() {
                         paddingHorizontal: 8, paddingVertical: 3,
                         flexDirection: 'row', alignItems: 'center', gap: 4,
                       }}>
-                        <Ionicons name="images-outline" size={11} color="#fff" />
+                        <Images size={11} color="#fff" weight="duotone" />
                         <Text style={{ color: '#fff', fontSize: 11, fontWeight: '600' }}>
                           {safeIdx + 1}/{postImages.length}
                         </Text>
@@ -2022,7 +2024,7 @@ export default function PostReviewScreen() {
                                 <Image key={`${lurl}-${li}`} source={{ uri: lurl }} style={{ width: 32, height: 32, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.4)' }} resizeMode="contain" />
                               )) : (
                                 <View style={{ backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 8, padding: 6 }}>
-                                  <Ionicons name="business-outline" size={16} color="#fff" />
+                                  <Buildings size={16} color="#fff" weight="duotone" />
                                 </View>
                               )}
                             </View>
@@ -2048,7 +2050,7 @@ export default function PostReviewScreen() {
                   {/* Zoom-hint intentionally rendered OUTSIDE the ViewShot so it
                       is NOT baked into the published image. */}
                   <View style={[styles.zoomHint, { position: 'absolute', right: 8, bottom: 8 }]} pointerEvents="none">
-                    <Ionicons name="expand-outline" size={14} color="#fff" />
+                    <ArrowsOutSimple size={14} color="#fff" weight="bold" />
                   </View>
 
                   {/* ── Thumbnail strip ────────────────────────────────── */}
@@ -2089,7 +2091,7 @@ export default function PostReviewScreen() {
                             borderRadius: 6, width: 12, height: 12,
                             justifyContent: 'center', alignItems: 'center',
                           }}>
-                            <Ionicons name="checkmark" size={8} color="#fff" />
+                            <Check size={8} color="#fff" weight="bold" />
                           </View>
                         )}
                       </TouchableOpacity>
@@ -2108,7 +2110,7 @@ export default function PostReviewScreen() {
                     >
                       {uploadingImage
                         ? <ActivityIndicator size="small" color={colors.primary} />
-                        : <Ionicons name="add" size={22} color={colors.primary} />}
+                        : <Plus size={22} color={colors.primary} weight="bold" />}
                     </TouchableOpacity>
                   </ScrollView>
                 </>
@@ -2120,7 +2122,7 @@ export default function PostReviewScreen() {
               ) : (
                 // No image yet — let user attach from the library
                 <View style={styles.imagePlaceholder}>
-                  <Ionicons name="image-outline" size={40} color={colors.textTertiary} />
+                  <ImageIcon size={40} color={colors.textTertiary} weight="duotone" />
                   <Text style={styles.imagePlaceholderText}>Geen afbeelding beschikbaar</Text>
                   <TouchableOpacity
                     style={styles.addImageBtn}
@@ -2131,7 +2133,7 @@ export default function PostReviewScreen() {
                       <ActivityIndicator size="small" color={colors.primary} />
                     ) : (
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                        <Ionicons name="cloud-upload-outline" size={15} color={colors.primary} />
+                        <UploadSimple size={15} color={colors.primary} weight="duotone" />
                         <Text style={styles.addImageBtnText}>Voeg afbeelding toe</Text>
                       </View>
                     )}
@@ -2152,7 +2154,7 @@ export default function PostReviewScreen() {
                       paddingVertical: 9, backgroundColor: colors.primary + '08',
                     }}
                   >
-                    <Ionicons name="create-outline" size={15} color={colors.primary} />
+                    <PencilLine size={15} color={colors.primary} weight="duotone" />
                     <Text style={{ fontSize: fontSize.sm, color: colors.primary, fontWeight: fontWeight.semibold }}>
                       {overlayConfig[post.id]?.text || overlayConfig[post.id]?.showLogo
                         ? 'Overlay aanpassen'
@@ -2179,7 +2181,7 @@ export default function PostReviewScreen() {
                         {rotatingImage
                           ? <ActivityIndicator size="small" color={colors.primary} />
                           : <>
-                              <Ionicons name="refresh-outline" size={15} color={colors.textSecondary} />
+                              <ArrowsClockwise size={15} color={colors.textSecondary} weight="bold" />
                               <Text style={{ fontSize: fontSize.sm, color: colors.textSecondary, fontWeight: fontWeight.medium }}>Draaien</Text>
                             </>}
                       </TouchableOpacity>
@@ -2196,7 +2198,7 @@ export default function PostReviewScreen() {
                         {flippingImage
                           ? <ActivityIndicator size="small" color={colors.primary} />
                           : <>
-                              <Ionicons name="swap-horizontal-outline" size={15} color={colors.textSecondary} />
+                              <ArrowsLeftRight size={15} color={colors.textSecondary} weight="regular" />
                               <Text style={{ fontSize: fontSize.sm, color: colors.textSecondary, fontWeight: fontWeight.medium }}>Spiegelen</Text>
                             </>}
                       </TouchableOpacity>
@@ -2230,7 +2232,7 @@ export default function PostReviewScreen() {
                       {(acc.imageUrl || (acc as any).image_url) ? (
                         <Image source={{ uri: acc.imageUrl || (acc as any).image_url }} style={{ width: 14, height: 14, borderRadius: 7 }} />
                       ) : (
-                        <Ionicons name="person-circle-outline" size={14} color={colors.textTertiary} />
+                        <UserCircle size={14} color={colors.textTertiary} weight="duotone" />
                       )}
                       <Text style={{ color: colors.textSecondary, fontSize: fontSize.xs, fontWeight: fontWeight.medium }}>
                         {acc.name}
@@ -2264,7 +2266,7 @@ export default function PostReviewScreen() {
                     }}
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                      <Ionicons name="close-circle" size={16} color={colors.error} />
+                      <XCircle size={16} color={colors.error} weight="fill" />
                       <Text style={{ color: colors.error, fontSize: fontSize.sm, fontWeight: fontWeight.bold }}>
                         {t.postApproval.rejected}{rejDateLabel ? ` · ${rejDateLabel}` : ''}
                       </Text>
@@ -2284,7 +2286,7 @@ export default function PostReviewScreen() {
 
               {/* ── Language select ─────────────────────────────────── */}
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                <Ionicons name="globe-outline" size={14} color={colors.textTertiary} />
+                <Globe size={14} color={colors.textTertiary} weight="duotone" />
                 {LANG_OPTIONS.map((lang) => {
                   const isActive = (postLang[post.id] || 'nl') === lang.code;
                   const isLoading = translating === post.id && isActive;
@@ -2423,7 +2425,7 @@ export default function PostReviewScreen() {
                 return (
                   <View style={{ gap: 6 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                      <Ionicons name="logo-instagram" size={14} color={config?.color || '#E4405F'} />
+                      <InstagramLogo size={14} color={config?.color || '#E4405F'} weight="fill" />
                       <Text style={{ fontSize: 11, color: colors.textSecondary, fontWeight: fontWeight.medium }}>
                         Formaat
                       </Text>
@@ -2483,7 +2485,7 @@ export default function PostReviewScreen() {
                         borderRadius: borderRadius.sm,
                         paddingHorizontal: 10, paddingVertical: 6,
                       }}>
-                        <Ionicons name="information-circle-outline" size={13} color={config?.color || '#E4405F'} />
+                        <Info size={13} color={config?.color || '#E4405F'} weight="regular" />
                         <Text style={{ fontSize: 11, color: config?.color || '#E4405F', fontWeight: fontWeight.medium }}>
                           {hint}
                         </Text>
@@ -2839,7 +2841,7 @@ export default function PostReviewScreen() {
                   onPress={() => setPreviewPost(post)}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                    <Ionicons name="eye-outline" size={14} color={colors.info} />
+                    <Eye size={14} color={colors.info} weight="duotone" />
                     <Text style={styles.translateBtnText}>Preview</Text>
                   </View>
                 </TouchableOpacity>
@@ -2853,7 +2855,7 @@ export default function PostReviewScreen() {
                   {regenerating === post.id
                     ? <ActivityIndicator size="small" color={colors.primary} />
                     : <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                        <Ionicons name="refresh-outline" size={14} color={colors.primary} />
+                        <ArrowsClockwise size={14} color={colors.primary} weight="bold" />
                         <Text style={[styles.translateBtnText, { color: colors.primary }]}>Regenereer</Text>
                       </View>}
                 </TouchableOpacity>
@@ -2873,7 +2875,7 @@ export default function PostReviewScreen() {
                   }}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                    <Ionicons name="calendar-outline" size={14} color={colors.info} />
+                    <Calendar size={14} color={colors.info} weight="duotone" />
                     <Text style={[styles.translateBtnText, { color: colors.info }]}>
                       {post.status === 'scheduled' ? '📅 Ingepland' : 'Inplannen'}
                     </Text>
@@ -2911,7 +2913,7 @@ export default function PostReviewScreen() {
                   }}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                    <Ionicons name="locate-outline" size={14} color={colors.success} />
+                    <Crosshair size={14} color={colors.success} weight="duotone" />
                     <Text style={styles.audienceBtnText}>Doelgroep</Text>
                   </View>
                 </TouchableOpacity>
@@ -2929,7 +2931,7 @@ export default function PostReviewScreen() {
                 }}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                  <Ionicons name="brush-outline" size={14} color="#8B5CF6" />
+                  <PaintBrush size={14} color="#8B5CF6" weight="duotone" />
                   <Text style={[styles.translateBtnText, { color: '#8B5CF6' }]}>Content Creator</Text>
                 </View>
               </TouchableOpacity>
@@ -2968,7 +2970,7 @@ export default function PostReviewScreen() {
                       },
                     ]}
                   >
-                    <Ionicons name="hourglass-outline" size={16} color={colors.textSecondary} />
+                    <Hourglass size={16} color={colors.textSecondary} weight="duotone" />
                     <Text style={[styles.actionBtnText, { color: colors.textSecondary }]}>
                       {t.postApproval.inReview}
                     </Text>
@@ -3005,7 +3007,7 @@ export default function PostReviewScreen() {
                         borderWidth: 1.5, borderColor: '#F59E0B',
                       }}
                     >
-                      <Ionicons name="rocket-outline" size={16} color="#F59E0B" />
+                      <Rocket size={16} color="#F59E0B" weight="duotone" />
                       <Text style={{ color: '#F59E0B', fontSize: fontSize.sm, fontWeight: fontWeight.semibold }}>
                         Boost
                       </Text>
@@ -3021,7 +3023,7 @@ export default function PostReviewScreen() {
                         borderWidth: 1.5, borderColor: colors.textTertiary,
                       }}
                     >
-                      <Ionicons name="lock-closed-outline" size={14} color={colors.textTertiary} />
+                      <Lock size={14} color={colors.textTertiary} weight="duotone" />
                       <Text style={{ color: colors.textTertiary, fontSize: fontSize.sm, fontWeight: fontWeight.semibold }}>
                         Boost (Promote tier)
                       </Text>
@@ -3042,7 +3044,7 @@ export default function PostReviewScreen() {
                 >
                   {deletePost.isPending
                     ? <ActivityIndicator size="small" color={colors.error} />
-                    : <Ionicons name="trash-outline" size={18} color={colors.error} />}
+                    : <Trash size={18} color={colors.error} weight="duotone" />}
                 </TouchableOpacity>
               </View>
             </ScrollView>
@@ -3060,7 +3062,7 @@ export default function PostReviewScreen() {
           <ActivityIndicator color={colors.textOnPrimary} />
         ) : (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <Ionicons name="rocket-outline" size={18} color={colors.textOnPrimary} />
+            <Rocket size={18} color={colors.textOnPrimary} weight="duotone" />
             <Text style={styles.publishAllText}>
               {t.postReview.publishAllButton} ({posts.filter((p) => p.status === 'draft').length} {t.postReview.channels})
             </Text>
@@ -3095,7 +3097,7 @@ export default function PostReviewScreen() {
                 📅 Post inplannen
               </Text>
               <TouchableOpacity onPress={() => setSchedulingPost(null)}>
-                <Ionicons name="close" size={22} color={colors.textSecondary} />
+                <X size={22} color={colors.textSecondary} weight="bold" />
               </TouchableOpacity>
             </View>
 
@@ -3210,7 +3212,7 @@ export default function PostReviewScreen() {
             style={{ position: 'absolute', top: Platform.OS === 'ios' ? 54 : 24, right: 16, zIndex: 10, backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: 8 }}
             onPress={() => setPreviewPost(null)}
           >
-            <Ionicons name="close" size={22} color="#fff" />
+            <X size={22} color="#fff" weight="bold" />
           </TouchableOpacity>
 
           {previewPost && (() => {
@@ -3298,7 +3300,7 @@ export default function PostReviewScreen() {
                         />
                       )) : (
                         <View style={{ backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 8, padding: 6 }}>
-                          <Ionicons name="business-outline" size={16} color="#fff" />
+                          <Buildings size={16} color="#fff" weight="duotone" />
                         </View>
                       )}
                     </View>
@@ -3388,7 +3390,7 @@ export default function PostReviewScreen() {
                         paddingHorizontal: 8, paddingVertical: 3,
                         flexDirection: 'row', alignItems: 'center', gap: 4,
                       }}>
-                        <Ionicons name="images-outline" size={11} color="#fff" />
+                        <Images size={11} color="#fff" weight="duotone" />
                         <Text style={{ color: '#fff', fontSize: 11, fontWeight: '600' }}>
                           {previewSlideIdx + 1}/{imgs.length}
                         </Text>
@@ -3421,7 +3423,7 @@ export default function PostReviewScreen() {
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#000' }}>Company Page</Text>
                         <Text style={{ fontSize: 11, color: '#666' }}>1,234 volgers • Nu</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 2 }}>
-                          <Ionicons name="earth-outline" size={11} color="#666" />
+                          <Globe size={11} color="#666" weight="duotone" />
                           <Text style={{ fontSize: 10, color: '#666' }}>Zichtbaar voor iedereen</Text>
                         </View>
                       </View>
@@ -3448,16 +3450,16 @@ export default function PostReviewScreen() {
                         </View>
                         <Text style={{ fontWeight: 'bold', fontSize: 13, color: '#000' }}>company.page</Text>
                       </View>
-                      <Ionicons name="ellipsis-horizontal" size={20} color="#000" />
+                      <DotsThree size={20} color="#000" weight="bold" />
                     </View>
                     <PreviewImage height={SCREEN_WIDTH - 32} />
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
                       <View style={{ flexDirection: 'row', gap: 14 }}>
-                        <Ionicons name="heart-outline" size={22} color="#000" />
-                        <Ionicons name="chatbubble-outline" size={22} color="#000" />
-                        <Ionicons name="paper-plane-outline" size={22} color="#000" />
+                        <Heart size={22} color="#000" weight="duotone" />
+                        <ChatCircle size={22} color="#000" weight="duotone" />
+                        <PaperPlaneTilt size={22} color="#000" weight="duotone" />
                       </View>
-                      <Ionicons name="bookmark-outline" size={22} color="#000" />
+                      <Bookmark size={22} color="#000" weight="duotone" />
                     </View>
                     <Text style={{ paddingHorizontal: 10, fontSize: 12, fontWeight: 'bold', color: '#000' }}>1.234 vind-ik-leuks</Text>
                     <Text style={{ paddingHorizontal: 10, paddingTop: 2, fontSize: 12, color: '#000' }}><Text style={{ fontWeight: 'bold' }}>company.page</Text> {text}</Text>
@@ -3505,7 +3507,7 @@ export default function PostReviewScreen() {
                       <Text style={{ fontWeight: 'bold', fontSize: 13, color: '#000' }}>Company Page</Text>
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                         <Text style={{ fontSize: 11, color: '#666' }}>Nu ·</Text>
-                        <Ionicons name="earth-outline" size={11} color="#666" />
+                        <Globe size={11} color="#666" weight="duotone" />
                       </View>
                     </View>
                   </View>
@@ -3521,7 +3523,7 @@ export default function PostReviewScreen() {
                           onError={() => { if (imgUrl) setPreviewFailedUrls(prev => new Set([...prev, imgUrl])); }}
                         />
                       : <View style={{ width: '100%', height: 220, marginTop: 8, backgroundColor: '#e8e8e8', justifyContent: 'center', alignItems: 'center', gap: 6 }}>
-                          <Ionicons name="image-outline" size={40} color="#aaa" />
+                          <ImageIcon size={40} color="#aaa" weight="duotone" />
                           <Text style={{ fontSize: 11, color: '#aaa' }}>Afbeelding niet beschikbaar</Text>
                         </View>
                     : null}
@@ -3595,7 +3597,7 @@ export default function PostReviewScreen() {
                 Tekst / Logo overlay
               </Text>
               <TouchableOpacity onPress={() => setEditingOverlay(null)}>
-                <Ionicons name="close" size={22} color={colors.textSecondary} />
+                <X size={22} color={colors.textSecondary} weight="bold" />
               </TouchableOpacity>
             </View>
 
@@ -3724,7 +3726,7 @@ export default function PostReviewScreen() {
                           borderWidth: 2, borderColor: colors.surface,
                         }}
                       >
-                        <Ionicons name="close" size={13} color="#fff" />
+                        <X size={13} color="#fff" weight="bold" />
                       </TouchableOpacity>
                     </View>
                   ))}
@@ -3742,7 +3744,7 @@ export default function PostReviewScreen() {
                     >
                       {extraLogoUploading
                         ? <ActivityIndicator size="small" color={colors.primary} />
-                        : <Ionicons name="add" size={26} color={colors.textSecondary} />}
+                        : <Plus size={26} color={colors.textSecondary} weight="bold" />}
                     </TouchableOpacity>
                   )}
                 </View>
@@ -3807,7 +3809,7 @@ export default function PostReviewScreen() {
                     borderRadius: 6,
                     padding: 4,
                   }}>
-                    <Ionicons name="business-outline" size={14} color="#fff" />
+                    <Buildings size={14} color="#fff" weight="duotone" />
                   </View>
                 )}
                 {overlayDraft.text && overlayDraft.textPosition === 'bottom' && (
@@ -3916,7 +3918,7 @@ export default function PostReviewScreen() {
             }}
             onPress={() => setZoomImageUrl(null)}
           >
-            <Ionicons name="close" size={24} color="#fff" />
+            <X size={24} color="#fff" weight="bold" />
           </TouchableOpacity>
 
           {/* Pinch-zoom via native ScrollView maximumZoomScale */}
@@ -3995,7 +3997,7 @@ export default function PostReviewScreen() {
                         justifyContent: 'center', alignItems: 'center',
                       }}
                     >
-                      {isSelected && <Ionicons name="checkmark" size={16} color="#fff" />}
+                      {isSelected && <Check size={16} color="#fff" weight="bold" />}
                     </TouchableOpacity>
                     {/* Tap on the rest of the row = single direct publish */}
                     <TouchableOpacity
@@ -4009,7 +4011,7 @@ export default function PostReviewScreen() {
                         <Image source={{ uri: acc.profile_image_url }} style={{ width: 40, height: 40, borderRadius: 20 }} />
                       ) : (
                         <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primary + '20', justifyContent: 'center', alignItems: 'center' }}>
-                          <Ionicons name="person" size={20} color={colors.primary} />
+                          <User size={20} color={colors.primary} weight="duotone" />
                         </View>
                       )}
                       <View style={{ flex: 1 }}>
@@ -4025,7 +4027,7 @@ export default function PostReviewScreen() {
                           </Text>
                         )}
                       </View>
-                      <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                      <CaretRight size={18} color={colors.textTertiary} weight="bold" />
                     </TouchableOpacity>
                   </View>
                 );

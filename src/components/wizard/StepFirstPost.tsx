@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { spacing, fontSize, fontWeight, borderRadius } from '../../theme';
 import { useTheme } from '../../context/ThemeContext';
 
+import { Camera, CheckCircle } from 'phosphor-react-native';
 type Props = {
   connectedCount: number;
   onCreatePost: () => void;
@@ -24,7 +24,7 @@ export default function StepFirstPost({ connectedCount, onCreatePost, onClose }:
           marginBottom: spacing.lg,
         }}
       >
-        <Ionicons name="checkmark-circle" size={56} color={colors.success} />
+        <CheckCircle size={56} color={colors.success} weight="fill" />
       </View>
 
       <Text style={{ fontSize: fontSize.xxl, fontWeight: fontWeight.bold, color: colors.text, textAlign: 'center', marginBottom: spacing.sm }}>
@@ -51,7 +51,7 @@ export default function StepFirstPost({ connectedCount, onCreatePost, onClose }:
           marginBottom: spacing.md,
         }}
       >
-        <Ionicons name="camera" size={22} color="#fff" />
+        <Camera size={22} color="#fff" weight="duotone" />
         <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: fontWeight.semibold }}>
           Maak nu een post
         </Text>

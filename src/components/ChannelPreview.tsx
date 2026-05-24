@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: icon> | Ionicons name=<dynamic: meta.icon>
 // src/components/ChannelPreview.tsx
 // Mock preview of how a Library post will render on each social channel.
 // Used in LibraryPostDetailScreen to give the user a sense of the final look
@@ -5,9 +6,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, type ImageStyle, type StyleProp } from 'react-native';
-import { Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import type { Channel } from '../types';
 
+import { Bookmark, ChatCircle, DotsThree, Heart, ImageBroken, PaperPlaneTilt } from 'phosphor-react-native';
 const CHANNEL_META: Record<string, { name: string; color: string; icon: keyof typeof Ionicons.glyphMap | null; faIcon?: string }> = {
   linkedin:  { name: 'LinkedIn',  color: '#0A66C2', icon: 'logo-linkedin' },
   instagram: { name: 'Instagram', color: '#E1306C', icon: 'logo-instagram' },
@@ -44,11 +46,11 @@ export default function ChannelPreview({ channel, accountName, imageUrl, caption
         </View>
         {imageUrl ? <Image source={{ uri: imageUrl }} style={styles.imageSquare} resizeMode="cover" /> : <ImagePlaceholder />}
         <View style={styles.actionsRow}>
-          <Ionicons name="heart-outline" size={22} color="#0F172A" />
-          <Ionicons name="chatbubble-outline" size={20} color="#0F172A" />
-          <Ionicons name="paper-plane-outline" size={20} color="#0F172A" />
+          <Heart size={22} color="#0F172A" weight="duotone" />
+          <ChatCircle size={20} color="#0F172A" weight="duotone" />
+          <PaperPlaneTilt size={20} color="#0F172A" weight="duotone" />
           <View style={{ flex: 1 }} />
-          <Ionicons name="bookmark-outline" size={22} color="#0F172A" />
+          <Bookmark size={22} color="#0F172A" weight="duotone" />
         </View>
         <View style={styles.bodyPad}>
           <Text style={styles.igCaption}>
@@ -70,7 +72,7 @@ export default function ChannelPreview({ channel, accountName, imageUrl, caption
             <Text style={styles.handle}>{handleName}</Text>
             <Text style={styles.subhandle}>Just now · 🌍</Text>
           </View>
-          <Ionicons name="ellipsis-horizontal" size={18} color="#64748B" />
+          <DotsThree size={18} color="#64748B" weight="bold" />
         </View>
         <View style={styles.bodyPad}>
           {captionLine ? <Text style={styles.fbBody}>{captionLine}</Text> : null}
@@ -95,7 +97,7 @@ export default function ChannelPreview({ channel, accountName, imageUrl, caption
           <Text style={styles.handle}>{handleName}</Text>
           <Text style={styles.subhandle}>1u · 🌐</Text>
         </View>
-        <Ionicons name="ellipsis-horizontal" size={18} color="#64748B" />
+        <DotsThree size={18} color="#64748B" weight="bold" />
       </View>
       <View style={styles.bodyPad}>
         {captionLine ? <Text style={styles.liBody}>{captionLine}</Text> : null}
@@ -140,7 +142,7 @@ function ActionPill({ icon, label }: { icon: keyof typeof Ionicons.glyphMap; lab
 function ImagePlaceholder() {
   return (
     <View style={[styles.imageWide, { backgroundColor: '#F1F5F9', alignItems: 'center', justifyContent: 'center' }]}>
-      <MaterialCommunityIcons name="image-off-outline" size={32} color="#CBD5E1" />
+      <ImageBroken size={32} color="#CBD5E1" weight="duotone" />
     </View>
   );
 }

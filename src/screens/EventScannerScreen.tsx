@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: flash ? 'flash' : 'flash-outline'> | Ionicons name=<dynamic: locationSource === 'gps' ? 'navigate' : locationSource === 'event' ? 'location' : 'search'> | Ionicons name=<dynamic: opt.icon as any>
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -24,6 +25,7 @@ import { useThemedStyles } from '../utils/themedStyles';
 import { useTranslation } from '../i18n';
 import { useLocation, formatRegion, type RegionData } from '../hooks/useLocation';
 
+import { ArrowsClockwise, Buildings, Camera, Check, Envelope, Globe, MapPin, MapTrifold, PencilLine, Phone, QrCode, Scan, User, UserPlus } from 'phosphor-react-native';
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -617,7 +619,7 @@ export default function EventScannerScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
-        <Ionicons name="camera-outline" size={48} color={colors.primary} />
+        <Camera size={48} color={colors.primary} weight="duotone" />
         <Text style={styles.permissionTitle}>{t.eventScanner.needCamera}</Text>
         <Text style={styles.permissionSub}>
           {t.eventScanner.needCameraSub}
@@ -645,7 +647,7 @@ export default function EventScannerScreen() {
 
         {manualMode && (
           <View style={styles.manualOverlay}>
-            <Ionicons name="person-add-outline" size={48} color="rgba(255,255,255,0.4)" />
+            <UserPlus size={48} color="rgba(255,255,255,0.4)" weight="duotone" />
             <Text style={styles.manualOverlayText}>{t.eventScanner.manualEntry}</Text>
           </View>
         )}
@@ -670,7 +672,7 @@ export default function EventScannerScreen() {
           </TouchableOpacity>
 
           <View style={styles.scanHintPill}>
-            <Ionicons name="qr-code-outline" size={14} color="rgba(255,255,255,0.8)" />
+            <QrCode size={14} color="rgba(255,255,255,0.8)" weight="duotone" />
             <Text style={styles.scanHintText}>
               {scanning ? t.eventScanner.scanHint : t.eventScanner.processing}
             </Text>
@@ -686,7 +688,7 @@ export default function EventScannerScreen() {
               }
             }}
           >
-            <Ionicons name="create-outline" size={20} color="#fff" />
+            <PencilLine size={20} color="#fff" weight="duotone" />
           </TouchableOpacity>
         </View>
       </View>
@@ -753,7 +755,7 @@ export default function EventScannerScreen() {
           </Text>
           {scannedList.length > 0 && (
             <TouchableOpacity onPress={loadExistingScans}>
-              <Ionicons name="refresh" size={18} color={colors.primary} />
+              <ArrowsClockwise size={18} color={colors.primary} weight="bold" />
             </TouchableOpacity>
           )}
         </View>
@@ -761,7 +763,7 @@ export default function EventScannerScreen() {
         <ScrollView showsVerticalScrollIndicator={false}>
           {scannedList.length === 0 ? (
             <View style={styles.emptyList}>
-              <Ionicons name="scan-outline" size={32} color={colors.textTertiary} />
+              <Scan size={32} color={colors.textTertiary} weight="regular" />
               <Text style={styles.emptyListText}>{t.eventScanner.noScansYet}</Text>
               <Text style={styles.emptyListSub}>{t.eventScanner.noScansSub}</Text>
             </View>
@@ -785,7 +787,7 @@ export default function EventScannerScreen() {
                     ) : null}
                     {contactLocation ? (
                       <View style={styles.contactLocationRow}>
-                        <Ionicons name="location-outline" size={10} color={colors.textTertiary} />
+                        <MapPin size={10} color={colors.textTertiary} weight="duotone" />
                         <Text style={styles.contactLocationText}>
                           {contactLocation}
                         </Text>
@@ -826,7 +828,7 @@ export default function EventScannerScreen() {
             {/* Parsed preview / edit fields */}
             <View style={styles.modalFields}>
               <View style={styles.fieldRow}>
-                <Ionicons name="person-outline" size={18} color={colors.textSecondary} />
+                <User size={18} color={colors.textSecondary} weight="duotone" />
                 <TextInput
                   style={styles.fieldInput}
                   value={editContact.name || ''}
@@ -836,7 +838,7 @@ export default function EventScannerScreen() {
                 />
               </View>
               <View style={styles.fieldRow}>
-                <Ionicons name="mail-outline" size={18} color={colors.textSecondary} />
+                <Envelope size={18} color={colors.textSecondary} weight="duotone" />
                 <TextInput
                   style={styles.fieldInput}
                   value={editContact.email || ''}
@@ -848,7 +850,7 @@ export default function EventScannerScreen() {
                 />
               </View>
               <View style={styles.fieldRow}>
-                <Ionicons name="business-outline" size={18} color={colors.textSecondary} />
+                <Buildings size={18} color={colors.textSecondary} weight="duotone" />
                 <TextInput
                   style={styles.fieldInput}
                   value={editContact.company || ''}
@@ -858,7 +860,7 @@ export default function EventScannerScreen() {
                 />
               </View>
               <View style={styles.fieldRow}>
-                <Ionicons name="call-outline" size={18} color={colors.textSecondary} />
+                <Phone size={18} color={colors.textSecondary} weight="duotone" />
                 <TextInput
                   style={styles.fieldInput}
                   value={editContact.phone || ''}
@@ -873,7 +875,7 @@ export default function EventScannerScreen() {
             {/* Location preview in modal */}
             {sessionRegion && (
               <View style={styles.locationPreview}>
-                <Ionicons name="location" size={14} color={colors.primary} />
+                <MapPin size={14} color={colors.primary} weight="duotone" />
                 <Text style={styles.locationPreviewText}>
                   {formatRegion(sessionRegion, 'short')}
                 </Text>
@@ -894,7 +896,7 @@ export default function EventScannerScreen() {
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
                   <>
-                    <Ionicons name="checkmark" size={18} color="#fff" />
+                    <Check size={18} color="#fff" weight="bold" />
                     <Text style={styles.modalSaveText}>{t.eventScanner.save}</Text>
                   </>
                 )}
@@ -920,7 +922,7 @@ export default function EventScannerScreen() {
 
             <View style={styles.modalFields}>
               <View style={styles.fieldRow}>
-                <Ionicons name="business-outline" size={18} color={colors.textSecondary} />
+                <Buildings size={18} color={colors.textSecondary} weight="duotone" />
                 <TextInput
                   style={styles.fieldInput}
                   value={manualCity}
@@ -931,7 +933,7 @@ export default function EventScannerScreen() {
                 />
               </View>
               <View style={styles.fieldRow}>
-                <Ionicons name="map-outline" size={18} color={colors.textSecondary} />
+                <MapTrifold size={18} color={colors.textSecondary} weight="duotone" />
                 <TextInput
                   style={styles.fieldInput}
                   value={manualProvince}
@@ -942,7 +944,7 @@ export default function EventScannerScreen() {
                 />
               </View>
               <View style={styles.fieldRow}>
-                <Ionicons name="globe-outline" size={18} color={colors.textSecondary} />
+                <Globe size={18} color={colors.textSecondary} weight="duotone" />
                 <TextInput
                   style={styles.fieldInput}
                   value={manualCountry}
@@ -965,7 +967,7 @@ export default function EventScannerScreen() {
                 style={styles.modalSaveBtn}
                 onPress={applyManualLocation}
               >
-                <Ionicons name="checkmark" size={18} color="#fff" />
+                <Check size={18} color="#fff" weight="bold" />
                 <Text style={styles.modalSaveText}>{t.regionScanner.apply}</Text>
               </TouchableOpacity>
             </View>

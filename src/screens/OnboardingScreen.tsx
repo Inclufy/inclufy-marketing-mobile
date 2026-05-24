@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: f.icon as any> | MaterialCommunityIcons name=<dynamic: item.icon as any>
 // src/screens/OnboardingScreen.tsx
 // Interactive App Tour & Setup Guide
 
@@ -6,7 +7,7 @@ import {
   View, Text, TouchableOpacity, ScrollView, SafeAreaView, TextInput,
   Dimensions, FlatList, Animated,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../context/ThemeContext';
@@ -14,6 +15,7 @@ import { useThemedStyles } from '../utils/themedStyles';
 import { supabase } from '../services/supabase';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { CaretRight, Lightbulb, Rocket } from 'phosphor-react-native';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // ─── Tour Slides ─────────────────────────────────────────────────────
@@ -194,7 +196,7 @@ export default function OnboardingScreen() {
               backgroundColor: colors.primary + '15',
               justifyContent: 'center', alignItems: 'center', marginBottom: spacing.md,
             }}>
-              <MaterialCommunityIcons name="rocket-launch" size={32} color={colors.primary} />
+              <Rocket size={32} color={colors.primary} weight="fill" />
             </View>
             <Text style={{ fontSize: fontSize.xl, fontWeight: fontWeight.bold as any, color: colors.text, textAlign: 'center' }}>
               Stel je platform in
@@ -241,7 +243,7 @@ export default function OnboardingScreen() {
                     {item.description}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                <CaretRight size={18} color={colors.textTertiary} weight="bold" />
               </TouchableOpacity>
             ))}
           </View>
@@ -253,7 +255,7 @@ export default function OnboardingScreen() {
             padding: spacing.md, marginTop: spacing.lg,
             borderWidth: 1, borderColor: colors.primary + '20',
           }}>
-            <MaterialCommunityIcons name="lightbulb-outline" size={20} color={colors.primary} />
+            <Lightbulb size={20} color={colors.primary} weight="duotone" />
             <Text style={{ flex: 1, fontSize: fontSize.sm, color: colors.textSecondary, lineHeight: 20 }}>
               Je kunt deze stappen altijd later aanpassen via Instellingen. Begin met de stappen die je al weet.
             </Text>

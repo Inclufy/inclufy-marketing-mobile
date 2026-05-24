@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: CAT_ICONS[cat]> | MaterialCommunityIcons name=<dynamic: CAT_ICONS[item.category] || 'package-variant'>
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, FlatList, Alert,
@@ -17,6 +18,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '../services/supabase';
 
+import { ArrowLeft, CameraPlus, MagnifyingGlass, Package, Plus, SealCheck, XCircle } from 'phosphor-react-native';
 // ── Upload product image ──────────────────────────────────────────────────────
 
 async function uploadProductImage(localUri: string): Promise<string> {
@@ -210,7 +212,7 @@ export default function ProductsScreen() {
             <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.surfaceElevated,
               paddingHorizontal: 6, paddingVertical: 2, borderRadius: borderRadius.sm,
               marginTop: 6, alignSelf: 'flex-start', gap: 3 }}>
-              <MaterialCommunityIcons name="check-decagram" size={12} color={colors.success} />
+              <SealCheck size={12} color={colors.success} weight="fill" />
               <Text style={{ fontSize: 10, color: colors.textSecondary }}>
                 {item.usps.length} USP{item.usps.length !== 1 ? 's' : ''}
               </Text>
@@ -223,7 +225,7 @@ export default function ProductsScreen() {
 
   const renderEmpty = () => (
     <View style={{ alignItems: 'center', paddingTop: 80, gap: 12, paddingHorizontal: spacing.lg }}>
-      <MaterialCommunityIcons name="package-variant-closed" size={64} color={colors.textTertiary} />
+      <Package size={64} color={colors.textTertiary} weight="duotone" />
       <Text style={{ fontSize: fontSize.lg, fontWeight: fontWeight.semibold, color: colors.textSecondary }}>
         Nog geen producten
       </Text>
@@ -233,7 +235,7 @@ export default function ProductsScreen() {
       <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.primary,
         paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, borderRadius: borderRadius.full,
         gap: 6, marginTop: spacing.sm }} onPress={openCreate}>
-        <MaterialCommunityIcons name="plus" size={20} color="#fff" />
+        <Plus size={20} color="#fff" weight="bold" />
         <Text style={{ color: '#fff', fontWeight: fontWeight.semibold, fontSize: fontSize.sm }}>
           Product toevoegen
         </Text>
@@ -255,9 +257,9 @@ export default function ProductsScreen() {
       {/* Header */}
       <View style={s.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: spacing.xs }}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+          <ArrowLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
-        <MaterialCommunityIcons name="package-variant-closed" size={28} color={colors.primary} />
+        <Package size={28} color={colors.primary} weight="duotone" />
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: fontSize.xxl, fontWeight: fontWeight.bold, color: colors.text }}>
             Producten & Services
@@ -286,13 +288,13 @@ export default function ProductsScreen() {
 
       {/* Search */}
       <View style={s.searchRow}>
-        <MaterialCommunityIcons name="magnify" size={20} color={colors.textTertiary} />
+        <MagnifyingGlass size={20} color={colors.textTertiary} weight="bold" />
         <TextInput style={{ flex: 1, marginLeft: 8, fontSize: fontSize.sm, color: colors.text }}
           placeholder="Zoek producten, services..." placeholderTextColor={colors.textTertiary}
           value={search} onChangeText={setSearch} autoCapitalize="none" autoCorrect={false} />
         {search.length > 0 && (
           <TouchableOpacity onPress={() => setSearch('')}>
-            <MaterialCommunityIcons name="close-circle" size={18} color={colors.textTertiary} />
+            <XCircle size={18} color={colors.textTertiary} weight="fill" />
           </TouchableOpacity>
         )}
       </View>
@@ -310,7 +312,7 @@ export default function ProductsScreen() {
 
       {/* FAB */}
       <TouchableOpacity style={s.fab} onPress={openCreate} activeOpacity={0.85}>
-        <MaterialCommunityIcons name="plus" size={28} color="#fff" />
+        <Plus size={28} color="#fff" weight="bold" />
       </TouchableOpacity>
 
       {/* ─── Edit Modal ──────────────────────────────────────────── */}
@@ -342,7 +344,7 @@ export default function ProductsScreen() {
                 {form.image_url
                   ? <Image source={{ uri: form.image_url }} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
                   : <>
-                      <MaterialCommunityIcons name="camera-plus-outline" size={32} color={colors.textTertiary} />
+                      <CameraPlus size={32} color={colors.textTertiary} weight="duotone" />
                       <Text style={{ fontSize: fontSize.xs, color: colors.textTertiary, marginTop: 6 }}>
                         Tik om afbeelding te kiezen
                       </Text>

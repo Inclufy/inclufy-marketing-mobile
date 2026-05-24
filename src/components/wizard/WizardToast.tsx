@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: meta.icon>
 /**
  * WizardToast — slide-in notificatie banner voor de wizard.
  *

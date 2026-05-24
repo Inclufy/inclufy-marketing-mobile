@@ -17,10 +17,10 @@
 
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { Warning } from 'phosphor-react-native';
 // Keep in sync with supabase/functions/_shared/watermark.ts:WatermarkPosition
 // (and the CHECK constraint in 20260518190000_watermark_position.sql).
 export type WatermarkPosition =
@@ -144,7 +144,7 @@ export default function WatermarkPositionPicker({
                         top: 2, right: 2,
                       }}
                     >
-                      <Ionicons name="warning" size={10} color="#F59E0B" />
+                      <Warning size={10} color="#F59E0B" weight="fill" />
                     </View>
                   )}
                 </TouchableOpacity>

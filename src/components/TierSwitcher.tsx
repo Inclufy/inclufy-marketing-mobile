@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: t.icon>
 // src/components/TierSwitcher.tsx
 // ────────────────────────────────────────────────────────────────────────
 // Superadmin-only dev tool: switch your own profiles.tier in one tap.
@@ -34,6 +35,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { supabase } from '../services/supabase';
 import { useUserTier, type Tier } from '../utils/userTier';
 
+import { ArrowsLeftRight, Check, Info } from 'phosphor-react-native';
 const TIERS: Array<{
   key: Tier;
   label: string;
@@ -111,7 +113,7 @@ export default function TierSwitcher() {
           gap: 6,
         }}
       >
-        <Ionicons name="information-circle-outline" size={14} color={colors.textSecondary} />
+        <Info size={14} color={colors.textSecondary} weight="regular" />
         <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary, flex: 1 }}>
           Wijzigt alleen je eigen profiel · Voor QA / preview
         </Text>
@@ -177,9 +179,9 @@ export default function TierSwitcher() {
             {isPending ? (
               <ActivityIndicator size="small" color={t.color} />
             ) : isActive ? (
-              <Ionicons name="checkmark" size={18} color={t.color} />
+              <Check size={18} color={t.color} weight="bold" />
             ) : (
-              <Ionicons name="swap-horizontal" size={16} color={colors.textTertiary} />
+              <ArrowsLeftRight size={16} color={colors.textTertiary} weight="bold" />
             )}
           </TouchableOpacity>
         );

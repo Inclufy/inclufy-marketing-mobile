@@ -7,9 +7,9 @@ import {
   setAudioModeAsync,
   useAudioRecorderState,
 } from 'expo-audio';
-import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { Microphone, RadioButton } from 'phosphor-react-native';
 interface Props {
   onRecordingComplete: (uri: string) => void;
 }
@@ -64,13 +64,13 @@ export default function AudioCapture({ onRecordingComplete }: Props) {
       <View style={styles.waveform}>
         {isRecording ? (
           <>
-            <Ionicons name="radio-button-on" size={16} color={colors.error} />
+            <RadioButton size={16} color={colors.error} weight="fill" />
             <Text style={styles.timer}>{formatTime(duration)}</Text>
             <Text style={styles.hint}>Opname bezig...</Text>
           </>
         ) : (
           <>
-            <Ionicons name="mic" size={28} color={colors.primary} />
+            <Microphone size={28} color={colors.primary} weight="duotone" />
             <Text style={styles.hint}>Tik om audio op te nemen</Text>
             <Text style={styles.subHint}>AI transcribeert en maakt er een post van</Text>
           </>

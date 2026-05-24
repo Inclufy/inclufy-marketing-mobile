@@ -5,7 +5,6 @@ import React, { useState, useMemo } from 'react';
 import {
   View, Text, TouchableOpacity, FlatList, SafeAreaView, ScrollView,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
@@ -13,6 +12,7 @@ import { useContentProposals } from '../hooks/useContentProposals';
 import { useCampaigns } from '../hooks/useCampaigns';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { CaretLeft, CaretRight } from 'phosphor-react-native';
 const DAYS_NL = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
 const MONTHS_NL = ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'];
 
@@ -107,7 +107,7 @@ export default function ContentCalendarScreen() {
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border }}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: spacing.xs }}>
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
+          <CaretLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={{ flex: 1, textAlign: 'center', fontSize: fontSize.lg, fontWeight: fontWeight.bold as any, color: colors.text }}>
           Content Kalender
@@ -118,13 +118,13 @@ export default function ContentCalendarScreen() {
       {/* Month/Week Toggle + Navigation */}
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.md, paddingVertical: spacing.sm }}>
         <TouchableOpacity onPress={navigatePrev} style={{ padding: spacing.xs }}>
-          <Ionicons name="chevron-back" size={20} color={colors.textSecondary} />
+          <CaretLeft size={20} color={colors.textSecondary} weight="bold" />
         </TouchableOpacity>
         <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.semibold as any, color: colors.text }}>
           {MONTHS_NL[month]} {year}
         </Text>
         <TouchableOpacity onPress={navigateNext} style={{ padding: spacing.xs }}>
-          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
+          <CaretRight size={20} color={colors.textSecondary} weight="bold" />
         </TouchableOpacity>
       </View>
 

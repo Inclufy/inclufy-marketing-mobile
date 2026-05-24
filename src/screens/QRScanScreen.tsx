@@ -10,12 +10,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 import { useCreateContact } from '../hooks/useContacts';
 
+import { Camera, UserPlus, X } from 'phosphor-react-native';
 interface ParsedContact {
   firstName?: string;
   lastName?: string;
@@ -179,7 +179,7 @@ export default function QRScanScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.center}>
-        <Ionicons name="camera-outline" size={48} color={colors.textTertiary} />
+        <Camera size={48} color={colors.textTertiary} weight="duotone" />
         <Text style={styles.permText}>{t.qrScan?.needCamera ?? 'Camera permission required'}</Text>
         <TouchableOpacity style={styles.permBtn} onPress={requestPermission}>
           <Text style={styles.permBtnText}>{t.qrScan?.grantPerm ?? 'Grant permission'}</Text>
@@ -217,7 +217,7 @@ export default function QRScanScreen() {
         {/* Bottom */}
         <View style={styles.bottomBar}>
           <TouchableOpacity style={styles.cancelBtn} onPress={() => navigation.goBack()}>
-            <Ionicons name="close" size={20} color="#fff" />
+            <X size={20} color="#fff" weight="bold" />
             <Text style={styles.cancelText}>{t.common?.cancel ?? 'Cancel'}</Text>
           </TouchableOpacity>
         </View>
@@ -229,7 +229,7 @@ export default function QRScanScreen() {
           <View style={styles.modalCard}>
             <View style={styles.modalHeader}>
               <View style={styles.modalIcon}>
-                <Ionicons name="person-add" size={24} color={colors.primary} />
+                <UserPlus size={24} color={colors.primary} weight="duotone" />
               </View>
               <Text style={styles.modalTitle}>{t.qrScan?.contactFound ?? 'Contact found!'}</Text>
             </View>

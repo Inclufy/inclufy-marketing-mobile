@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: (currentPlatform?.icon || 'card-text') as any> | MaterialCommunityIcons name=<dynamic: ct.icon as any> | MaterialCommunityIcons name=<dynamic: editMode ? 'check' : 'pencil'> | MaterialCommunityIcons name=<dynamic: isSelected ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'> | MaterialCommunityIcons name=<dynamic: opt.value ? 'check-circle' : 'circle-outline'> | MaterialCommunityIcons name=<dynamic: p.icon as any> | MaterialCommunityIcons name=<dynamic: s.icon as any>
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
@@ -16,7 +17,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import * as ImagePicker from 'expo-image-picker';
 import api from '../services/api';
@@ -30,6 +31,7 @@ import AIConsentModal from '../components/AIConsentModal';
 import { useAIConsent } from '../hooks/useAIConsent';
 import { useConnectedChannels } from '../hooks/useConnectedChannels';
 
+import { ArrowLeft, ArrowRight, ArrowsClockwise, ArrowsOut, Camera, CaretLeft, CaretRight, Check, ClipboardText, Copy, FloppyDisk, ImageSquare, Images, MagnifyingGlass, PaperPlaneTilt, ShareNetwork, Sparkle, X, XCircle } from 'phosphor-react-native';
 const { width: SCREEN_W } = Dimensions.get('window');
 
 // ─── Types ───────────────────────────────────────────────────────────
@@ -495,7 +497,7 @@ export default function ContentCreatorScreen() {
                 marginBottom: 4,
               }}>
                 {isDone ? (
-                  <MaterialCommunityIcons name="check" size={16} color="#fff" />
+                  <Check size={16} color="#fff" weight="bold" />
                 ) : (
                   <MaterialCommunityIcons name={s.icon as any} size={16} color={isActive ? '#fff' : colors.textTertiary} />
                 )}
@@ -630,7 +632,7 @@ export default function ContentCreatorScreen() {
           <Text style={{ fontSize: 10, color: colors.textTertiary }}>{topic.length}/1000 tekens</Text>
           {topic.length > 0 && (
             <TouchableOpacity onPress={() => setTopic('')}>
-              <MaterialCommunityIcons name="close-circle" size={16} color={colors.textTertiary} />
+              <XCircle size={16} color={colors.textTertiary} weight="fill" />
             </TouchableOpacity>
           )}
         </View>
@@ -745,7 +747,7 @@ export default function ContentCreatorScreen() {
             </>
           ) : (
             <>
-              <MaterialCommunityIcons name="creation" size={22} color="#fff" />
+              <Sparkle size={22} color="#fff" weight="fill" />
               <Text style={{ color: '#fff', fontSize: fontSize.lg, fontWeight: fontWeight.bold }}>Genereer Content</Text>
             </>
           )}
@@ -773,7 +775,7 @@ export default function ContentCreatorScreen() {
           }}
           onPress={handleGenerate}
         >
-          <MaterialCommunityIcons name="refresh" size={14} color={colors.primary} />
+          <ArrowsClockwise size={14} color={colors.primary} weight="bold" />
           <Text style={{ fontSize: 11, color: colors.primary, fontWeight: fontWeight.semibold }}>Opnieuw</Text>
         </TouchableOpacity>
       </View>
@@ -787,7 +789,7 @@ export default function ContentCreatorScreen() {
           borderBottomWidth: 1, borderBottomColor: colors.primary + '15',
         }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <MaterialCommunityIcons name="creation" size={16} color={colors.primary} />
+            <Sparkle size={16} color={colors.primary} weight="fill" />
             <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.bold, color: colors.primary }}>
               Gegenereerde Content
             </Text>
@@ -806,7 +808,7 @@ export default function ContentCreatorScreen() {
               style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: colors.primary + '15', justifyContent: 'center', alignItems: 'center' }}
               onPress={handleCopy}
             >
-              <MaterialCommunityIcons name="content-copy" size={16} color={colors.primary} />
+              <Copy size={16} color={colors.primary} weight="duotone" />
             </TouchableOpacity>
           </View>
         </View>
@@ -881,7 +883,7 @@ export default function ContentCreatorScreen() {
             onPress={() => navigateHistory('prev')}
             disabled={historyIndex <= 0}
           >
-            <Ionicons name="chevron-back" size={18} color={colors.textSecondary} />
+            <CaretLeft size={18} color={colors.textSecondary} weight="bold" />
           </TouchableOpacity>
           <Text style={{ fontSize: 12, color: colors.textSecondary }}>Versie {historyIndex + 1}/{contentHistory.length}</Text>
           <TouchableOpacity
@@ -889,7 +891,7 @@ export default function ContentCreatorScreen() {
             onPress={() => navigateHistory('next')}
             disabled={historyIndex >= contentHistory.length - 1}
           >
-            <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+            <CaretRight size={18} color={colors.textSecondary} weight="bold" />
           </TouchableOpacity>
         </View>
       )}
@@ -903,7 +905,7 @@ export default function ContentCreatorScreen() {
             handleGenerate();
           }}
         >
-          <MaterialCommunityIcons name="resize" size={16} color={colors.text} />
+          <ArrowsOut size={16} color={colors.text} weight="bold" />
           <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.text }}>Andere lengte</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -915,7 +917,7 @@ export default function ContentCreatorScreen() {
             Alert.alert('Gekopieerd', 'Content + hashtags gekopieerd');
           }}
         >
-          <MaterialCommunityIcons name="clipboard-text" size={16} color={colors.text} />
+          <ClipboardText size={16} color={colors.text} weight="duotone" />
           <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.text }}>Kopieer alles</Text>
         </TouchableOpacity>
       </View>
@@ -929,9 +931,9 @@ export default function ContentCreatorScreen() {
         }}
         onPress={() => goToStep(3)}
       >
-        <MaterialCommunityIcons name="image-plus" size={20} color="#fff" />
+        <ImageSquare size={20} color="#fff" weight="duotone" />
         <Text style={{ color: '#fff', fontSize: fontSize.lg, fontWeight: fontWeight.bold }}>Volgende: Media toevoegen</Text>
-        <MaterialCommunityIcons name="arrow-right" size={20} color="#fff" />
+        <ArrowRight size={20} color="#fff" weight="bold" />
       </TouchableOpacity>
 
       {/* Skip to publish */}
@@ -970,7 +972,7 @@ export default function ContentCreatorScreen() {
             backgroundColor: colors.primary + '15',
             justifyContent: 'center', alignItems: 'center',
           }}>
-            <MaterialCommunityIcons name="camera" size={24} color={colors.primary} />
+            <Camera size={24} color={colors.primary} weight="duotone" />
           </View>
           <Text style={{ fontSize: 12, fontWeight: fontWeight.bold, color: colors.primary }}>Foto maken</Text>
           <Text style={{ fontSize: 9, color: colors.textSecondary }}>Camera</Text>
@@ -990,7 +992,7 @@ export default function ContentCreatorScreen() {
             backgroundColor: colors.success + '15',
             justifyContent: 'center', alignItems: 'center',
           }}>
-            <MaterialCommunityIcons name="image-multiple" size={24} color={colors.success} />
+            <Images size={24} color={colors.success} weight="duotone" />
           </View>
           <Text style={{ fontSize: 12, fontWeight: fontWeight.bold, color: colors.success }}>Galerij</Text>
           <Text style={{ fontSize: 9, color: colors.textSecondary }}>Tot 4 foto's</Text>
@@ -1014,7 +1016,7 @@ export default function ContentCreatorScreen() {
             backgroundColor: '#8B5CF6' + '15',
             justifyContent: 'center', alignItems: 'center',
           }}>
-            <MaterialCommunityIcons name="creation" size={24} color="#8B5CF6" />
+            <Sparkle size={24} color="#8B5CF6" weight="fill" />
           </View>
           <Text style={{ fontSize: 12, fontWeight: fontWeight.bold, color: '#8B5CF6' }}>AI Zoeken</Text>
           <Text style={{ fontSize: 9, color: colors.textSecondary }}>Stock foto's</Text>
@@ -1031,11 +1033,11 @@ export default function ContentCreatorScreen() {
         }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
-              <MaterialCommunityIcons name="creation" size={18} color="#8B5CF6" />
+              <Sparkle size={18} color="#8B5CF6" weight="fill" />
               <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.bold, color: colors.text }}>AI Afbeelding zoeken</Text>
             </View>
             <TouchableOpacity onPress={() => setShowAiImageSearch(false)}>
-              <MaterialCommunityIcons name="close" size={20} color={colors.textSecondary} />
+              <X size={20} color={colors.textSecondary} weight="bold" />
             </TouchableOpacity>
           </View>
 
@@ -1068,7 +1070,7 @@ export default function ContentCreatorScreen() {
             >
               {aiImageLoading
                 ? <ActivityIndicator size="small" color="#fff" />
-                : <MaterialCommunityIcons name="magnify" size={20} color="#fff" />}
+                : <MagnifyingGlass size={20} color="#fff" weight="bold" />}
             </TouchableOpacity>
           </View>
 
@@ -1114,7 +1116,7 @@ export default function ContentCreatorScreen() {
                         width: 20, height: 20, borderRadius: 10,
                         backgroundColor: '#8B5CF6', justifyContent: 'center', alignItems: 'center',
                       }}>
-                        <MaterialCommunityIcons name="check" size={14} color="#fff" />
+                        <Check size={14} color="#fff" weight="bold" />
                       </View>
                     )}
                     <Text style={{
@@ -1163,7 +1165,7 @@ export default function ContentCreatorScreen() {
                   }}
                   onPress={() => removeImage(i)}
                 >
-                  <MaterialCommunityIcons name="close" size={14} color="#fff" />
+                  <X size={14} color="#fff" weight="bold" />
                 </TouchableOpacity>
               </View>
             ))}
@@ -1222,7 +1224,7 @@ export default function ContentCreatorScreen() {
           }}
           onPress={() => goToStep(2)}
         >
-          <MaterialCommunityIcons name="arrow-left" size={18} color={colors.text} />
+          <ArrowLeft size={18} color={colors.text} weight="bold" />
           <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.text }}>Terug</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -1233,7 +1235,7 @@ export default function ContentCreatorScreen() {
           }}
           onPress={() => goToStep(4)}
         >
-          <MaterialCommunityIcons name="send-check" size={18} color="#fff" />
+          <PaperPlaneTilt size={18} color="#fff" weight="fill" />
           <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.bold, color: '#fff' }}>Volgende: Publiceren</Text>
         </TouchableOpacity>
       </View>
@@ -1383,7 +1385,7 @@ export default function ContentCreatorScreen() {
             </>
           ) : (
             <>
-              <MaterialCommunityIcons name="send" size={20} color="#fff" />
+              <PaperPlaneTilt size={20} color="#fff" weight="duotone" />
               <Text style={{ color: '#fff', fontSize: fontSize.lg, fontWeight: fontWeight.bold }}>
                 Publiceren naar {publishPlatforms.length} platform{publishPlatforms.length !== 1 ? 's' : ''}
               </Text>
@@ -1400,7 +1402,7 @@ export default function ContentCreatorScreen() {
             }}
             onPress={handleSaveDraft}
           >
-            <MaterialCommunityIcons name="content-save" size={16} color={colors.text} />
+            <FloppyDisk size={16} color={colors.text} weight="duotone" />
             <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.text }}>
               {savedAsDraft ? '✓ Opgeslagen' : 'Opslaan als concept'}
             </Text>
@@ -1413,7 +1415,7 @@ export default function ContentCreatorScreen() {
             }}
             onPress={handleShare}
           >
-            <MaterialCommunityIcons name="share-variant" size={16} color={colors.text} />
+            <ShareNetwork size={16} color={colors.text} weight="duotone" />
             <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.text }}>Delen</Text>
           </TouchableOpacity>
         </View>

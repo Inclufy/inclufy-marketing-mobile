@@ -29,10 +29,14 @@ import {
   Pressable,
   Linking,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { supabase } from '../services/supabase';
+
+import {
+  ArrowSquareOut, ArrowsClockwise, Clock, Image as ImageIcon, XCircle,
+  MapPin, Ruler, CheckCircle, WarningCircle,
+} from 'phosphor-react-native';
 
 interface BakedFile {
   name: string;          // full storage path, e.g. branded/<uid>/1763123456_abc.jpg
@@ -41,8 +45,24 @@ interface BakedFile {
   sizeKb: number | null;
 }
 
+interface CurrentSettings {
+  position: string;      // raw enum value from profiles
+  size: string;          // raw enum value from profiles
+  savedAt: number;       // ms epoch — when these settings were last fetched
+}
+
 const STORAGE_BUCKET = 'media';
 const SIGNED_URL_TTL_SEC = 60 * 5; // 5 minutes — enough to look + share
+
+// Human-readable labels (NL) for position/size enum values
+const POSITION_LABELS: Record<string, string> = {
+  'top-left': 'Linksboven',     'top-center': 'Boven midden',     'top-right': 'Rechtsboven',
+  'middle-left': 'Midden links', 'middle-center': 'Centrum',       'middle-right': 'Midden rechts',
+  'bottom-left': 'Linksonder',   'bottom-center': 'Onder midden',  'bottom-right': 'Rechtsonder',
+};
+const SIZE_LABELS: Record<string, string> = {
+  small: 'Klein', medium: 'Medium', large: 'Groot', xlarge: 'Extra groot',
+};
 
 export default function WatermarkPreview() {
   const { colors } = useTheme();
@@ -50,6 +70,7 @@ export default function WatermarkPreview() {
   const [files, setFiles] = useState<BakedFile[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [zoomedUrl, setZoomedUrl] = useState<string | null>(null);
+  const [current, setCurrent] = useState<CurrentSettings | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -61,6 +82,22 @@ export default function WatermarkPreview() {
         setFiles([]);
         return;
       }
+
+      // 0. Fetch current watermark settings so the user can verify what the
+      // NEXT bake will use + compare to the timestamps below to see whether
+      // recent bakes reflect the current settings or older ones.
+      try {
+        const { data: prof } = await supabase
+          .from('profiles')
+          .select('watermark_position, watermark_size')
+          .eq('id', user.id)
+          .maybeSingle();
+        setCurrent({
+          position: (prof as any)?.watermark_position ?? 'top-left',
+          size: (prof as any)?.watermark_size ?? 'medium',
+          savedAt: Date.now(),
+        });
+      } catch { /* non-blocking */ }
 
       // 1. List the user's branded/ folder, newest first
       const folder = `branded/${user.id}`;
@@ -155,14 +192,58 @@ export default function WatermarkPreview() {
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={{ opacity: loading ? 0.4 : 1 }}
       >
-        <Ionicons name="refresh" size={16} color={colors.primary} />
+        <ArrowsClockwise size={16} color={colors.primary} weight="bold" />
       </TouchableOpacity>
     </View>
   );
 
+  // Recent-bake threshold: any image baked within this window of the current
+  // settings being fetched is assumed to use those settings. Picked generously
+  // (5 min) so the user has time to flip tier → publish → return here.
+  const RECENT_BAKE_MS = 5 * 60 * 1000;
+
   return (
     <View style={{ paddingBottom: spacing.sm }}>
       {Header}
+
+      {/* ── Current-settings strip ─────────────────────────────────────
+          Reflects profiles.watermark_position + watermark_size so the
+          user can verify that the NEXT publish (and recent bakes within
+          the last 5 min) will use these exact settings. */}
+      {current && (
+        <View
+          style={{
+            marginHorizontal: spacing.md,
+            marginBottom: spacing.xs,
+            padding: spacing.sm,
+            borderRadius: borderRadius.md,
+            backgroundColor: colors.primary + '10',
+            borderWidth: 1,
+            borderColor: colors.primary + '30',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 10,
+          }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, flex: 1 }}>
+            <MapPin size={13} color={colors.primary} weight="duotone" />
+            <Text style={{ fontSize: fontSize.xs, color: colors.text, fontWeight: fontWeight.semibold }}>
+              {POSITION_LABELS[current.position] ?? current.position}
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, flex: 1 }}>
+            <Ruler size={13} color={colors.primary} weight="duotone" />
+            <Text style={{ fontSize: fontSize.xs, color: colors.text, fontWeight: fontWeight.semibold }}>
+              {SIZE_LABELS[current.size] ?? current.size}
+            </Text>
+          </View>
+        </View>
+      )}
+      {current && (
+        <Text style={{ fontSize: 10, color: colors.textTertiary, paddingHorizontal: spacing.md, marginBottom: spacing.xs, fontStyle: 'italic' }}>
+          Volgende publish gebruikt deze instellingen.
+        </Text>
+      )}
 
       <View style={{ paddingHorizontal: spacing.md, paddingTop: 4 }}>
         {loading && files === null && (
@@ -200,7 +281,7 @@ export default function WatermarkPreview() {
               gap: 8,
             }}
           >
-            <Ionicons name="image-outline" size={18} color={colors.textSecondary} style={{ marginTop: 1 }} />
+            <ImageIcon size={18} color={colors.textSecondary} style={{ marginTop: 1 }} weight="duotone" />
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: fontSize.xs, color: colors.text, fontWeight: fontWeight.semibold }}>
                 Nog geen baked images
@@ -214,14 +295,21 @@ export default function WatermarkPreview() {
 
         {files && files.length > 0 && (
           <>
-            {files.map((f, idx) => (
+            {files.map((f, idx) => {
+              // Compare each baked image's createdAt against current.savedAt
+              // to indicate whether the image likely reflects current settings.
+              // RECENT_BAKE_MS (5 min) is the trust window — anything baked
+              // within that window of the settings fetch is assumed current.
+              const bakedAt = f.createdAt ? new Date(f.createdAt).getTime() : 0;
+              const isRecent = !!current && bakedAt > 0 && (current.savedAt - bakedAt) < RECENT_BAKE_MS;
+              return (
               <View
                 key={f.name}
                 style={{
                   marginBottom: idx === files.length - 1 ? 0 : spacing.sm,
                   borderRadius: borderRadius.md,
                   borderWidth: 1,
-                  borderColor: colors.border,
+                  borderColor: isRecent ? '#10B981' + '60' : colors.border,
                   overflow: 'hidden',
                   backgroundColor: colors.background,
                 }}
@@ -236,6 +324,26 @@ export default function WatermarkPreview() {
                     }}
                     resizeMode="contain"
                   />
+                  {/* Settings-match badge over the image */}
+                  {current && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 8, right: 8,
+                        backgroundColor: isRecent ? 'rgba(16,185,129,0.95)' : 'rgba(245,158,11,0.95)',
+                        paddingHorizontal: 8, paddingVertical: 4,
+                        borderRadius: 6,
+                        flexDirection: 'row', alignItems: 'center', gap: 4,
+                      }}
+                    >
+                      {isRecent
+                        ? <CheckCircle size={11} color="#fff" weight="fill" />
+                        : <WarningCircle size={11} color="#fff" weight="fill" />}
+                      <Text style={{ color: '#fff', fontSize: 9, fontWeight: '700' }}>
+                        {isRecent ? 'Huidige settings' : 'Andere settings'}
+                      </Text>
+                    </View>
+                  )}
                 </Pressable>
                 <View
                   style={{
@@ -246,7 +354,7 @@ export default function WatermarkPreview() {
                     gap: 6,
                   }}
                 >
-                  <Ionicons name="time-outline" size={11} color={colors.textSecondary} />
+                  <Clock size={11} color={colors.textSecondary} weight="duotone" />
                   <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary }}>
                     {formatWhen(f.createdAt)}
                   </Text>
@@ -263,13 +371,15 @@ export default function WatermarkPreview() {
                     onPress={() => Linking.openURL(f.signedUrl)}
                     hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
                   >
-                    <Ionicons name="open-outline" size={14} color={colors.primary} />
+                    <ArrowSquareOut size={14} color={colors.primary} weight="duotone" />
                   </TouchableOpacity>
                 </View>
               </View>
-            ))}
+              );
+            })}
             <Text style={{ fontSize: 10, color: colors.textTertiary, marginTop: 4, fontStyle: 'italic' }}>
               Signed URLs verlopen na 5 minuten — refresh om nieuwe te krijgen.
+              {current && ' Groen = met huidige settings · Geel = met andere settings.'}
             </Text>
           </>
         )}
@@ -300,7 +410,7 @@ export default function WatermarkPreview() {
             />
           )}
           <View style={{ position: 'absolute', top: 50, right: 20 }}>
-            <Ionicons name="close-circle" size={32} color="#ffffff" />
+            <XCircle size={32} color="#ffffff" weight="fill" />
           </View>
         </Pressable>
       </Modal>

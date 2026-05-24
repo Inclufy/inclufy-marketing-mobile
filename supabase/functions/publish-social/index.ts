@@ -10,6 +10,7 @@ import {
   checkChannelsPerPost,
   policyDenyResponse,
 } from '../_shared/free-tier-policy.ts';
+import { bakeAmosWatermark, safeWatermarkPosition, safeWatermarkSize, type WatermarkPosition, type WatermarkSize } from '../_shared/watermark.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
@@ -1605,7 +1606,14 @@ Deno.serve(async (req: Request) => {
     if (post_id && user_id) {
       const channel = directChannel;
       const text = directText;
-      const imageUrl = directImageUrl;
+      let imageUrl = directImageUrl;
+      // Mutable local so we can re-assign with watermarked URLs below.
+      // `let` (not `const`) because the bake step replaces each entry
+      // with the new branded URL. Defensive empty-array fallback so
+      // downstream `.map()` / spreads never trip on undefined.
+      let extraImageUrls: string[] = Array.isArray(directExtraImageUrls)
+        ? (directExtraImageUrls as any[]).filter((u): u is string => typeof u === 'string' && !!u)
+        : [];
       const videoUrl = directVideoUrl as string | undefined;
       const mediaType = (directMediaType as string | undefined) ?? 'photo';
       const igFormat = (directIgFormat as 'feed' | 'story' | 'reel' | undefined) ?? 'feed';
@@ -1663,6 +1671,89 @@ Deno.serve(async (req: Request) => {
             console.warn(`[publish-social] free-tier channels-per-post cap hit for post ${post_id}`);
             return policyDenyResponse(channelCheck, corsHeaders);
           }
+        }
+
+        // 3. Bake AMOS watermark for free tier. Pro+ tiers no-op inside
+        // the helper. v3 uses imagescript with NO external font fetch —
+        // a flat pink badge composited at one of 9 grid positions. Wrapped
+        // in try/catch so any unexpected failure falls back to original URL.
+        //
+        // Position resolution (first match wins):
+        //   a. post.engagement.watermark_position  (per-post override)
+        //   b. profile.watermark_positions_by_channel[channel]  (per-channel)
+        //   c. profile.watermark_position                       (user default)
+        //   d. 'top-left'                                       (system default)
+        const channelKey = String(channel ?? '').toLowerCase();
+
+        // Single batched lookup: post row + profile row in parallel for the
+        // fallback chain. This was previously two awaits per gate.
+        const [postLookup, profileLookup] = await Promise.all([
+          db.from('go_posts')
+            .select('engagement')
+            .eq('id', post_id)
+            .maybeSingle()
+            .then(r => r.data, () => null),
+          db.from('profiles')
+            .select('watermark_position, watermark_positions_by_channel, watermark_size')
+            .eq('id', user_id)
+            .maybeSingle()
+            .then(r => r.data, () => null),
+        ]);
+
+        const watermarkPosition: WatermarkPosition = (() => {
+          const fromPost = (postLookup?.engagement as any)?.watermark_position;
+          if (typeof fromPost === 'string') return safeWatermarkPosition(fromPost);
+          const byChan = (profileLookup?.watermark_positions_by_channel as any)?.[channelKey];
+          if (typeof byChan === 'string') return safeWatermarkPosition(byChan);
+          if (typeof profileLookup?.watermark_position === 'string') {
+            return safeWatermarkPosition(profileLookup.watermark_position);
+          }
+          return 'top-left';
+        })();
+
+        const watermarkSize: WatermarkSize = (() => {
+          const fromPost = (postLookup?.engagement as any)?.watermark_size;
+          if (typeof fromPost === 'string') return safeWatermarkSize(fromPost);
+          if (typeof profileLookup?.watermark_size === 'string') {
+            return safeWatermarkSize(profileLookup.watermark_size);
+          }
+          return 'medium';
+        })();
+
+        // Multi-image: carousel posts (IG / LinkedIn / FB) ship a primary
+        // image + N extras. We MUST bake every one — otherwise a free user
+        // can bypass the watermark by tucking unbranded extras after a
+        // primary image we did watermark. Run all bakes in parallel for
+        // latency; each call has its own try/catch so one bad image
+        // doesn't cascade-fail the rest.
+        const safeBake = async (url: string): Promise<string> => {
+          try {
+            return await bakeAmosWatermark({
+              db, imageUrl: url, userId: user_id, tier,
+              position: watermarkPosition,
+              size: watermarkSize,
+            });
+          } catch (bakeErr: any) {
+            console.error(`[publish-social] watermark bake threw for ${url.slice(0, 60)}…: ${bakeErr?.message ?? bakeErr}`);
+            return url; // fail-open: original URL still publishes
+          }
+        };
+
+        if (imageUrl || extraImageUrls.length > 0) {
+          const targets: string[] = [
+            ...(imageUrl ? [imageUrl] : []),
+            ...extraImageUrls,
+          ];
+          const baked = await Promise.all(targets.map(safeBake));
+          if (imageUrl) {
+            imageUrl = baked[0];
+            extraImageUrls = baked.slice(1);
+          } else {
+            extraImageUrls = baked;
+          }
+          console.log(
+            `[publish-social] watermark baked: 1 primary + ${extraImageUrls.length} extras (tier=${tier}, position=${watermarkPosition}, size=${watermarkSize})`,
+          );
         }
       }
 
@@ -1769,13 +1860,15 @@ Deno.serve(async (req: Request) => {
       let result: { success: boolean; postId?: string; error?: string; permalink?: string; boardId?: string };
       switch (channel) {
         case 'linkedin':
-          result = await publishToLinkedIn(tokenData.access_token, socialAccount.platform_account_id, text, imageUrl, socialAccount.account_type === 'company' ? 'company' : 'personal', directExtraImageUrls, videoUrl, mediaType);
+          // Use the WATERMARKED extraImageUrls (not directExtraImageUrls) so
+          // free-tier carousel extras carry the AMOS chip too. Same below.
+          result = await publishToLinkedIn(tokenData.access_token, socialAccount.platform_account_id, text, imageUrl, socialAccount.account_type === 'company' ? 'company' : 'personal', extraImageUrls, videoUrl, mediaType);
           break;
         case 'facebook':
           result = await publishToFacebook(tokenData.access_token, socialAccount.platform_account_id, text, imageUrl, videoUrl);
           break;
         case 'instagram':
-          result = await publishToInstagram(tokenData.access_token, socialAccount.platform_account_id, text, imageUrl, directExtraImageUrls, igFormat, videoUrl);
+          result = await publishToInstagram(tokenData.access_token, socialAccount.platform_account_id, text, imageUrl, extraImageUrls, igFormat, videoUrl);
           break;
         case 'whatsapp':
           // WhatsApp Cloud API publishing not yet active — manual copy-paste only.
@@ -1793,7 +1886,7 @@ Deno.serve(async (req: Request) => {
             text,
             videoUrl,
             imageUrl,
-            directExtraImageUrls,
+            extraImageUrls,
           );
           break;
         case 'pinterest': {

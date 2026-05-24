@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: isEditing ? 'checkmark-outline' : 'create-outline'> | Ionicons name=<dynamic: opt.ionicon as any> | Ionicons name=<dynamic: t.ionicon as any>
 import React, { useState } from 'react';
 import {
   View,
@@ -25,6 +26,7 @@ import { useThemedStyles } from '../utils/themedStyles';
 import AIConsentModal from '../components/AIConsentModal';
 import { useAIConsent } from '../hooks/useAIConsent';
 
+import { CheckCircle, FileText, Hand, Images, Megaphone, Newspaper, ShareNetwork, Sparkle, Star, WarningCircle, XCircle } from 'phosphor-react-native';
 type Route = RouteProp<RootStackParamList, 'EventRecap'>;
 
 type OutputFormat = 'blog' | 'newsletter' | 'linkedin_article';
@@ -702,7 +704,7 @@ export default function EventRecapScreen() {
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <View style={styles.headerIcon}>
-            <Ionicons name="newspaper-outline" size={22} color={colors.primary} />
+            <Newspaper size={22} color={colors.primary} weight="duotone" />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.headerTitle}>Event Recap</Text>
@@ -813,7 +815,7 @@ export default function EventRecapScreen() {
                   <Image source={{ uri: cap.thumbnail_url }} style={styles.photoImg} />
                   {isSelected && (
                     <View style={styles.photoCheckOverlay}>
-                      <Ionicons name="checkmark-circle" size={24} color="#fff" />
+                      <CheckCircle size={24} color="#fff" weight="fill" />
                     </View>
                   )}
                 </TouchableOpacity>
@@ -833,7 +835,7 @@ export default function EventRecapScreen() {
           <ActivityIndicator color={colors.textOnPrimary} />
         ) : (
           <View style={styles.generateBtnInner}>
-            <Ionicons name="sparkles-outline" size={18} color={colors.textOnPrimary} />
+            <Sparkle size={18} color={colors.textOnPrimary} weight="regular" />
             <Text style={styles.generateBtnText}>
               {recap ? 'Opnieuw genereren' : `Genereer ${FORMAT_OPTIONS.find((f) => f.key === selectedFormat)?.label}`}
             </Text>
@@ -844,7 +846,7 @@ export default function EventRecapScreen() {
       {/* Error */}
       {error ? (
         <View style={styles.errorBox}>
-          <Ionicons name="alert-circle-outline" size={18} color={colors.error} />
+          <WarningCircle size={18} color={colors.error} weight="regular" />
           <Text style={styles.errorText}>{error}</Text>
         </View>
       ) : null}
@@ -908,7 +910,7 @@ export default function EventRecapScreen() {
           {/* Social teaser */}
           <View style={[styles.teaserBox, cardShadow]}>
             <View style={styles.sectionTitleRow}>
-              <Ionicons name="megaphone-outline" size={15} color={colors.primary} />
+              <Megaphone size={15} color={colors.primary} weight="duotone" />
               <Text style={styles.teaserLabel}>Social Teaser</Text>
             </View>
             {isEditing ? (
@@ -929,7 +931,7 @@ export default function EventRecapScreen() {
           {(recap.key_highlights?.length ?? 0) > 0 && (
             <View style={styles.highlightsBox}>
               <View style={styles.sectionTitleRow}>
-                <Ionicons name="star-outline" size={18} color={colors.primary} />
+                <Star size={18} color={colors.primary} weight="duotone" />
                 <Text style={styles.sectionTitle}>Key Highlights</Text>
               </View>
               {recap.key_highlights.map((h, i) => (
@@ -944,7 +946,7 @@ export default function EventRecapScreen() {
           {/* Full content */}
           <View style={styles.contentBox}>
             <View style={styles.sectionTitleRow}>
-              <Ionicons name="document-text-outline" size={18} color={colors.textSecondary} />
+              <FileText size={18} color={colors.textSecondary} weight="duotone" />
               <Text style={styles.sectionTitle}>Volledige Tekst</Text>
             </View>
             {isEditing ? (
@@ -965,7 +967,7 @@ export default function EventRecapScreen() {
           {recap.suggested_cta ? (
             <View style={styles.ctaBox}>
               <View style={styles.sectionTitleRow}>
-                <Ionicons name="hand-right-outline" size={15} color={colors.accent} />
+                <Hand size={15} color={colors.accent} weight="duotone" />
                 <Text style={styles.ctaLabel}>Suggested CTA</Text>
               </View>
               <Text style={styles.ctaText}>{recap.suggested_cta}</Text>
@@ -976,7 +978,7 @@ export default function EventRecapScreen() {
           {selectedPhotos.length > 0 && (
             <View style={styles.selectedPhotosBox}>
               <View style={styles.sectionTitleRow}>
-                <Ionicons name="images-outline" size={16} color={colors.textSecondary} />
+                <Images size={16} color={colors.textSecondary} weight="duotone" />
                 <Text style={styles.sectionTitle}>Bijgevoegde foto's ({selectedPhotos.length})</Text>
               </View>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.selectedPhotoScroll}>
@@ -984,7 +986,7 @@ export default function EventRecapScreen() {
                   <TouchableOpacity key={url} onPress={() => togglePhoto(url)}>
                     <Image source={{ uri: url }} style={styles.selectedPhotoImg} />
                     <View style={styles.removePhotoBtn}>
-                      <Ionicons name="close-circle" size={18} color={colors.error} />
+                      <XCircle size={18} color={colors.error} weight="fill" />
                     </View>
                   </TouchableOpacity>
                 ))}
@@ -994,7 +996,7 @@ export default function EventRecapScreen() {
 
           {/* Share */}
           <TouchableOpacity style={styles.shareBtn} onPress={handleShare}>
-            <Ionicons name="share-outline" size={18} color={colors.primary} />
+            <ShareNetwork size={18} color={colors.primary} weight="duotone" />
             <Text style={styles.shareBtnText}>Deel Recap</Text>
           </TouchableOpacity>
         </View>

@@ -10,7 +10,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '../services/supabase';
@@ -20,6 +19,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 import { useActiveGoal, type AgentGoal } from '../hooks/useAgentGoals';
 
+import { CaretRight, Flag, FlagCheckered, WarningCircle } from 'phosphor-react-native';
 function clamp01(n: number): number {
   if (!Number.isFinite(n)) return 0;
   return Math.max(0, Math.min(1, n));
@@ -188,7 +188,7 @@ export default function GoalModeTile() {
         onPress={() => navigation.navigate('GoalSetup' as any)}
       >
         <View style={styles.emptyIconWrap}>
-          <MaterialCommunityIcons name="flag-outline" size={18} color="#F97316" />
+          <Flag size={18} color="#F97316" weight="regular" />
         </View>
         <View style={{ flex: 1 }}>
           <Text style={styles.emptyTitle}>
@@ -200,7 +200,7 @@ export default function GoalModeTile() {
               : 'Goal Mode dispatches agents toward one measurable target.'}
           </Text>
         </View>
-        <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+        <CaretRight size={18} color={colors.textSecondary} weight="bold" />
       </TouchableOpacity>
     );
   }
@@ -231,7 +231,7 @@ export default function GoalModeTile() {
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <View style={styles.iconWrap}>
-              <MaterialCommunityIcons name="flag-checkered" size={18} color="#fff" />
+              <FlagCheckered size={18} color="#fff" weight="fill" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.title} numberOfLines={1}>
@@ -248,7 +248,7 @@ export default function GoalModeTile() {
                 navigation.navigate('MultiAgent' as any, { goalId: activeGoal.id });
               }}
             >
-              <Ionicons name="alert-circle" size={11} color="#fff" />
+              <WarningCircle size={11} color="#fff" weight="fill" />
               <Text style={styles.pendingText}>
                 {pendingApprovals} {isNl ? 'wacht' : 'pending'}
               </Text>

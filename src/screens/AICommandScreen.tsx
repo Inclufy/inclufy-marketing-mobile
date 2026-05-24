@@ -10,13 +10,13 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../services/supabase';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { ArrowUp, Sparkle } from 'phosphor-react-native';
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL ?? '';
 const SUPABASE_ANON_KEY = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
@@ -276,7 +276,7 @@ export default function AICommandScreen() {
   const renderEmpty = useCallback(
     () => (
       <View style={styles.emptyContainer}>
-        <Ionicons name="sparkles" size={48} color={colors.primary} />
+        <Sparkle size={48} color={colors.primary} weight="fill" />
         <Text style={styles.emptyTitle}>{t.aiCommand.emptyTitle}</Text>
         <Text style={styles.emptySubtitle}>
           {t.aiCommand.emptySubtitle}
@@ -360,7 +360,7 @@ export default function AICommandScreen() {
           onPress={() => sendMessage(input)}
           disabled={!input.trim() || loading}
         >
-          <Ionicons name="arrow-up" size={20} color={colors.textOnPrimary} />
+          <ArrowUp size={20} color={colors.textOnPrimary} weight="bold" />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

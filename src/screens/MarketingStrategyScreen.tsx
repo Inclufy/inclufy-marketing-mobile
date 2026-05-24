@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: ch.icon> | MaterialCommunityIcons name=<dynamic: g.icon> | MaterialCommunityIcons name=<dynamic: opt.key === 'conservative' ? 'shield-check' : opt.key === 'balanced' ? 'scale-balance' : 'rocket-launch'>
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, ScrollView,
@@ -11,6 +12,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { subtleShadow } from '../utils/shadows';
+import { ArrowLeft, CaretLeft, CaretRight, Check, FlagCheckered, UsersThree } from 'phosphor-react-native';
 import {
   useMarketingStrategy, useUpdateMarketingStrategy,
   MarketingStrategy, ChannelConfig,
@@ -255,7 +257,7 @@ export default function MarketingStrategyScreen() {
             onPress={() => setStep(i)}
           >
             {step > i
-              ? <MaterialCommunityIcons name="check" size={16} color="#fff" />
+              ? <Check size={16} color="#fff" weight="bold" />
               : <Text style={[s.stepNum, (step >= i && step === i) && s.stepNumActive]}>{i + 1}</Text>}
           </TouchableOpacity>
         </React.Fragment>
@@ -411,7 +413,7 @@ export default function MarketingStrategyScreen() {
           style={[s.personasBtn, { borderColor: colors.border }]}
           onPress={() => navigation.navigate('Personas')}
         >
-          <MaterialCommunityIcons name="account-group" size={20} color={colors.primary} />
+          <UsersThree size={20} color={colors.primary} weight="duotone" />
           <Text style={[s.personasBtnText, { color: colors.text }]}>
             {existing?.personas?.length
               ? `${existing.personas.length} persona${existing.personas.length === 1 ? '' : "'s"} ingesteld`
@@ -547,7 +549,7 @@ export default function MarketingStrategyScreen() {
           backgroundColor: '#F9731622',
           justifyContent: C, alignItems: C,
         }}>
-          <MaterialCommunityIcons name="flag-checkered" size={20} color="#F97316" />
+          <FlagCheckered size={20} color="#F97316" weight="fill" />
         </View>
         <View style={{ flex: 1 }}>
           <Text style={[s.sectionTitle, { color: '#EA580C' }]}>
@@ -557,7 +559,7 @@ export default function MarketingStrategyScreen() {
             Eén kwartaaldoel met automatische agent inzet binnen je budget.
           </Text>
         </View>
-        <MaterialCommunityIcons name="chevron-right" size={22} color="#F97316" />
+        <CaretRight size={22} color="#F97316" weight="bold" />
       </TouchableOpacity>
     </>
   );
@@ -573,7 +575,7 @@ export default function MarketingStrategyScreen() {
       <View style={s.header}>
         <View style={s.headerRow}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+            <ArrowLeft size={24} color={colors.text} weight="bold" />
           </TouchableOpacity>
           <Text style={s.headerTitle}>{STEP_TITLES[step]}</Text>
         </View>
@@ -587,14 +589,14 @@ export default function MarketingStrategyScreen() {
       <View style={s.navBar}>
         {step > 0 ? (
           <TouchableOpacity style={s.navBtn} onPress={() => setStep(step - 1)}>
-            <MaterialCommunityIcons name="chevron-left" size={18} color={colors.textSecondary} />
+            <CaretLeft size={18} color={colors.textSecondary} weight="bold" />
             <Text style={s.navBtnText}>Vorige</Text>
           </TouchableOpacity>
         ) : <View />}
         {step < 2 ? (
           <TouchableOpacity style={[s.navBtn, s.navBtnPrimary]} onPress={() => setStep(step + 1)}>
             <Text style={[s.navBtnText, s.navBtnTextPrimary]}>Volgende</Text>
-            <MaterialCommunityIcons name="chevron-right" size={18} color="#fff" />
+            <CaretRight size={18} color="#fff" weight="bold" />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={[s.navBtn, s.navBtnPrimary]} onPress={handleSave} disabled={updateMutation.isPending}>

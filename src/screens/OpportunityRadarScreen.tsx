@@ -17,6 +17,7 @@ import { useTranslation } from '../i18n';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { CaretRight, Radioactive, X } from 'phosphor-react-native';
 type OpportunityType = 'trending' | 'event' | 'budget' | 'lead' | 'content' | 'channel' | 'gap';
 
 interface Opportunity {
@@ -317,7 +318,7 @@ export default function OpportunityRadarScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.radarBadge}>
-          <MaterialCommunityIcons name="radar" size={18} color={colors.primary} />
+          <Radioactive size={18} color={colors.primary} weight="duotone" />
           <Text style={styles.radarBadgeText}>{t.radar?.live ?? 'Live AI Radar'}</Text>
         </View>
         <Text style={styles.headerTitle}>{t.radar?.title ?? 'Opportunity Radar'}</Text>
@@ -360,7 +361,7 @@ export default function OpportunityRadarScreen() {
 
         {!isLoading && visible.length === 0 && (
           <View style={styles.empty}>
-            <MaterialCommunityIcons name="radar" size={52} color={colors.textTertiary} />
+            <Radioactive size={52} color={colors.textTertiary} weight="duotone" />
             <Text style={styles.emptyTitle}>{t.radar?.allClear ?? 'Alles in orde!'}</Text>
             <Text style={styles.emptySub}>{t.radar?.allClearSub ?? 'Geen kansen op dit moment. Trek om te vernieuwen.'}</Text>
           </View>
@@ -407,7 +408,7 @@ export default function OpportunityRadarScreen() {
 
               <View style={styles.cardActions}>
                 <TouchableOpacity style={styles.dismissBtn} onPress={() => handleDismiss(opp.id)}>
-                  <Ionicons name="close" size={14} color={colors.textTertiary} />
+                  <X size={14} color={colors.textTertiary} weight="bold" />
                   <Text style={styles.dismissText}>{t.radar?.dismiss ?? 'Negeer'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -415,7 +416,7 @@ export default function OpportunityRadarScreen() {
                   onPress={() => handleAction(opp)}
                 >
                   <Text style={styles.actionBtnText}>{opp.action}</Text>
-                  <Ionicons name="arrow-forward" size={14} color="#fff" />
+                  <CaretRight size={14} color="#fff" weight="bold" />
                 </TouchableOpacity>
               </View>
             </View>

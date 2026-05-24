@@ -18,6 +18,7 @@ import { useTranslation } from '../i18n';
 import { useConnectedChannels } from '../hooks/useConnectedChannels';
 import type { Channel } from '../types';
 
+import { CaretLeft, CheckCircle, Info, PuzzlePiece } from 'phosphor-react-native';
 // ─── Integration Definitions ────────────────────────────────────────────────
 
 interface IntegrationDef {
@@ -286,7 +287,7 @@ export default function IntegrationsScreen() {
           {/* Nav */}
           <View style={styles.navRow}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-              <Ionicons name="chevron-back" size={20} color="#fff" />
+              <CaretLeft size={20} color="#fff" weight="bold" />
               <Text style={styles.backLabel}>{isNl ? 'Terug' : 'Back'}</Text>
             </TouchableOpacity>
             <View style={{ width: 40 }} />
@@ -299,7 +300,7 @@ export default function IntegrationsScreen() {
               backgroundColor: 'rgba(255,255,255,0.15)',
               justifyContent: 'center', alignItems: 'center',
             }}>
-              <Ionicons name="extension-puzzle-outline" size={24} color="#fff" />
+              <PuzzlePiece size={24} color="#fff" weight="duotone" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.headerTitle}>
@@ -366,7 +367,7 @@ export default function IntegrationsScreen() {
                         </View>
                       ) : connected ? (
                         <View style={styles.connectedBadge}>
-                          <Ionicons name="checkmark-circle" size={14} color="#10B981" />
+                          <CheckCircle size={14} color="#10B981" weight="fill" />
                           <Text style={styles.connectedText}>
                             {isNl ? 'Verbonden' : 'Connected'}
                           </Text>
@@ -397,7 +398,7 @@ export default function IntegrationsScreen() {
                 backgroundColor: '#64748B18',
                 justifyContent: 'center', alignItems: 'center',
               }}>
-                <Ionicons name="information-circle-outline" size={20} color="#64748B" />
+                <Info size={20} color="#64748B" weight="regular" />
               </View>
               <Text style={styles.infoTitle}>
                 {isNl ? 'Meer integraties binnenkort' : 'More integrations coming soon'}

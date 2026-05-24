@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: isExpanded ? 'chevron-up' : 'chevron-down'>
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity,
@@ -13,6 +14,7 @@ import { subtleShadow } from '../utils/shadows';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { ArrowsClockwise, CaretRight, CheckCircle, RadioButton, Radioactive } from 'phosphor-react-native';
 type FeedItemType = 'lead_signal' | 'trend_alert' | 'event_opportunity' | 'partnership_match' | 'campaign_trigger' | 'competitor_move' | 'content_opportunity' | 'budget_optimization' | 'marketing_gap';
 
 interface FeedItem {
@@ -498,12 +500,12 @@ export default function OpportunityFeedScreen() {
                 onPress={() => handleAction(item)}
               >
                 <Text style={styles.actionBtnText}>{item.suggested_action.label}</Text>
-                <Ionicons name="arrow-forward" size={14} color="#fff" />
+                <CaretRight size={14} color="#fff" weight="bold" />
               </TouchableOpacity>
             )}
             {item.is_actioned && (
               <View style={styles.actionedRow}>
-                <Ionicons name="checkmark-circle" size={14} color={colors.success} />
+                <CheckCircle size={14} color={colors.success} weight="fill" />
                 <Text style={styles.actionedText}>Actie ondernomen</Text>
               </View>
             )}
@@ -527,7 +529,7 @@ export default function OpportunityFeedScreen() {
             <Text style={styles.headerSub}>Events, leads, gaps en kosten — dynamisch</Text>
           </View>
           <TouchableOpacity onPress={() => { refetch(); qc.invalidateQueries({ queryKey: ['discovered_events'] }); qc.invalidateQueries({ queryKey: ['opportunity_gaps'] }); }} style={styles.refreshBtn}>
-            <Ionicons name="refresh" size={18} color={colors.primary} />
+            <ArrowsClockwise size={18} color={colors.primary} weight="bold" />
           </TouchableOpacity>
         </View>
         <View style={styles.statsRow}>
@@ -557,7 +559,7 @@ export default function OpportunityFeedScreen() {
           {scanning ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <MaterialCommunityIcons name="radar" size={16} color="#fff" />
+            <Radioactive size={16} color="#fff" weight="duotone" />
           )}
           <Text style={styles.scanBtnText}>{scanning ? 'Scannen...' : 'Scan kansen'}</Text>
         </TouchableOpacity>
@@ -587,7 +589,7 @@ export default function OpportunityFeedScreen() {
         </View>
       ) : filtered.length === 0 ? (
         <View style={styles.empty}>
-          <Ionicons name="radio-outline" size={52} color={colors.textTertiary} />
+          <RadioButton size={52} color={colors.textTertiary} weight="regular" />
           <Text style={styles.emptyTitle}>Geen kansen gevonden</Text>
           <Text style={styles.emptySub}>Tik op "Scan kansen" of ga naar Event Intelligence om events te ontdekken.</Text>
         </View>

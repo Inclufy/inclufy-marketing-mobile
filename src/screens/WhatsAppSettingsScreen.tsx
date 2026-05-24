@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: showToken ? 'eye-off' : 'eye'>
 /**
  * WhatsAppSettingsScreen
  *
@@ -30,6 +31,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
+import { DownloadSimple, FileText, UserMinus, WhatsappLogo } from 'phosphor-react-native';
 import {
   useWhatsAppConfig,
   useWhatsAppTemplates,
@@ -121,7 +123,7 @@ function WABAConfigSection({
     return (
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <View style={styles.row}>
-          <Ionicons name="logo-whatsapp" size={24} color="#25D366" />
+          <WhatsappLogo size={24} color="#25D366" weight="fill" />
           <View style={{ flex: 1, marginLeft: spacing.sm }}>
             <Text style={[styles.cardTitle, { color: colors.text }]}>
               {config.business_name ?? 'WhatsApp Business'}
@@ -158,7 +160,7 @@ function WABAConfigSection({
   return (
     <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
       <View style={styles.row}>
-        <Ionicons name="logo-whatsapp" size={28} color="#25D366" />
+        <WhatsappLogo size={28} color="#25D366" weight="fill" />
         <Text style={[styles.cardTitle, { color: colors.text, marginLeft: spacing.sm, flex: 1 }]}>
           {config ? 'WABA bewerken' : 'WABA koppelen'}
         </Text>
@@ -298,7 +300,7 @@ function TemplatesSyncBar({
           <ActivityIndicator color={colors.primary} />
         ) : (
           <>
-            <Ionicons name="cloud-download-outline" size={18} color={colors.primary} />
+            <DownloadSimple size={18} color={colors.primary} weight="duotone" />
             <Text style={{ color: colors.primary, fontWeight: fontWeight.semibold as '600', marginLeft: spacing.xs }}>
               Sync templates vanuit Meta
             </Text>
@@ -387,7 +389,7 @@ function CSVImportButton({
     >
       {importing ? <ActivityIndicator color={colors.primary} /> : (
         <>
-          <Ionicons name="document-text-outline" size={16} color={colors.text} />
+          <FileText size={16} color={colors.text} weight="duotone" />
           <Text style={[styles.buttonText, { color: colors.text, marginLeft: 6 }]}>CSV import</Text>
         </>
       )}
@@ -529,7 +531,7 @@ export default function WhatsAppSettingsScreen() {
       <TemplatesSyncBar config={config ?? null} colors={colors} />
       {(!templates || templates.length === 0) ? (
         <View style={[styles.card, styles.emptyState, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <Ionicons name="document-text-outline" size={32} color={colors.textTertiary} />
+          <FileText size={32} color={colors.textTertiary} weight="duotone" />
           <Text style={[styles.emptyDesc, { color: colors.textSecondary, textAlign: 'center' }]}>
             {config
               ? 'Nog geen templates. Tik op "Sync vanuit Meta" om je goedgekeurde templates op te halen.'
@@ -617,7 +619,7 @@ export default function WhatsAppSettingsScreen() {
               onPress={() => handleOptOut(r.id, r.phone_e164)}
               disabled={optingOut}
             >
-              <Ionicons name="person-remove-outline" size={18} color={colors.textTertiary} />
+              <UserMinus size={18} color={colors.textTertiary} weight="duotone" />
             </TouchableOpacity>
           </View>
         ))

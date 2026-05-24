@@ -24,9 +24,9 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
 } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { File as FSFile } from 'expo-file-system';
+import { Camera, Check, PaperPlaneTilt, Trash, Warning, X } from 'phosphor-react-native';
 import {
   type IssueAttachmentInline,
   type IssueCategory,
@@ -173,7 +173,7 @@ export function ShakeReportSheet({
           <View style={styles.handle} />
           <View style={styles.header}>
             <View style={styles.headerLeft}>
-              <MaterialCommunityIcons name="alert" size={18} color="#d97706" />
+              <Warning size={18} color="#d97706" weight="fill" />
               <Text style={styles.headerTitle}>Probleem melden</Text>
               {detectedModule ? (
                 <View style={styles.moduleBadge}>
@@ -182,7 +182,7 @@ export function ShakeReportSheet({
               ) : null}
             </View>
             <TouchableOpacity onPress={onClose} hitSlop={8}>
-              <MaterialCommunityIcons name="close" size={20} color="#64748b" />
+              <X size={20} color="#64748b" weight="bold" />
             </TouchableOpacity>
           </View>
 
@@ -212,7 +212,7 @@ export function ShakeReportSheet({
                     style={[styles.chip, active && styles.chipActive]}
                   >
                     {active ? (
-                      <MaterialCommunityIcons name="check" size={12} color="#fff" />
+                      <Check size={12} color="#fff" weight="bold" />
                     ) : null}
                     <Text style={[styles.chipText, active && styles.chipTextActive]}>
                       {opt.label}
@@ -237,7 +237,7 @@ export function ShakeReportSheet({
               Screenshot (optioneel)
             </Text>
             <TouchableOpacity onPress={pickScreenshot} style={styles.pickerButton}>
-              <MaterialCommunityIcons name="camera" size={14} color="#7c3aed" />
+              <Camera size={14} color="#7c3aed" weight="duotone" />
               <Text style={styles.pickerButtonText}>Bestand kiezen</Text>
             </TouchableOpacity>
             {attachments.map((a, i) => (
@@ -249,7 +249,7 @@ export function ShakeReportSheet({
                   {Math.round(a.size_bytes / 1024)} KB
                 </Text>
                 <TouchableOpacity onPress={() => removeAttachment(i)} hitSlop={8}>
-                  <MaterialCommunityIcons name="trash-can" size={14} color="#dc2626" />
+                  <Trash size={14} color="#dc2626" weight="duotone" />
                 </TouchableOpacity>
               </View>
             ))}
@@ -273,7 +273,7 @@ export function ShakeReportSheet({
                 <ActivityIndicator color="#fff" />
               ) : (
                 <>
-                  <MaterialCommunityIcons name="send" size={14} color="#fff" />
+                  <PaperPlaneTilt size={14} color="#fff" weight="duotone" />
                   <Text style={styles.submitText}>Verstuur probleem</Text>
                 </>
               )}

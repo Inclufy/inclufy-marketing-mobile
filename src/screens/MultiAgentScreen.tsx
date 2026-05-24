@@ -18,6 +18,7 @@ import { useTranslation } from '../i18n';
 import { supabase } from '../services/supabase';
 import type { RootStackParamList } from '../types';
 
+import { CaretLeft, FlagCheckered, Robot, TreeStructure, XCircle } from 'phosphor-react-native';
 // ─── Agent Definitions ──────────────────────────────────────────────────────
 
 interface AgentDef {
@@ -323,7 +324,7 @@ export default function MultiAgentScreen() {
           {/* Nav */}
           <View style={styles.navRow}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-              <Ionicons name="chevron-back" size={20} color="#fff" />
+              <CaretLeft size={20} color="#fff" weight="bold" />
               <Text style={styles.backLabel}>{isNl ? 'Terug' : 'Back'}</Text>
             </TouchableOpacity>
             <View style={{ width: 40 }} />
@@ -336,7 +337,7 @@ export default function MultiAgentScreen() {
               backgroundColor: 'rgba(255,255,255,0.15)',
               justifyContent: 'center', alignItems: 'center',
             }}>
-              <MaterialCommunityIcons name="robot-outline" size={24} color="#fff" />
+              <Robot size={24} color="#fff" weight="duotone" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.headerTitle}>
@@ -369,11 +370,11 @@ export default function MultiAgentScreen() {
                 paddingVertical: 4,
               }}
             >
-              <MaterialCommunityIcons name="flag-checkered" size={11} color="#fff" />
+              <FlagCheckered size={11} color="#fff" weight="fill" />
               <Text style={{ color: '#fff', fontSize: 11, fontWeight: fontWeight.semibold }}>
                 {isNl ? 'Filter: doel' : 'Filter: goal'} — {goalTitle ?? goalId.slice(0, 6)}
               </Text>
-              <Ionicons name="close-circle" size={13} color="#fff" />
+              <XCircle size={13} color="#fff" weight="fill" />
             </TouchableOpacity>
           )}
 
@@ -469,7 +470,7 @@ export default function MultiAgentScreen() {
                 backgroundColor: '#9333EA18',
                 justifyContent: 'center', alignItems: 'center',
               }}>
-                <MaterialCommunityIcons name="sitemap-outline" size={20} color="#9333EA" />
+                <TreeStructure size={20} color="#9333EA" weight="duotone" />
               </View>
               <Text style={styles.orchestrationTitle}>
                 {isNl ? 'Hoe agents samenwerken' : 'How agents collaborate'}

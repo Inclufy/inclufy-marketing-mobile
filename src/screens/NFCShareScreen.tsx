@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: "nfc-off" as any>
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -8,7 +9,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
 import { supabase } from '../services/supabase';
@@ -18,6 +19,7 @@ import { useCreateContact } from '../hooks/useContacts';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { CheckCircle, CreditCard, Download, QrCode, XCircle } from 'phosphor-react-native';
 type NFCMode = 'idle' | 'sharing' | 'receiving' | 'success' | 'error' | 'unsupported';
 
 export default function NFCShareScreen() {
@@ -239,15 +241,13 @@ export default function NFCShareScreen() {
         <View style={[styles.ring, styles.ring1]} />
         <View style={styles.nfcIconWrap}>
           {mode === 'success' ? (
-            <Ionicons name="checkmark-circle" size={52} color={colors.success} />
+            <CheckCircle size={52} color={colors.success} weight="fill" />
           ) : mode === 'error' ? (
-            <Ionicons name="close-circle" size={52} color={colors.error} />
+            <XCircle size={52} color={colors.error} weight="fill" />
           ) : (
-            <MaterialCommunityIcons
-              name="contactless-payment"
+            <CreditCard
               size={52}
-              color={mode === 'sharing' || mode === 'receiving' ? colors.primary : colors.textTertiary}
-            />
+              color={mode === 'sharing' || mode === 'receiving' ? colors.primary : colors.textTertiary} weight="duotone" />
           )}
         </View>
       </View>
@@ -272,11 +272,11 @@ export default function NFCShareScreen() {
       {(mode === 'idle' || mode === 'error') && (
         <View style={styles.actions}>
           <TouchableOpacity style={styles.shareBtn} onPress={handleShare} activeOpacity={0.85}>
-            <MaterialCommunityIcons name="contactless-payment" size={22} color="#fff" />
+            <CreditCard size={22} color="#fff" weight="duotone" />
             <Text style={styles.shareBtnText}>{t.nfc?.shareBtn ?? 'Share my contact'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.receiveBtn} onPress={handleReceive} activeOpacity={0.85}>
-            <Ionicons name="download-outline" size={22} color={colors.primary} />
+            <Download size={22} color={colors.primary} weight="duotone" />
             <Text style={styles.receiveBtnText}>{t.nfc?.receiveBtn ?? 'Receive contact'}</Text>
           </TouchableOpacity>
         </View>
@@ -290,7 +290,7 @@ export default function NFCShareScreen() {
 
       {mode === 'idle' && (
         <View style={styles.altHint}>
-          <Ionicons name="qr-code-outline" size={16} color={colors.textTertiary} />
+          <QrCode size={16} color={colors.textTertiary} weight="duotone" />
           <Text style={styles.altHintText}>{t.nfc?.orUseQR ?? 'Or scan a QR code instead'}</Text>
           <TouchableOpacity onPress={() => (navigation as any).navigate('QRScan')}>
             <Text style={styles.altHintLink}>{t.nfc?.openQR ?? 'Open scanner'}</Text>

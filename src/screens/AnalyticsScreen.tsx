@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: trend >= 0 ? 'trending-up' : 'trending-down'>
 // src/screens/AnalyticsScreen.tsx
 // Analytics & Reports — marketing performance overview
 
@@ -15,6 +16,7 @@ import { useEvents } from '../hooks/useEvents';
 import { useAutomations, useAutomationStats } from '../hooks/useAutomations';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { CaretLeft } from 'phosphor-react-native';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface StatCardProps {
@@ -125,7 +127,7 @@ export default function AnalyticsScreen() {
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border }}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: spacing.xs }}>
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
+          <CaretLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={{ flex: 1, textAlign: 'center', fontSize: fontSize.lg, fontWeight: fontWeight.bold as any, color: colors.text }}>
           Analytics & Rapportage

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: item.media_type === 'video' ? 'videocam-outline' : item.media_type === 'audio' ? 'mic-outline' : 'document-text-outline'>
 import React from 'react';
 import {
   View,
@@ -21,6 +22,7 @@ import { useTranslation } from '../i18n';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { Calendar, Camera, CaretRight, FileText, GitBranch, MapPin, Scan, ShareNetwork, Sparkle, Trash, UserPlus, Users } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'EventDashboard'>;
 
@@ -242,7 +244,7 @@ export default function EventDashboardScreen() {
             {/* AI-detected tags — guard against non-array or missing label props */}
             {Array.isArray((item as any).ai_tags) && (item as any).ai_tags.length > 0 && (
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                <Ionicons name="sparkles" size={12} color={colors.info} />
+                <Sparkle size={12} color={colors.info} weight="fill" />
                 <Text style={styles.aiTags} numberOfLines={1}>
                   {(item as any).ai_tags
                     .slice(0, 3)
@@ -286,7 +288,7 @@ export default function EventDashboardScreen() {
             onPress={(e) => { e.stopPropagation(); handleDeleteCapture(item); }}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Ionicons name="trash-outline" size={18} color={colors.error} />
+            <Trash size={18} color={colors.error} weight="duotone" />
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -308,11 +310,11 @@ export default function EventDashboardScreen() {
 
         <View style={styles.metaRow}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Ionicons name="location-outline" size={14} color={colors.textSecondary} />
+            <MapPin size={14} color={colors.textSecondary} weight="duotone" />
             <Text style={styles.metaText}>{event.location || t.common.noLocation}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Ionicons name="calendar-outline" size={14} color={colors.textSecondary} />
+            <Calendar size={14} color={colors.textSecondary} weight="duotone" />
             <Text style={styles.metaText}>{new Date(event.event_date).toLocaleDateString(locale === 'nl' ? 'nl-NL' : locale === 'fr' ? 'fr-FR' : 'en-US')}</Text>
           </View>
         </View>
@@ -325,7 +327,7 @@ export default function EventDashboardScreen() {
             <Text style={[styles.statusText, { color: statusColors[event.status] }]}>
               {event.status}
             </Text>
-            <Ionicons name="arrow-forward" size={14} color={statusColors[event.status]} />
+            <CaretRight size={14} color={statusColors[event.status]} weight="bold" />
             <Text style={[styles.statusText, { color: statusColors[event.status] }]}>
               {t.eventDashboard.tapToChange}
             </Text>
@@ -364,49 +366,49 @@ export default function EventDashboardScreen() {
             style={styles.quickActionBtn}
             onPress={() => navigation.navigate('StoryArc', { eventId })}
           >
-            <Ionicons name="git-branch-outline" size={20} color={colors.primary} />
+            <GitBranch size={20} color={colors.primary} weight="duotone" />
             <Text style={styles.quickActionLabel} numberOfLines={1}>Story</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickActionBtn}
             onPress={() => navigation.navigate('EventRecap', { eventId })}
           >
-            <Ionicons name="document-text-outline" size={20} color={colors.primary} />
+            <FileText size={20} color={colors.primary} weight="duotone" />
             <Text style={styles.quickActionLabel} numberOfLines={1}>Recap</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickActionBtn}
             onPress={() => navigation.navigate('TeamManage', { eventId })}
           >
-            <Ionicons name="people-outline" size={20} color={colors.primary} />
+            <Users size={20} color={colors.primary} weight="duotone" />
             <Text style={styles.quickActionLabel} numberOfLines={1}>Team</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickActionBtn}
             onPress={() => navigation.navigate('LiveCapture', { eventId })}
           >
-            <Ionicons name="camera-outline" size={20} color={colors.primary} />
+            <Camera size={20} color={colors.primary} weight="duotone" />
             <Text style={styles.quickActionLabel} numberOfLines={1}>Foto</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickActionBtn}
             onPress={() => navigation.navigate('EventScanner', { eventId })}
           >
-            <Ionicons name="scan-outline" size={20} color={colors.success} />
+            <Scan size={20} color={colors.success} weight="regular" />
             <Text style={[styles.quickActionLabel, { color: colors.success }]} numberOfLines={1}>Scan</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickActionBtn}
             onPress={() => navigation.navigate('EventAttendees', { eventId })}
           >
-            <Ionicons name="person-add-outline" size={20} color={colors.info} />
+            <UserPlus size={20} color={colors.info} weight="duotone" />
             <Text style={[styles.quickActionLabel, { color: colors.info }]} numberOfLines={1}>Gasten</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.quickActionBtn}
             onPress={() => navigation.navigate('EventShare', { eventId })}
           >
-            <Ionicons name="share-social-outline" size={20} color={colors.secondary} />
+            <ShareNetwork size={20} color={colors.secondary} weight="duotone" />
             <Text style={[styles.quickActionLabel, { color: colors.secondary }]} numberOfLines={1}>Delen</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -433,7 +435,7 @@ export default function EventDashboardScreen() {
         onPress={() => navigation.navigate('LiveCapture', { eventId })}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <Ionicons name="camera" size={20} color={colors.textOnPrimary} />
+          <Camera size={20} color={colors.textOnPrimary} weight="duotone" />
           <Text style={styles.captureFabText}>{t.eventDashboard.startCapture}</Text>
         </View>
       </TouchableOpacity>

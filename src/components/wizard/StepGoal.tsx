@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: p.icon> | Ionicons name=<dynamic: selected ? 'checkmark-circle' : 'ellipse-outline'>
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,6 +7,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { supabase } from '../../services/supabase';
 import type { PlatformKey } from '../../hooks/useSocialWizard';
 
+import { CaretRight, Sparkle } from 'phosphor-react-native';
 const PLATFORMS: Array<{
   key: PlatformKey;
   label: string;
@@ -92,7 +94,7 @@ export default function StepGoal({ selectedPlatforms, togglePlatform, fetchRecom
           flexDirection: 'row',
           gap: spacing.sm,
         }}>
-          <Ionicons name="sparkles" size={20} color={colors.primary} />
+          <Sparkle size={20} color={colors.primary} weight="fill" />
           <View style={{ flex: 1 }}>
             <Text style={{ color: colors.primary, fontSize: fontSize.sm, fontWeight: fontWeight.semibold, marginBottom: 2 }}>
               AMOS adviseert
@@ -196,7 +198,7 @@ export default function StepGoal({ selectedPlatforms, togglePlatform, fetchRecom
         }}>
           Verder ({selectedPlatforms.length} {selectedPlatforms.length === 1 ? 'kanaal' : 'kanalen'})
         </Text>
-        <Ionicons name="arrow-forward" size={18} color={selectedPlatforms.length === 0 ? colors.textTertiary : '#fff'} />
+        <CaretRight size={18} color={selectedPlatforms.length === 0 ? colors.textTertiary : '#fff'} weight="bold" />
       </TouchableOpacity>
     </ScrollView>
   );

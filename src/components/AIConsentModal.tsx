@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: item.icon>
 import React from 'react';
 import {
   Modal,
@@ -13,6 +14,7 @@ import { useTranslation } from '../i18n';
 import { useTheme } from '../context/ThemeContext';
 import { aiConsentService } from '../services/ai-consent.service';
 
+import { Buildings, CheckCircle, Lightbulb, ShieldCheck, UploadSimple } from 'phosphor-react-native';
 interface AIConsentModalProps {
   visible: boolean;
   onAccept: () => void;
@@ -59,7 +61,7 @@ export default function AIConsentModal({ visible, onAccept, onDecline }: AIConse
             {/* Header */}
             <View style={styles.header}>
               <View style={[styles.iconCircle, { backgroundColor: colors.primaryLight + '20' }]}>
-                <Ionicons name="shield-checkmark" size={32} color={colors.primary} />
+                <ShieldCheck size={32} color={colors.primary} weight="fill" />
               </View>
               <Text style={[styles.title, { color: colors.text }]}>
                 {c.title}
@@ -72,7 +74,7 @@ export default function AIConsentModal({ visible, onAccept, onDecline }: AIConse
             {/* What data is sent */}
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                <Ionicons name="cloud-upload-outline" size={16} color={colors.primary} />
+                <UploadSimple size={16} color={colors.primary} weight="duotone" />
                 {'  '}{c.dataSentTitle}
               </Text>
               {dataItems.map((item, i) => (
@@ -88,7 +90,7 @@ export default function AIConsentModal({ visible, onAccept, onDecline }: AIConse
             {/* Who receives the data */}
             <View style={[styles.section, styles.highlightSection, { backgroundColor: colors.surfaceElevated }]}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                <Ionicons name="business-outline" size={16} color={colors.primary} />
+                <Buildings size={16} color={colors.primary} weight="duotone" />
                 {'  '}{c.recipientTitle}
               </Text>
               <Text style={[styles.bodyText, { color: colors.textSecondary }]}>
@@ -99,12 +101,12 @@ export default function AIConsentModal({ visible, onAccept, onDecline }: AIConse
             {/* Purpose */}
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                <Ionicons name="bulb-outline" size={16} color={colors.primary} />
+                <Lightbulb size={16} color={colors.primary} weight="duotone" />
                 {'  '}{c.purposeTitle}
               </Text>
               {purposeItems.map((item, i) => (
                 <View key={i} style={styles.listItem}>
-                  <Ionicons name="checkmark-circle" size={16} color={colors.primary} />
+                  <CheckCircle size={16} color={colors.primary} weight="fill" />
                   <Text style={[styles.listText, { color: colors.textSecondary }]}>
                     {item}
                   </Text>
@@ -130,7 +132,7 @@ export default function AIConsentModal({ visible, onAccept, onDecline }: AIConse
               style={[styles.acceptButton, { backgroundColor: colors.primary }]}
               onPress={handleAccept}
             >
-              <Ionicons name="shield-checkmark" size={20} color="#FFF" />
+              <ShieldCheck size={20} color="#FFF" weight="fill" />
               <Text style={styles.acceptText}>{c.accept}</Text>
             </TouchableOpacity>
             <TouchableOpacity testID="consent-decline" style={styles.declineButton} onPress={onDecline}>

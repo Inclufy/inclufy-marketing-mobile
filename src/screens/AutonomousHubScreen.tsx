@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: strategy.auto_publish ? 'rocket-launch' : 'shield-check-outline'>
 import React, { useState } from 'react';
 import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity,
@@ -17,6 +18,7 @@ import { useMarketingStrategy } from '../hooks/useMarketingStrategy';
 import { useProposalStats, useTrustScore } from '../hooks/useContentProposals';
 import { useAutomationStats } from '../hooks/useAutomations';
 
+import { Brain, CaretLeft, CaretRight, ChartLineUp, Megaphone, NotePencil, PencilLine, PencilSimple, RadioButton, Radioactive, Robot, SealCheck } from 'phosphor-react-native';
 interface Decision {
   id: string;
   type: string;
@@ -252,7 +254,7 @@ export default function AutonomousHubScreen() {
         {/* Back button row */}
         <View style={styles.navRow}>
           <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-            <Ionicons name="chevron-back" size={20} color="#fff" />
+            <CaretLeft size={20} color="#fff" weight="bold" />
             <Text style={styles.backLabel}>{t.common.back}</Text>
           </TouchableOpacity>
           <View style={styles.systemToggle}>
@@ -268,7 +270,7 @@ export default function AutonomousHubScreen() {
 
         <View style={styles.headerTop}>
           <View style={styles.headerIcon}>
-            <MaterialCommunityIcons name="brain" size={24} color="#fff" />
+            <Brain size={24} color="#fff" weight="duotone" />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.headerTitle}>{t.autonomousHub.title}</Text>
@@ -303,10 +305,10 @@ export default function AutonomousHubScreen() {
           <TouchableOpacity style={styles.strategyBanner} onPress={() => navigateTo('MarketingStrategy')} activeOpacity={0.7}>
             <View style={styles.strategyBannerTitle}>
               <View style={styles.strategyBadge}>
-                <MaterialCommunityIcons name="check-decagram" size={18} color="#059669" />
+                <SealCheck size={18} color="#059669" weight="fill" />
                 <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.bold, color: '#059669' }}>Marketing Strategie Actief</Text>
               </View>
-              <MaterialCommunityIcons name="pencil" size={16} color={colors.textTertiary} />
+              <PencilSimple size={16} color={colors.textTertiary} weight="duotone" />
             </View>
             <View style={styles.strategyStats}>
               <View style={styles.strategyStat}>
@@ -325,7 +327,7 @@ export default function AutonomousHubScreen() {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity style={styles.strategyCta} onPress={() => navigateTo('MarketingStrategy')} activeOpacity={0.7}>
-            <MaterialCommunityIcons name="chart-timeline-variant-shimmer" size={32} color="#059669" />
+            <ChartLineUp size={32} color="#059669" weight="duotone" />
             <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.bold, color: colors.text }}>Stel je Marketing Strategie in</Text>
             <Text style={{ fontSize: fontSize.sm, color: colors.textSecondary, textAlign: 'center' }}>AMOS heeft een strategie nodig om autonoom te werken — doelen, budget, kanalen & planning.</Text>
             <View style={{ backgroundColor: '#059669', borderRadius: borderRadius.full, paddingHorizontal: spacing.lg, paddingVertical: spacing.sm }}>
@@ -343,12 +345,12 @@ export default function AutonomousHubScreen() {
           >
             <View style={styles.sectionHeader}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <MaterialCommunityIcons name="file-document-edit-outline" size={20} color="#F59E0B" />
+                <NotePencil size={20} color="#F59E0B" weight="duotone" />
                 <Text style={[styles.sectionTitle, { color: '#F59E0B' }]}>
                   {proposalStats?.pending ?? 0} {(proposalStats?.pending ?? 0) === 1 ? 'voorstel wacht' : 'voorstellen wachten'} op goedkeuring
                 </Text>
               </View>
-              <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+              <CaretRight size={18} color={colors.textTertiary} weight="bold" />
             </View>
             <View style={{ flexDirection: 'row', gap: spacing.sm, marginTop: spacing.xs }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
@@ -367,7 +369,7 @@ export default function AutonomousHubScreen() {
             onPress={() => navigateTo('ContentProposals')}
             activeOpacity={0.7}
           >
-            <MaterialCommunityIcons name="robot-happy-outline" size={32} color={colors.textTertiary} />
+            <Robot size={32} color={colors.textTertiary} weight="duotone" />
             <Text style={{ fontSize: fontSize.sm, color: colors.textSecondary, textAlign: 'center' }}>
               Laat AMOS content voorstellen genereren op basis van je strategie.
             </Text>
@@ -530,19 +532,19 @@ export default function AutonomousHubScreen() {
           <Text style={styles.sectionTitle}>{t.autonomousHub.quickActions}</Text>
           <View style={styles.quickActions}>
             <TouchableOpacity style={styles.quickBtn} onPress={() => navigateTo('ContentCreator')}>
-              <Ionicons name="create" size={20} color={colors.primary} />
+              <PencilLine size={20} color={colors.primary} weight="duotone" />
               <Text style={styles.quickBtnText}>{t.autonomousHub.generateContent}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.quickBtn} onPress={() => navigateTo('EventIntelligence')}>
-              <MaterialCommunityIcons name="radar" size={20} color={colors.primary} />
+              <Radioactive size={20} color={colors.primary} weight="duotone" />
               <Text style={styles.quickBtnText}>{t.autonomousHub.scanEvents}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.quickBtn} onPress={() => navigateTo('OpportunityFeed')}>
-              <Ionicons name="radio" size={20} color={colors.primary} />
+              <RadioButton size={20} color={colors.primary} weight="fill" />
               <Text style={styles.quickBtnText}>{t.autonomousHub.opportunityFeed}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.quickBtn} onPress={() => navigateTo('CampaignCreate')}>
-              <Ionicons name="megaphone" size={20} color={colors.primary} />
+              <Megaphone size={20} color={colors.primary} weight="duotone" />
               <Text style={styles.quickBtnText}>{t.autonomousHub.startCampaignShort}</Text>
             </TouchableOpacity>
           </View>

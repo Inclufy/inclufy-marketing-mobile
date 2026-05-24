@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: icon as any> | Ionicons name=<dynamic: isSelected ? 'checkmark-circle' : 'ellipse-outline'> | MaterialCommunityIcons name=<dynamic: icon as any>
 import React, { useState } from 'react';
 import {
   View,
@@ -18,6 +19,7 @@ import { useTranslation } from '../i18n';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { CaretRight, Rocket } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 // Icon helper — supports both Ionicons and MaterialCommunityIcons
@@ -581,7 +583,7 @@ export default function CampaignCreateScreen() {
               onPress={handleNext}
             >
               <Text style={styles.nextButtonText}>Volgende</Text>
-              <Ionicons name="arrow-forward" size={20} color={colors.textOnPrimary} />
+              <CaretRight size={20} color={colors.textOnPrimary} weight="bold" />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -593,7 +595,7 @@ export default function CampaignCreateScreen() {
                 <ActivityIndicator color={colors.textOnPrimary} size="small" />
               ) : (
                 <>
-                  <Ionicons name="rocket-outline" size={20} color={colors.textOnPrimary} />
+                  <Rocket size={20} color={colors.textOnPrimary} weight="duotone" />
                   <Text style={styles.nextButtonText}>Campagne Aanmaken</Text>
                 </>
               )}

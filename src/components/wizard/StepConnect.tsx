@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: meta.icon>
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Modal, Alert, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,6 +8,7 @@ import { supabase } from '../../services/supabase';
 import * as WebBrowser from 'expo-web-browser';
 import type { PlatformKey, ConnectionStatus } from '../../hooks/useSocialWizard';
 
+import { CaretRight, CheckCircle, Hand, Info, Link, Sparkle } from 'phosphor-react-native';
 const PLATFORM_META: Record<PlatformKey, { label: string; icon: keyof typeof import('@expo/vector-icons').Ionicons.glyphMap; color: string }> = {
   facebook:  { label: 'Facebook',  icon: 'logo-facebook',  color: '#1877F2' },
   instagram: { label: 'Instagram', icon: 'logo-instagram', color: '#E4405F' },
@@ -36,7 +38,7 @@ const SCOPE_LIST: Record<PlatformKey, string[]> = {
   facebook: ['pages_show_list', 'pages_manage_posts', 'pages_read_engagement', 'instagram_content_publish', 'business_management', 'public_profile', 'ads_management'],
   instagram: ['pages_show_list', 'pages_manage_posts', 'pages_read_engagement', 'instagram_content_publish', 'business_management', 'public_profile', 'ads_management'],
   linkedin: ['openid', 'profile', 'email', 'w_member_social'],
-  tiktok: ['user.info.basic', 'video.publish', 'video.upload'],
+  tiktok: ['user.info.basic', 'video.publish'],
   pinterest: ['pins:read', 'pins:write', 'boards:read', 'boards:write', 'user_accounts:read'],
   threads: ['threads_basic', 'threads_content_publish'],
   snapchat: [],
@@ -181,7 +183,7 @@ export default function StepConnect({
         const tiktokClientKey = process.env.EXPO_PUBLIC_TIKTOK_CLIENT_KEY || 'sbaw0n7p637do602ql';
         // Scopes match Sandbox-activated set: user.info.basic + video.publish + video.upload.
         // We use video.publish for direct posting; video.upload allows draft uploads.
-        const tiktokScope = 'user.info.basic,video.publish,video.upload';
+        const tiktokScope = 'user.info.basic,video.publish';
         authUrl = `https://www.tiktok.com/v2/auth/authorize/?client_key=${tiktokClientKey}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(tiktokScope)}&response_type=code&state=${encodeURIComponent(state)}`;
       } else if (platformKey === 'pinterest') {
         // Pinterest OAuth — App-ID 1568759 (AMOS by Inclufy).
@@ -314,13 +316,13 @@ export default function StepConnect({
                     {meta.label}
                   </Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                    <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+                    <CheckCircle size={18} color={colors.success} weight="fill" />
                     <Text style={{ color: colors.success, fontSize: fontSize.sm, fontWeight: fontWeight.semibold }}>Klaar</Text>
                   </View>
                 </View>
                 <View style={{ backgroundColor: colors.background, padding: spacing.sm, borderRadius: borderRadius.sm }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
-                    <Ionicons name="hand-left-outline" size={14} color={colors.textSecondary} />
+                    <Hand size={14} color={colors.textSecondary} weight="duotone" />
                     <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary, fontWeight: fontWeight.semibold }}>
                       Manueel delen
                     </Text>
@@ -362,7 +364,7 @@ export default function StepConnect({
                 </Text>
                 {connected ? (
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-                    <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+                    <CheckCircle size={18} color={colors.success} weight="fill" />
                     <Text style={{ color: colors.success, fontSize: fontSize.sm, fontWeight: fontWeight.semibold }}>Verbonden</Text>
                   </View>
                 ) : null}
@@ -372,7 +374,7 @@ export default function StepConnect({
               {prereqs[p] && !connected ? (
                 <View style={{ backgroundColor: colors.background, padding: spacing.sm, borderRadius: borderRadius.sm, marginBottom: spacing.sm }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
-                    <Ionicons name="information-circle-outline" size={14} color={colors.textSecondary} />
+                    <Info size={14} color={colors.textSecondary} weight="regular" />
                     <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary, fontWeight: fontWeight.semibold }}>
                       Vooraf nodig:
                     </Text>
@@ -453,7 +455,7 @@ export default function StepConnect({
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
                     <>
-                      <Ionicons name="link" size={18} color="#fff" />
+                      <Link size={18} color="#fff" weight="duotone" />
                       <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: fontWeight.semibold }}>
                         Verbind {meta.label}
                       </Text>
@@ -481,7 +483,7 @@ export default function StepConnect({
           style={{ flex: 2, padding: spacing.md, borderRadius: borderRadius.md, backgroundColor: colors.primary, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: spacing.sm }}
         >
           <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: fontWeight.semibold }}>Verder</Text>
-          <Ionicons name="arrow-forward" size={18} color="#fff" />
+          <CaretRight size={18} color="#fff" weight="bold" />
         </TouchableOpacity>
       </View>
 
@@ -490,7 +492,7 @@ export default function StepConnect({
         <View style={{ flex: 1, backgroundColor: '#00000080', justifyContent: 'center', padding: spacing.lg }}>
           <View style={{ backgroundColor: colors.background, padding: spacing.lg, borderRadius: borderRadius.lg }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: spacing.sm }}>
-              <Ionicons name="sparkles" size={18} color={colors.primary} />
+              <Sparkle size={18} color={colors.primary} weight="fill" />
               <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.bold, color: colors.text }}>
                 AMOS legt uit
               </Text>

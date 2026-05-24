@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { spacing, fontSize, fontWeight, borderRadius } from '../../theme';
 import { useTheme } from '../../context/ThemeContext';
 import type { PlatformKey, BrandVoiceProfile } from '../../hooks/useSocialWizard';
 
+import { CaretRight, ChartBar, CheckCircle, Sparkle } from 'phosphor-react-native';
 const PLATFORM_LABEL: Record<string, string> = {
   facebook: 'Facebook',
   instagram: 'Instagram',
@@ -60,7 +60,7 @@ export default function StepBrandVoice({ socialAccounts, brandVoiceProfile, anal
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: spacing.lg }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: spacing.sm }}>
-        <Ionicons name="sparkles" size={28} color={colors.primary} />
+        <Sparkle size={28} color={colors.primary} weight="fill" />
         <Text style={{ fontSize: fontSize.xxl, fontWeight: fontWeight.bold, color: colors.text }}>
           Leer je merkstem
         </Text>
@@ -82,7 +82,7 @@ export default function StepBrandVoice({ socialAccounts, brandVoiceProfile, anal
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: spacing.sm }}>
-            <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+            <CheckCircle size={18} color={colors.success} weight="fill" />
             <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.bold, color: colors.text }}>
               Merkstem-profiel klaar
             </Text>
@@ -175,7 +175,7 @@ export default function StepBrandVoice({ socialAccounts, brandVoiceProfile, anal
                         gap: spacing.sm,
                       }}
                     >
-                      <Ionicons name="analytics" size={20} color={colors.primary} />
+                      <ChartBar size={20} color={colors.primary} weight="duotone" />
                       <View style={{ flex: 1 }}>
                         <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.text }}>
                           {acc.account_name || 'Onbekend'}
@@ -184,7 +184,7 @@ export default function StepBrandVoice({ socialAccounts, brandVoiceProfile, anal
                           {PLATFORM_LABEL[acc.platform]} · {acc.account_type}
                         </Text>
                       </View>
-                      <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                      <CaretRight size={18} color={colors.textTertiary} weight="bold" />
                     </TouchableOpacity>
                   ))
                 )}
@@ -217,7 +217,7 @@ export default function StepBrandVoice({ socialAccounts, brandVoiceProfile, anal
           <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: fontWeight.semibold }}>
             {brandVoiceProfile ? 'Verder' : 'Sla over'}
           </Text>
-          <Ionicons name="arrow-forward" size={18} color="#fff" />
+          <CaretRight size={18} color="#fff" weight="bold" />
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: conf.icon as any> | Ionicons name=<dynamic: statusConf.icon as any>
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   View,
@@ -28,6 +29,7 @@ import {
 } from '../hooks/useEventAttendees';
 import type { RootStackParamList } from '../types';
 
+import { Checks, Trash, UserPlus, Users } from 'phosphor-react-native';
 type Route = RouteProp<RootStackParamList, 'EventAttendees'>;
 
 // ─── Status Config ──────────────────────────────────────────────────
@@ -191,7 +193,7 @@ export default function EventAttendeesScreen() {
               style={styles.quickAction}
               onPress={() => handleStatusChange(item, 'attended')}
             >
-              <Ionicons name="checkmark-done" size={16} color={colors.success} />
+              <Checks size={16} color={colors.success} weight="bold" />
               <Text style={[styles.quickActionText, { color: colors.success }]}>{att.markAttended}</Text>
             </TouchableOpacity>
           )}
@@ -199,7 +201,7 @@ export default function EventAttendeesScreen() {
             style={styles.quickAction}
             onPress={() => handleDelete(item)}
           >
-            <Ionicons name="trash-outline" size={16} color={colors.error} />
+            <Trash size={16} color={colors.error} weight="duotone" />
             <Text style={[styles.quickActionText, { color: colors.error }]}>{att.remove}</Text>
           </TouchableOpacity>
         </View>
@@ -284,7 +286,7 @@ export default function EventAttendeesScreen() {
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Ionicons name="people-outline" size={56} color={colors.textTertiary} />
+              <Users size={56} color={colors.textTertiary} weight="duotone" />
               <Text style={[styles.emptyText, { color: colors.textSecondary }]}>{att.noAttendees}</Text>
             </View>
           }
@@ -298,7 +300,7 @@ export default function EventAttendeesScreen() {
         onPress={openAdd}
         activeOpacity={0.85}
       >
-        <Ionicons name="person-add" size={24} color="#fff" />
+        <UserPlus size={24} color="#fff" weight="duotone" />
       </TouchableOpacity>
 
       {/* ─── Add Attendee Modal ──────────────────────────────── */}

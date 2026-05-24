@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: calendarSynced ? 'checkmark-circle' : 'chevron-forward'> | Ionicons name=<dynamic: site.icon as any>
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -22,6 +23,7 @@ import { useAttendeeStats } from '../hooks/useEventAttendees';
 import { useCalendarSync } from '../hooks/useCalendarSync';
 import type { RootStackParamList, Event } from '../types';
 
+import { ArrowSquareOut, Calendar, MapPin, ShareNetwork, Users } from 'phosphor-react-native';
 type Route = RouteProp<RootStackParamList, 'EventShare'>;
 
 // ─── External Event Sites ───────────────────────────────────────────
@@ -169,17 +171,17 @@ export default function EventShareScreen() {
       <View style={[styles.summaryCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <Text style={[styles.eventName, { color: colors.text }]}>{event.name}</Text>
         <View style={styles.metaRow}>
-          <Ionicons name="calendar-outline" size={14} color={colors.textSecondary} />
+          <Calendar size={14} color={colors.textSecondary} weight="duotone" />
           <Text style={[styles.metaText, { color: colors.textSecondary }]}>{event.event_date}</Text>
         </View>
         {event.location ? (
           <View style={styles.metaRow}>
-            <Ionicons name="location-outline" size={14} color={colors.textSecondary} />
+            <MapPin size={14} color={colors.textSecondary} weight="duotone" />
             <Text style={[styles.metaText, { color: colors.textSecondary }]}>{event.location}</Text>
           </View>
         ) : null}
         <View style={styles.metaRow}>
-          <Ionicons name="people-outline" size={14} color={colors.textSecondary} />
+          <Users size={14} color={colors.textSecondary} weight="duotone" />
           <Text style={[styles.metaText, { color: colors.textSecondary }]}>
             {stats.total} {sh.attendees}
           </Text>
@@ -227,7 +229,7 @@ export default function EventShareScreen() {
           disabled={calendar.syncing}
         >
           <View style={[styles.actionIcon, { backgroundColor: '#10D9A0' + '20' }]}>
-            <Ionicons name="calendar" size={20} color="#10D9A0" />
+            <Calendar size={20} color="#10D9A0" weight="duotone" />
           </View>
           <View style={styles.actionText}>
             <Text style={[styles.actionTitle, { color: colors.text }]}>
@@ -257,7 +259,7 @@ export default function EventShareScreen() {
           style={[styles.shareBtn, { backgroundColor: colors.primary }]}
           onPress={handleShare}
         >
-          <Ionicons name="share-outline" size={20} color="#fff" />
+          <ShareNetwork size={20} color="#fff" weight="duotone" />
           <Text style={styles.shareBtnText}>{sh.shareNow}</Text>
         </TouchableOpacity>
       </View>
@@ -279,7 +281,7 @@ export default function EventShareScreen() {
             <View style={styles.actionText}>
               <Text style={[styles.actionTitle, { color: colors.text }]}>{site.name}</Text>
             </View>
-            <Ionicons name="open-outline" size={18} color={colors.textTertiary} />
+            <ArrowSquareOut size={18} color={colors.textTertiary} weight="duotone" />
           </TouchableOpacity>
         ))}
       </View>

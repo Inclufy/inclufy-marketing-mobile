@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: alert.icon> | MaterialCommunityIcons name=<dynamic: action.icon as any>
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -27,6 +28,7 @@ import AgentActivityTile from '../components/AgentActivityTile';
 import GoalModeTile from '../components/GoalModeTile';
 import CounterfactualNudge from '../components/CounterfactualNudge';
 
+import { ArrowUp, Bell, Brain, Calendar, CaretRight, Clipboard, Gear, MapPin, Rocket, Sparkle, Users } from 'phosphor-react-native';
 // ─── Types ──────────────────────────────────────────────────────────────────
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -352,7 +354,7 @@ export default function HomeScreen() {
           </View>
           <View style={styles.headerRight}>
             <TouchableOpacity style={styles.headerIconBtn} onPress={() => navigation.navigate('Notifications' as any)}>
-              <MaterialCommunityIcons name="bell-outline" size={22} color={colors.text} />
+              <Bell size={22} color={colors.text} weight="duotone" />
               {unreadNotifCount > 0 && (
                 <View style={styles.notifBadge}>
                   <Text style={styles.notifBadgeText}>{unreadNotifCount > 9 ? '9+' : String(unreadNotifCount)}</Text>
@@ -360,7 +362,7 @@ export default function HomeScreen() {
               )}
             </TouchableOpacity>
             <TouchableOpacity style={styles.headerIconBtn} onPress={() => navigation.navigate('Settings' as any)}>
-              <MaterialCommunityIcons name="cog-outline" size={22} color={colors.text} />
+              <Gear size={22} color={colors.text} weight="duotone" />
             </TouchableOpacity>
           </View>
         </View>
@@ -379,7 +381,7 @@ export default function HomeScreen() {
           >
             <View style={styles.amosBannerLeft}>
               <View style={styles.amosBrainCircle}>
-                <MaterialCommunityIcons name="brain" size={26} color="#fff" />
+                <Brain size={26} color="#fff" weight="duotone" />
               </View>
               <View>
                 <Text style={styles.amosBannerTitle}>{t.home.amosBannerTitle}</Text>
@@ -387,7 +389,7 @@ export default function HomeScreen() {
               </View>
             </View>
             <View style={styles.amosBannerChevron}>
-              <Ionicons name="chevron-forward" size={18} color="#fff" />
+              <CaretRight size={18} color="#fff" weight="bold" />
             </View>
           </LinearGradient>
         </TouchableOpacity>
@@ -410,7 +412,7 @@ export default function HomeScreen() {
             <Text style={styles.statLabel}>{t.home.activeCampaigns}</Text>
             <View style={[styles.statIndicator, { backgroundColor: colors.primary + '20' }]}>
               <View style={styles.statIndicatorRow}>
-                <Ionicons name="rocket-outline" size={12} color={colors.primary} />
+                <Rocket size={12} color={colors.primary} weight="duotone" />
                 <Text style={[styles.statIndicatorText, { color: colors.primary }]}> {t.home.live}</Text>
               </View>
             </View>
@@ -421,7 +423,7 @@ export default function HomeScreen() {
             <Text style={styles.statLabel}>{t.home.totalContacts}</Text>
             <View style={[styles.statIndicator, { backgroundColor: colors.info + '20' }]}>
               <View style={styles.statIndicatorRow}>
-                <Ionicons name="people-outline" size={12} color={colors.info} />
+                <Users size={12} color={colors.info} weight="duotone" />
                 <Text style={[styles.statIndicatorText, { color: colors.info }]}> {t.home.database}</Text>
               </View>
             </View>
@@ -432,7 +434,7 @@ export default function HomeScreen() {
             <Text style={styles.statLabel}>{t.home.openRate}</Text>
             <View style={[styles.statIndicator, { backgroundColor: colors.success + '20' }]}>
               <View style={styles.statIndicatorRow}>
-                <Ionicons name="arrow-up" size={12} color={colors.success} />
+                <ArrowUp size={12} color={colors.success} weight="bold" />
                 <Text style={[styles.statIndicatorText, { color: colors.success }]}> +3.2%</Text>
               </View>
             </View>
@@ -443,7 +445,7 @@ export default function HomeScreen() {
             <Text style={styles.statLabel}>{t.home.revenue}</Text>
             <View style={[styles.statIndicator, { backgroundColor: colors.success + '20' }]}>
               <View style={styles.statIndicatorRow}>
-                <Ionicons name="arrow-up" size={12} color={colors.success} />
+                <ArrowUp size={12} color={colors.success} weight="bold" />
                 <Text style={[styles.statIndicatorText, { color: colors.success }]}> +12%</Text>
               </View>
             </View>
@@ -474,7 +476,7 @@ export default function HomeScreen() {
 
           {upcomingEvents.length === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="calendar-outline" size={32} color={colors.textSecondary} />
+              <Calendar size={32} color={colors.textSecondary} weight="duotone" />
               <Text style={styles.emptyTitle}>{t.home.noEvents}</Text>
               <Text style={styles.emptyDescription}>{t.home.noEventsDesc}</Text>
             </View>
@@ -497,11 +499,11 @@ export default function HomeScreen() {
                     <View style={[styles.eventCardAccent, { backgroundColor: accentColor }]} />
                     <Text style={styles.eventName} numberOfLines={1}>{event.name}</Text>
                     <View style={styles.eventMetaRow}>
-                      <Ionicons name="location-outline" size={11} color={colors.textSecondary} />
+                      <MapPin size={11} color={colors.textSecondary} weight="duotone" />
                       <Text style={styles.eventMeta} numberOfLines={1}> {event.location || '—'}</Text>
                     </View>
                     <View style={styles.eventMetaRow}>
-                      <Ionicons name="calendar-outline" size={11} color={colors.textSecondary} />
+                      <Calendar size={11} color={colors.textSecondary} weight="duotone" />
                       <Text style={styles.eventMeta}> {new Date(event.event_date).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short' })}</Text>
                     </View>
                     <View style={[styles.eventStatusBadge, { backgroundColor: accentColor + '20' }]}>
@@ -531,7 +533,7 @@ export default function HomeScreen() {
             <View style={styles.loadingPlaceholder}><Text style={styles.loadingText}>{t.common.loading}</Text></View>
           ) : recentCampaigns.length === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="clipboard-outline" size={36} color={colors.textSecondary} />
+              <Clipboard size={36} color={colors.textSecondary} weight="duotone" />
               <Text style={styles.emptyTitle}>{t.home.noCampaigns}</Text>
               <Text style={styles.emptyDescription}>{t.home.noCampaignsDesc}</Text>
             </View>
@@ -569,7 +571,7 @@ export default function HomeScreen() {
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.lg, gap: spacing.xs }}>
-                <Ionicons name="sparkles" size={16} color={colors.primary} />
+                <Sparkle size={16} color={colors.primary} weight="fill" />
                 <Text style={[styles.sectionTitle, { paddingHorizontal: 0 }]}>{t.home.aiSuggestions}</Text>
               </View>
               <Text style={styles.sectionBadge}>{visibleAlerts.length}</Text>

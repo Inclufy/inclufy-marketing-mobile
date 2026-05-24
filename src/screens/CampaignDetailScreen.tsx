@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: (cat?.icon || 'ellipsis-horizontal') as any> | Ionicons name=<dynamic: (src?.icon || 'cash-outline') as any> | Ionicons name=<dynamic: campaign.status === 'paused' ? 'play-outline' : 'pause-outline'> | Ionicons name=<dynamic: cfg.icon as any> | Ionicons name=<dynamic: ch.icon as any> | Ionicons name=<dynamic: roi > 0 ? 'trending-up' : 'trending-down'> | Ionicons name=<dynamic: typeIcon as any>
 import React, { useState } from 'react';
 import {
   View,
@@ -26,6 +27,7 @@ import { subtleShadow } from '../utils/shadows';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { CaretRight, ChartBar, Checks, PaperPlaneTilt, PlusCircle, Rocket, ShareNetwork } from 'phosphor-react-native';
 type Route = RouteProp<RootStackParamList, 'CampaignDetail'>;
 
 const statusLabels: Record<string, string> = { active: 'Actief', draft: 'Concept', completed: 'Voltooid', paused: 'Gepauzeerd' };
@@ -448,25 +450,25 @@ export default function CampaignDetailScreen() {
             <Text style={styles.actionLabel}>{campaign.status === 'paused' ? 'Hervatten' : 'Pauzeren'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={handleActivate}>
-            <Ionicons name="rocket-outline" size={22} color={colors.success} />
+            <Rocket size={22} color={colors.success} weight="duotone" />
             <Text style={styles.actionLabel}>Activeren</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={handleReport}>
-            <Ionicons name="bar-chart-outline" size={22} color={colors.primary} />
+            <ChartBar size={22} color={colors.primary} weight="duotone" />
             <Text style={styles.actionLabel}>Rapport</Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.actionsRow, { marginTop: spacing.xs }]}>
           <TouchableOpacity style={styles.actionBtn} onPress={() => setShowPublishModal(true)}>
-            <Ionicons name="send-outline" size={22} color="#E8317A" />
+            <PaperPlaneTilt size={22} color="#E8317A" weight="duotone" />
             <Text style={styles.actionLabel}>Publiceren</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={handleShareCampaign}>
-            <Ionicons name="share-outline" size={22} color={colors.primary} />
+            <ShareNetwork size={22} color={colors.primary} weight="duotone" />
             <Text style={styles.actionLabel}>Delen</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionBtn} onPress={handleComplete}>
-            <Ionicons name="checkmark-done-outline" size={22} color={colors.textSecondary} />
+            <Checks size={22} color={colors.textSecondary} weight="bold" />
             <Text style={styles.actionLabel}>Afronden</Text>
           </TouchableOpacity>
         </View>
@@ -504,7 +506,7 @@ export default function CampaignDetailScreen() {
                 <ActivityIndicator size="small" color={ch.color} />
               ) : (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: ch.color + '15', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12 }}>
-                  <Ionicons name="send" size={12} color={ch.color} />
+                  <PaperPlaneTilt size={12} color={ch.color} weight="duotone" />
                   <Text style={{ fontSize: fontSize.xs, fontWeight: fontWeight.semibold, color: ch.color }}>Publiceer</Text>
                 </View>
               )}
@@ -552,7 +554,7 @@ export default function CampaignDetailScreen() {
           );
         })}
         <TouchableOpacity style={styles.addBtn} onPress={() => setShowCostModal(true)}>
-          <Ionicons name="add-circle-outline" size={18} color={colors.primary} />
+          <PlusCircle size={18} color={colors.primary} weight="regular" />
           <Text style={styles.addBtnText}>Kosten toevoegen</Text>
         </TouchableOpacity>
       </View>
@@ -576,7 +578,7 @@ export default function CampaignDetailScreen() {
           );
         })}
         <TouchableOpacity style={styles.addBtn} onPress={() => setShowRevenueModal(true)}>
-          <Ionicons name="add-circle-outline" size={18} color={colors.primary} />
+          <PlusCircle size={18} color={colors.primary} weight="regular" />
           <Text style={styles.addBtnText}>Revenue toevoegen</Text>
         </TouchableOpacity>
       </View>
@@ -663,7 +665,7 @@ export default function CampaignDetailScreen() {
                   {isPublishing ? (
                     <ActivityIndicator size="small" color={ch.color} />
                   ) : (
-                    <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                    <CaretRight size={18} color={colors.textTertiary} weight="bold" />
                   )}
                 </TouchableOpacity>
               );

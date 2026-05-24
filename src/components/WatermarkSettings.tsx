@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: ch.icon as any> | Ionicons name=<dynamic: expanded ? 'chevron-up' : 'chevron-down'>
 // src/components/WatermarkSettings.tsx
 // ────────────────────────────────────────────────────────────────────────
 // Settings panel for the AMOS watermark position.
@@ -24,6 +25,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { supabase } from '../services/supabase';
+import { Warning, XCircle } from 'phosphor-react-native';
 import WatermarkPositionPicker, {
   type WatermarkPosition,
   RISKY_POSITIONS_BY_CHANNEL,
@@ -221,7 +223,7 @@ export default function WatermarkSettings() {
                       onPress={(e) => { e.stopPropagation(); void saveChannel(ch.key, null); }}
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
-                      <Ionicons name="close-circle" size={18} color={colors.textTertiary} />
+                      <XCircle size={18} color={colors.textTertiary} weight="fill" />
                     </TouchableOpacity>
                   )}
                   <Ionicons
@@ -253,7 +255,7 @@ export default function WatermarkSettings() {
                           paddingHorizontal: 4,
                         }}
                       >
-                        <Ionicons name="warning" size={11} color="#F59E0B" style={{ marginTop: 1 }} />
+                        <Warning size={11} color="#F59E0B" style={{ marginTop: 1 }} weight="fill" />
                         <Text style={{ fontSize: 10, color: colors.textSecondary, flex: 1, lineHeight: 14 }}>
                           ⚠️ Posities wordt mogelijk bedekt door {ch.label} UI (likes / caption / username).
                         </Text>

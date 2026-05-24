@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: cap.media_type === 'video' ? 'videocam-outline' : cap.media_type === 'audio' ? 'mic-outline' : 'document-text-outline'> | Ionicons name=<dynamic: ch.icon as any> | Ionicons name=<dynamic: tab.icon as any> | MaterialCommunityIcons name=<dynamic: product.category === 'service' ? 'hand-heart-outline' : 'package-variant-closed'> | MaterialCommunityIcons name=<dynamic: saveToLibrary ? 'checkbox-marked-circle' : 'checkbox-blank-circle-outline'>
 import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
@@ -42,6 +43,7 @@ import { useTranslation } from '../i18n';
 import AIConsentModal from '../components/AIConsentModal';
 import { useAIConsent } from '../hooks/useAIConsent';
 
+import { Calendar, Camera, CaretRight, Check, FolderOpen, Image as ImageIcon, Package, User, UsersThree, X } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'LiveCapture'>;
 
@@ -727,11 +729,11 @@ export default function LiveCaptureScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
         <TouchableOpacity onPress={goBack} style={{ position: 'absolute', top: 56, left: 20, zIndex: 10, padding: 8 }}>
-          <Ionicons name="close" size={28} color={colors.text} />
+          <X size={28} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 }}>
           <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: colors.surfaceElevated, justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
-            <Ionicons name="camera-outline" size={40} color={colors.primary} />
+            <Camera size={40} color={colors.primary} weight="duotone" />
           </View>
           <Text style={{ color: colors.text, fontSize: 22, fontWeight: '700', textAlign: 'center' }}>Selecteer een event</Text>
           <Text style={{ color: colors.textSecondary, fontSize: 15, marginTop: 10, textAlign: 'center', lineHeight: 22 }}>
@@ -739,7 +741,7 @@ export default function LiveCaptureScreen() {
             <Text style={{ color: colors.primary, fontWeight: '600' }}>"Capture"</Text>{' '}om te starten.
           </Text>
           <TouchableOpacity onPress={goToEvents} style={{ marginTop: 32, backgroundColor: colors.primary, paddingHorizontal: 32, paddingVertical: 14, borderRadius: 28, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <Ionicons name="calendar-outline" size={18} color="#fff" />
+            <Calendar size={18} color="#fff" weight="duotone" />
             <Text style={{ color: '#fff', fontWeight: '700', fontSize: 15 }}>Naar Events</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={goBack} style={{ marginTop: 16, paddingHorizontal: 32, paddingVertical: 12 }}>
@@ -756,12 +758,12 @@ export default function LiveCaptureScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
         <TouchableOpacity onPress={goBack} style={{ position: 'absolute', top: 56, left: 20, zIndex: 10, padding: 8 }}>
-          <Ionicons name="close" size={28} color={colors.text} />
+          <X size={28} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1, paddingTop: 100, paddingHorizontal: 20 }}>
           <View style={{ alignItems: 'center', marginBottom: 24 }}>
             <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#3B82F615', justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
-              <MaterialCommunityIcons name="package-variant-closed" size={32} color="#3B82F6" />
+              <Package size={32} color="#3B82F6" weight="duotone" />
             </View>
             <Text style={{ color: colors.text, fontSize: 20, fontWeight: '700', textAlign: 'center' }}>Kies een product of dienst</Text>
             <Text style={{ color: colors.textSecondary, fontSize: 14, marginTop: 6, textAlign: 'center' }}>Selecteer waar deze content over gaat</Text>
@@ -783,7 +785,7 @@ export default function LiveCaptureScreen() {
                     {product.description ? ` · ${product.description}` : ''}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                <CaretRight size={18} color={colors.textTertiary} weight="bold" />
               </TouchableOpacity>
             ))}
             <TouchableOpacity onPress={() => setSelectedProduct({ id: 'none', name: 'Algemeen', category: 'product' } as any)} style={{ alignItems: 'center', padding: 14, marginTop: 4, borderRadius: 14, borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed' }}>
@@ -801,12 +803,12 @@ export default function LiveCaptureScreen() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.background }}>
         <TouchableOpacity onPress={goBack} style={{ position: 'absolute', top: 56, left: 20, zIndex: 10, padding: 8 }}>
-          <Ionicons name="close" size={28} color={colors.text} />
+          <X size={28} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1, paddingTop: 100, paddingHorizontal: 20 }}>
           <View style={{ alignItems: 'center', marginBottom: 24 }}>
             <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#10B98115', justifyContent: 'center', alignItems: 'center', marginBottom: 12 }}>
-              <MaterialCommunityIcons name="account-group" size={32} color="#10B981" />
+              <UsersThree size={32} color="#10B981" weight="duotone" />
             </View>
             <Text style={{ color: colors.text, fontSize: 20, fontWeight: '700', textAlign: 'center' }}>Wie staat centraal?</Text>
             <Text style={{ color: colors.textSecondary, fontSize: 14, marginTop: 6, textAlign: 'center' }}>Selecteer het teamlid voor deze behind-the-scenes content</Text>
@@ -818,7 +820,7 @@ export default function LiveCaptureScreen() {
                   <Image source={{ uri: member.photo_url }} style={{ width: 48, height: 48, borderRadius: 24 }} />
                 ) : (
                   <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: '#10B98115', justifyContent: 'center', alignItems: 'center' }}>
-                    <Ionicons name="person" size={24} color="#10B981" />
+                    <User size={24} color="#10B981" weight="duotone" />
                   </View>
                 )}
                 <View style={{ flex: 1 }}>
@@ -827,7 +829,7 @@ export default function LiveCaptureScreen() {
                     {member.role}{member.expertise?.length ? ` · ${member.expertise[0]}` : ''}
                   </Text>
                 </View>
-                <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+                <CaretRight size={18} color={colors.textTertiary} weight="bold" />
               </TouchableOpacity>
             ))}
             <TouchableOpacity onPress={() => setSelectedMember({ id: 'none', name: 'Team algemeen' } as any)} style={{ alignItems: 'center', padding: 14, marginTop: 4, borderRadius: 14, borderWidth: 1, borderColor: colors.border, borderStyle: 'dashed' }}>
@@ -883,7 +885,7 @@ export default function LiveCaptureScreen() {
         {mode === 'upload' && (
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 20, padding: 32, backgroundColor: '#000' }}>
             <View style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(124,58,237,0.2)', justifyContent: 'center', alignItems: 'center' }}>
-              <Ionicons name="image-outline" size={40} color={colors.primary} />
+              <ImageIcon size={40} color={colors.primary} weight="duotone" />
             </View>
             <Text style={{ color: '#fff', fontSize: 20, fontWeight: '700', textAlign: 'center' }}>
               Upload afbeelding
@@ -895,7 +897,7 @@ export default function LiveCaptureScreen() {
               onPress={handleUploadFromLibrary}
               style={{ backgroundColor: colors.primary, paddingHorizontal: 32, paddingVertical: 16, borderRadius: 28, flexDirection: 'row', alignItems: 'center', gap: 10 }}
             >
-              <Ionicons name="folder-open-outline" size={20} color="#fff" />
+              <FolderOpen size={20} color="#fff" weight="duotone" />
               <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>Kies uit bibliotheek</Text>
             </TouchableOpacity>
           </View>
@@ -1012,7 +1014,7 @@ export default function LiveCaptureScreen() {
               )}
               {cap.ai_status === 'completed' && (
                 <View style={styles.thumbnailBadge}>
-                  <Ionicons name="checkmark" size={8} color="#fff" />
+                  <Check size={8} color="#fff" weight="bold" />
                 </View>
               )}
             </TouchableOpacity>

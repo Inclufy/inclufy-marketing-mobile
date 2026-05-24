@@ -14,7 +14,6 @@ import {
   Linking,
   Switch,
 } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../types';
@@ -22,6 +21,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { subtleShadow } from '../utils/shadows';
+import { ArrowLeft, LinkedinLogo, Plus, UsersThree, X } from 'phosphor-react-native';
 import {
   useTeamDirectory,
   useAddTeamDirectoryMember,
@@ -265,7 +265,7 @@ export default function TeamDirectoryScreen() {
                 onPress={() => openLinkedIn(item.linkedin_url!)}
                 hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               >
-                <MaterialCommunityIcons name="linkedin" size={20} color="#0A66C2" />
+                <LinkedinLogo size={20} color="#0A66C2" weight="fill" />
               </TouchableOpacity>
             )}
             <View
@@ -296,7 +296,7 @@ export default function TeamDirectoryScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+          <ArrowLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <View style={styles.headerInfo}>
           <Text style={styles.title}>Team Directory</Text>
@@ -321,7 +321,7 @@ export default function TeamDirectoryScreen() {
           onRefresh={refetch}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <MaterialCommunityIcons name="account-group-outline" size={64} color={colors.textTertiary} />
+              <UsersThree size={64} color={colors.textTertiary} weight="duotone" />
               <Text style={styles.emptyText}>Nog geen teamleden</Text>
               <Text style={styles.emptySubtext}>
                 Voeg teamleden toe om contactgegevens, expertise en rollen op een plek te bewaren.
@@ -333,7 +333,7 @@ export default function TeamDirectoryScreen() {
 
       {/* FAB */}
       <TouchableOpacity style={styles.fab} onPress={openAddModal} activeOpacity={0.8}>
-        <MaterialCommunityIcons name="plus" size={28} color={colors.textOnPrimary} />
+        <Plus size={28} color={colors.textOnPrimary} weight="bold" />
       </TouchableOpacity>
 
       {/* Add / Edit Modal */}
@@ -343,7 +343,7 @@ export default function TeamDirectoryScreen() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{editingMember ? 'Lid bewerken' : 'Lid toevoegen'}</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <MaterialCommunityIcons name="close" size={24} color={colors.textSecondary} />
+                <X size={24} color={colors.textSecondary} weight="bold" />
               </TouchableOpacity>
             </View>
 

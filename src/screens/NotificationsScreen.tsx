@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: cfg.icon as any>
 import React, { useState } from 'react';
 import {
   View,
@@ -28,6 +29,7 @@ import {
 } from '../hooks/useNotifications';
 import { useProcessApproval } from '../hooks/usePostApproval';
 
+import { BellSlash, Calendar, Check, Users, X } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 type NotifConfig = { icon: string; color: string };
@@ -503,7 +505,7 @@ export default function NotificationsScreen() {
                   <View style={styles.cardContent}>
                     <View style={styles.cardHeader}>
                       <View style={[styles.iconCircle, { backgroundColor: '#f3e8ff' }]}>
-                        <Ionicons name="people" size={18} color="#7c3aed" />
+                        <Users size={18} color="#7c3aed" weight="duotone" />
                       </View>
                       <View style={styles.cardTitleRow}>
                         <Text style={[styles.cardTitle, styles.cardTitleUnread]} numberOfLines={1}>
@@ -513,7 +515,7 @@ export default function NotificationsScreen() {
                       </View>
                     </View>
                     <View style={styles.inviteEventBox}>
-                      <Ionicons name="calendar-outline" size={13} color="#7c3aed" />
+                      <Calendar size={13} color="#7c3aed" weight="duotone" />
                       <Text style={styles.inviteEventName} numberOfLines={1}>{n.data.event_name}</Text>
                     </View>
                     <Text style={styles.cardBody}>
@@ -528,7 +530,7 @@ export default function NotificationsScreen() {
                         ) : (
                           <>
                             <TouchableOpacity style={styles.acceptBtn} onPress={() => handleAccept(n)}>
-                              <Ionicons name="checkmark" size={14} color="#fff" />
+                              <Check size={14} color="#fff" weight="bold" />
                               <Text style={styles.acceptBtnText}>Accepteren</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.declineBtn} onPress={() => handleDecline(n)}>
@@ -655,7 +657,7 @@ export default function NotificationsScreen() {
                                   }}
                                   onPress={() => handleApprovePost(n)}
                                 >
-                                  <Ionicons name="checkmark" size={14} color="#fff" />
+                                  <Check size={14} color="#fff" weight="bold" />
                                   <Text style={{ color: '#fff', fontSize: fontSize.sm, fontWeight: fontWeight.semibold }}>
                                     {t.postApproval.approve}
                                   </Text>
@@ -673,7 +675,7 @@ export default function NotificationsScreen() {
                                   }}
                                   onPress={() => handleRejectPost(n)}
                                 >
-                                  <Ionicons name="close" size={14} color="#fff" />
+                                  <X size={14} color="#fff" weight="bold" />
                                   <Text style={{ color: '#fff', fontSize: fontSize.sm, fontWeight: fontWeight.semibold }}>
                                     {t.postApproval.reject}
                                   </Text>
@@ -694,7 +696,7 @@ export default function NotificationsScreen() {
             return (
               <View style={styles.emptyContainer}>
                 <View style={styles.emptyIconCircle}>
-                  <Ionicons name="notifications-off-outline" size={36} color={colors.textTertiary} />
+                  <BellSlash size={36} color={colors.textTertiary} weight="duotone" />
                 </View>
                 <Text style={styles.emptyTitle}>{t.notifications.noNotifications}</Text>
                 <Text style={styles.emptySub}>{t.notifications.allCaughtUp}</Text>

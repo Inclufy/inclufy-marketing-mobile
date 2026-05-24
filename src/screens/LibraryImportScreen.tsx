@@ -12,13 +12,13 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useImportLibraryZip } from '../hooks/useLibraryPosts';
 import { useProducts } from '../hooks/useProducts';
 import type { RootStackParamList } from '../types';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { CaretLeft, CheckCircle, Download, Info, Package, UploadSimple, XCircle } from 'phosphor-react-native';
 // Lazy-loaded native modules
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let DocumentPicker: any = null;
@@ -90,7 +90,7 @@ export default function LibraryImportScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
+          <CaretLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]}>Library import</Text>
         <View style={{ width: 24 }} />
@@ -99,7 +99,7 @@ export default function LibraryImportScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         {/* Info card */}
         <View style={[styles.infoCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <MaterialCommunityIcons name="information-outline" size={20} color={colors.primary} />
+          <Info size={20} color={colors.primary} weight="regular" />
           <View style={{ flex: 1 }}>
             <Text style={[styles.infoTitle, { color: colors.text }]}>ZIP structuur</Text>
             <Text style={[styles.infoBody, { color: colors.textSecondary }]}>
@@ -150,18 +150,20 @@ export default function LibraryImportScreen() {
         >
           {file ? (
             <View style={styles.fileBoxRow}>
-              <MaterialCommunityIcons name="zip-box" size={28} color={colors.primary} />
+              <Package size={28} color={colors.primary} weight="duotone" />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.fileName, { color: colors.text }]} numberOfLines={1}>{file.name}</Text>
                 <Text style={[styles.fileSize, { color: colors.textSecondary }]}>
                   {file.size ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : ''}
                 </Text>
               </View>
-              <Ionicons name="close-circle" size={22} color={colors.textSecondary} onPress={() => setFile(null)} />
+              <TouchableOpacity onPress={() => setFile(null)}>
+                <XCircle size={22} color={colors.textSecondary} weight="fill" />
+              </TouchableOpacity>
             </View>
           ) : (
             <View style={styles.fileBoxEmpty}>
-              <Ionicons name="cloud-upload-outline" size={32} color={colors.primary} />
+              <UploadSimple size={32} color={colors.primary} weight="duotone" />
               <Text style={[styles.fileEmptyText, { color: colors.text }]}>Tik om ZIP te selecteren</Text>
               <Text style={[styles.fileEmptyHint, { color: colors.textSecondary }]}>Max 100 MB</Text>
             </View>
@@ -185,7 +187,7 @@ export default function LibraryImportScreen() {
             </>
           ) : (
             <>
-              <Ionicons name="download-outline" size={20} color="#fff" />
+              <Download size={20} color="#fff" weight="duotone" />
               <Text style={styles.startBtnText}>Start import</Text>
             </>
           )}
@@ -194,7 +196,7 @@ export default function LibraryImportScreen() {
         {/* Result */}
         {result && (
           <View style={[styles.resultCard, { backgroundColor: '#10B98120', borderColor: '#10B981' }]}>
-            <Ionicons name="checkmark-circle" size={28} color="#10B981" />
+            <CheckCircle size={28} color="#10B981" weight="fill" />
             <View style={{ flex: 1 }}>
               <Text style={[styles.resultTitle, { color: '#10B981' }]}>Import gelukt</Text>
               <Text style={[styles.resultBody, { color: colors.text }]}>

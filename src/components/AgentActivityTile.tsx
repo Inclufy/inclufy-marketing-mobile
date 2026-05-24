@@ -10,7 +10,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '../services/supabase';
@@ -19,6 +18,7 @@ import { useThemedStyles } from '../utils/themedStyles';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 
+import { Robot, WarningCircle } from 'phosphor-react-native';
 interface Stats {
   awaitingApproval: number;
   blockedToday: number;
@@ -123,7 +123,7 @@ export default function AgentActivityTile() {
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
             <View style={styles.iconWrap}>
-              <MaterialCommunityIcons name="robot-outline" size={18} color="#fff" />
+              <Robot size={18} color="#fff" weight="duotone" />
             </View>
             <View>
               <Text style={styles.title}>
@@ -136,7 +136,7 @@ export default function AgentActivityTile() {
           </View>
           {!!stats?.awaitingApproval && stats.awaitingApproval > 0 && (
             <View style={styles.pendingPill}>
-              <Ionicons name="alert-circle" size={11} color="#fff" />
+              <WarningCircle size={11} color="#fff" weight="fill" />
               <Text style={styles.pendingText}>
                 {stats.awaitingApproval} {isNl ? 'wacht' : 'pending'}
               </Text>

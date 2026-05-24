@@ -12,7 +12,6 @@ import {
   Platform,
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
@@ -23,6 +22,7 @@ import { useThemedStyles } from '../utils/themedStyles';
 import AIConsentModal from '../components/AIConsentModal';
 import { useAIConsent } from '../hooks/useAIConsent';
 
+import { Camera, CaretLeft, Sparkle } from 'phosphor-react-native';
 interface ParsedContact {
   firstName: string;
   lastName: string;
@@ -190,7 +190,7 @@ export default function CardScanScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.center}>
-        <Ionicons name="camera-outline" size={48} color={colors.textTertiary} />
+        <Camera size={48} color={colors.textTertiary} weight="duotone" />
         <Text style={styles.permText}>{t.cardScan?.needCamera ?? 'Camera permission required'}</Text>
         <TouchableOpacity style={styles.permBtn} onPress={requestPermission}>
           <Text style={styles.permBtnText}>{t.cardScan?.grantPerm ?? 'Grant permission'}</Text>
@@ -218,7 +218,7 @@ export default function CardScanScreen() {
               style={{ position: 'absolute' as const, top: Platform.OS === 'ios' ? 54 : 16, left: 16, zIndex: 20, padding: 10, borderRadius: 22, backgroundColor: 'rgba(0,0,0,0.45)' }}
               activeOpacity={0.7}
             >
-              <Ionicons name="chevron-back" size={22} color="#fff" />
+              <CaretLeft size={22} color="#fff" weight="bold" />
             </TouchableOpacity>
 
             {/* Top hint */}
@@ -265,7 +265,7 @@ export default function CardScanScreen() {
           <View style={styles.modalCard}>
             <View style={styles.modalHeader}>
               <View style={styles.modalIcon}>
-                <Ionicons name="sparkles" size={22} color={colors.primary} />
+                <Sparkle size={22} color={colors.primary} weight="fill" />
               </View>
               <View>
                 <Text style={styles.modalTitle}>{t.cardScan?.aiExtracted ?? 'AI extracted'}</Text>

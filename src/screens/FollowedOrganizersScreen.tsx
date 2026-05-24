@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: cat.icon as any> | Ionicons name=<dynamic: item.is_favorite ? 'star' : 'star-outline'>
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -11,7 +12,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../services/supabase';
@@ -19,6 +20,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { subtleShadow } from '../utils/shadows';
 import { useTheme } from '../context/ThemeContext';
 
+import { Lightbulb, Plus, PlusCircle, Star, Trash } from 'phosphor-react-native';
 interface FollowedOrganizer {
   id: string;
   organizer_name: string;
@@ -193,7 +195,7 @@ export default function FollowedOrganizersScreen() {
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleRemove(item)} style={{ marginLeft: 4 }}>
-            <Ionicons name="trash-outline" size={18} color={colors.textTertiary} />
+            <Trash size={18} color={colors.textTertiary} weight="duotone" />
           </TouchableOpacity>
         </View>
       </View>
@@ -227,7 +229,7 @@ export default function FollowedOrganizersScreen() {
             }}
             onPress={() => setShowAddModal(true)}
           >
-            <Ionicons name="add" size={18} color="#fff" />
+            <Plus size={18} color="#fff" weight="bold" />
             <Text style={{ color: '#fff', fontWeight: fontWeight.bold, fontSize: fontSize.sm }}>
               Toevoegen
             </Text>
@@ -241,7 +243,7 @@ export default function FollowedOrganizersScreen() {
             }}
             onPress={() => setShowSuggestions(!showSuggestions)}
           >
-            <Ionicons name="bulb-outline" size={16} color={colors.primary} />
+            <Lightbulb size={16} color={colors.primary} weight="duotone" />
             <Text style={{ color: colors.primary, fontWeight: fontWeight.semibold, fontSize: fontSize.sm }}>
               Suggesties
             </Text>
@@ -278,7 +280,7 @@ export default function FollowedOrganizersScreen() {
                   <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.text }}>{s.name}</Text>
                   <Text style={{ fontSize: 11, color: colors.textSecondary }} numberOfLines={1}>{s.description}</Text>
                 </View>
-                <Ionicons name="add-circle-outline" size={22} color={colors.primary} />
+                <PlusCircle size={22} color={colors.primary} weight="regular" />
               </TouchableOpacity>
             );
           })}
@@ -292,7 +294,7 @@ export default function FollowedOrganizersScreen() {
         </View>
       ) : organizers.length === 0 ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.sm, padding: spacing.xl }}>
-          <Ionicons name="star-outline" size={52} color={colors.textTertiary} />
+          <Star size={52} color={colors.textTertiary} weight="duotone" />
           <Text style={{ fontSize: fontSize.lg, fontWeight: fontWeight.bold, color: colors.text }}>
             Nog geen organisatoren
           </Text>

@@ -1,5 +1,5 @@
 // src/services/demo-agent.service.ts
-// Mobile demo agent service for Inclufy GO (React Native + Expo).
+// Mobile demo agent service for AMOS by Inclufy (React Native + Expo).
 //
 // This service does NOT contain seeder logic — the shared Supabase backend
 // is populated by the web Marketing dashboard or server-side Edge Functions.

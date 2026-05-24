@@ -12,7 +12,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../context/ThemeContext';
@@ -21,6 +20,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 import { supabase } from '../services/supabase';
 
+import { CaretRight, TrendUp } from 'phosphor-react-native';
 // ─── Config ─────────────────────────────────────────────────────────────────
 // Same Supabase URL/key pattern as `src/services/supabase.ts` — these mirror
 // the EXPO_PUBLIC env vars that other screens (AICommandScreen) use.
@@ -262,14 +262,14 @@ export default function CounterfactualNudge({
         style={styles.gradient}
       >
         <View style={styles.iconWrap}>
-          <Ionicons name="trending-up" size={22} color="#fff" />
+          <TrendUp size={22} color="#fff" weight="bold" />
         </View>
         <View style={styles.body}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
         <View style={styles.chevronWrap}>
-          <Ionicons name="chevron-forward" size={16} color="#fff" />
+          <CaretRight size={16} color="#fff" weight="bold" />
         </View>
         {/* `colors` referenced so the themedStyles hook re-runs on theme change
              without needing a full prop. */}

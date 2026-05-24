@@ -16,7 +16,6 @@ import {
   View, Text, ScrollView, TouchableOpacity, ActivityIndicator,
   RefreshControl, Platform, StatusBar, Alert,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Circle } from 'react-native-svg';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -26,6 +25,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 import { supabase } from '../services/supabase';
 import type { RootStackParamList } from '../types';
+import { CaretLeft, FlagCheckered } from 'phosphor-react-native';
 import {
   useGoal, useGoalRuns, useTransitionGoal, useRunGoalsNow, useOrgRole,
   type GoalStatus, type AgentGoal,
@@ -313,13 +313,13 @@ export default function GoalDetailScreen() {
         <LinearGradient colors={theme.gradient} style={styles.header}>
           <View style={styles.navRow}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-              <Ionicons name="chevron-back" size={20} color="#fff" />
+              <CaretLeft size={20} color="#fff" weight="bold" />
               <Text style={styles.backLabel}>{isNl ? 'Terug' : 'Back'}</Text>
             </TouchableOpacity>
             <View style={{ width: 40 }} />
           </View>
           <View style={styles.statusPill}>
-            <MaterialCommunityIcons name="flag-checkered" size={11} color="#fff" />
+            <FlagCheckered size={11} color="#fff" weight="fill" />
             <Text style={styles.statusPillText}>{theme.label[isNl ? 'nl' : 'en']}</Text>
           </View>
           <Text style={[styles.headerTitle, { marginTop: spacing.xs }]}>{goal.title}</Text>

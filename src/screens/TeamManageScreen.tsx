@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: config?.icon as any> | Ionicons name=<dynamic: roleConfig.icon as any>
 import React, { useState } from 'react';
 import {
   View,
@@ -27,6 +28,7 @@ import { subtleShadow } from '../utils/shadows';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { Users, X } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'TeamManage'>;
 
@@ -347,7 +349,7 @@ export default function TeamManageScreen() {
             style={[styles.memberActionBtn, styles.removeBtn]}
             onPress={() => handleRemove(item)}
           >
-            <Ionicons name="close" size={14} color={colors.error} />
+            <X size={14} color={colors.error} weight="bold" />
           </TouchableOpacity>
         </View>
       </View>
@@ -434,7 +436,7 @@ export default function TeamManageScreen() {
           contentContainerStyle={styles.membersList}
           ListEmptyComponent={
             <View style={styles.emptyContainer}>
-              <Ionicons name="people-outline" size={48} color={colors.textSecondary} />
+              <Users size={48} color={colors.textSecondary} weight="duotone" />
               <Text style={styles.emptyText}>{t.teamManage.noMembers}</Text>
               <Text style={styles.emptySubtext}>
                 {t.teamManage.noMembersDesc}

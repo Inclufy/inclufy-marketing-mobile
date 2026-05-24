@@ -13,7 +13,6 @@
 
 import React from 'react';
 import { View, SafeAreaView, TouchableOpacity, Text, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
@@ -31,6 +30,7 @@ import StepVerify from '../components/wizard/StepVerify';
 import StepBrandVoice from '../components/wizard/StepBrandVoice';
 import StepFirstPost from '../components/wizard/StepFirstPost';
 
+import { X } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList, 'SocialMediaWizard'>;
 type Route = RouteProp<RootStackParamList, 'SocialMediaWizard'>;
 
@@ -75,7 +75,7 @@ export default function SocialMediaWizard() {
         }}
       >
         <TouchableOpacity onPress={handleClose} style={{ padding: 6 }} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-          <Ionicons name="close" size={24} color={colors.text} />
+          <X size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={{ flex: 1, fontSize: fontSize.lg, fontWeight: fontWeight.bold, color: colors.text, marginLeft: spacing.sm }}>
           Social media wizard

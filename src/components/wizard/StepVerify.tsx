@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: meta.icon>
 import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -5,6 +6,7 @@ import { spacing, fontSize, fontWeight, borderRadius } from '../../theme';
 import { useTheme } from '../../context/ThemeContext';
 import type { PlatformKey } from '../../hooks/useSocialWizard';
 
+import { CaretRight, CheckCircle, Warning } from 'phosphor-react-native';
 const PLATFORM_META: Record<string, { label: string; icon: keyof typeof import('@expo/vector-icons').Ionicons.glyphMap; color: string }> = {
   facebook:  { label: 'Facebook',  icon: 'logo-facebook',  color: '#1877F2' },
   instagram: { label: 'Instagram', icon: 'logo-instagram', color: '#E4405F' },
@@ -91,7 +93,7 @@ export default function StepVerify({ selectedPlatforms, socialAccounts, goNext, 
           borderColor: '#F59E0B' + '40',
         }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-            <Ionicons name="warning" size={16} color="#F59E0B" />
+            <Warning size={16} color="#F59E0B" weight="fill" />
             <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: '#F59E0B' }}>
               {issues.length} aandachtspunt{issues.length > 1 ? 'en' : ''}
             </Text>
@@ -151,7 +153,7 @@ export default function StepVerify({ selectedPlatforms, socialAccounts, goNext, 
                           {badge.label}
                         </Text>
                       </View>
-                      <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+                      <CheckCircle size={18} color={colors.success} weight="fill" />
                     </View>
                   );
                 })}
@@ -178,7 +180,7 @@ export default function StepVerify({ selectedPlatforms, socialAccounts, goNext, 
           <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: fontWeight.semibold }}>
             {allGood ? 'Volgende: merkstem leren' : 'Toch verder'}
           </Text>
-          <Ionicons name="arrow-forward" size={18} color="#fff" />
+          <CaretRight size={18} color="#fff" weight="bold" />
         </TouchableOpacity>
       </View>
     </ScrollView>

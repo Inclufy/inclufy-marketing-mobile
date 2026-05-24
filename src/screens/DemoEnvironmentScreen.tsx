@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: activeConfig.icon> | Ionicons name=<dynamic: industry.icon>
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -16,6 +17,7 @@ import { subtleShadow, cardShadow } from '../utils/shadows';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { CheckCircle, Info, RadioButton, Sparkle, Trash } from 'phosphor-react-native';
 // ─── Constants ──────────────────────────────────────────────────────────────
 
 const STORAGE_KEY = 'demo_active_industry_go';
@@ -499,13 +501,13 @@ export default function DemoEnvironmentScreen() {
                 <View style={styles.industryBadges}>
                   {isActive && (
                     <View style={[styles.activeBadge, { backgroundColor: colors.success + '15' }]}>
-                      <Ionicons name="checkmark-circle" size={16} color={colors.success} />
+                      <CheckCircle size={16} color={colors.success} weight="fill" />
                       <Text style={[styles.badgeText, { color: colors.success }]}>Actief</Text>
                     </View>
                   )}
                   {isSelected && !isActive && (
                     <View style={[styles.activeBadge, { backgroundColor: industry.color + '15' }]}>
-                      <Ionicons name="radio-button-on" size={14} color={industry.color} />
+                      <RadioButton size={14} color={industry.color} weight="fill" />
                     </View>
                   )}
                 </View>
@@ -532,7 +534,7 @@ export default function DemoEnvironmentScreen() {
             {loadingAction === 'seed' ? (
               <ActivityIndicator size="small" color={colors.textOnPrimary} />
             ) : (
-              <Ionicons name="sparkles-outline" size={20} color={colors.textOnPrimary} />
+              <Sparkle size={20} color={colors.textOnPrimary} weight="regular" />
             )}
             <Text style={styles.actionButtonPrimaryText}>Demo Genereren</Text>
           </TouchableOpacity>
@@ -550,7 +552,7 @@ export default function DemoEnvironmentScreen() {
             {loadingAction === 'reset' ? (
               <ActivityIndicator size="small" color={colors.error} />
             ) : (
-              <Ionicons name="trash-outline" size={20} color={colors.error} />
+              <Trash size={20} color={colors.error} weight="duotone" />
             )}
             <Text style={styles.actionButtonDangerText}>Demo Resetten</Text>
           </TouchableOpacity>
@@ -558,7 +560,7 @@ export default function DemoEnvironmentScreen() {
 
         {/* ── Info Card ───────────────────────────────────────────────── */}
         <View style={styles.infoCard}>
-          <Ionicons name="information-circle-outline" size={20} color={colors.info} />
+          <Info size={20} color={colors.info} weight="regular" />
           <Text style={styles.infoText}>
             Genereert realistische demo-events voor de geselecteerde branche, direct in je Events-tab.
             Geen externe services nodig. Je kunt de demo op elk moment resetten.

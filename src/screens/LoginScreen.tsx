@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: biometricType === 'Face ID' ? 'scan-outline' : 'finger-print-outline'> | Ionicons name=<dynamic: showPassword ? 'eye-outline' : 'eye-off-outline'>
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -17,6 +18,7 @@ import { supabase } from '../services/supabase';
 import { colors, brandGradient, spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 
+import { Lock } from 'phosphor-react-native';
 export default function LoginScreen() {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
@@ -174,7 +176,7 @@ export default function LoginScreen() {
             </View>
             <View style={styles.inputWrapper}>
               <View style={styles.inputIcon}>
-                <Ionicons name="lock-closed-outline" size={18} color={colors.textSecondary} />
+                <Lock size={18} color={colors.textSecondary} weight="duotone" />
               </View>
               <View style={styles.inputSeparator} />
               <TextInput

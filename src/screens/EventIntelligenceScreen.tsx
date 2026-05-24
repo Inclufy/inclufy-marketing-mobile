@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: cfg.icon as any> | Ionicons name=<dynamic: isExpanded ? 'chevron-up' : 'chevron-down'>
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   View,
@@ -11,7 +12,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,6 +24,7 @@ import type { RootStackParamList } from '../types';
 import { useTheme } from '../context/ThemeContext';
 import type { RegionData } from '../hooks/useLocation';
 
+import { Calendar, CheckCircle, CreditCard, Globe, MapPin, Radioactive, Sparkle, Star } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 interface DiscoveredEvent {
@@ -673,7 +675,7 @@ export default function EventIntelligenceScreen() {
               {item.name ?? '—'}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginTop: 4 }}>
-              <Ionicons name="location-outline" size={12} color={colors.textSecondary} />
+              <MapPin size={12} color={colors.textSecondary} weight="duotone" />
               <Text style={{ fontSize: 11, color: colors.textSecondary }}>{item.city || item.location || '—'}</Text>
               <Text style={{ fontSize: 11, color: colors.textSecondary }}>•</Text>
               <Text style={{ fontSize: 11, color: colors.textSecondary }}>{formatDate(item.date_start)}</Text>
@@ -711,7 +713,7 @@ export default function EventIntelligenceScreen() {
         {/* AI recommendation */}
         {!!item.ai_recommendation && (
           <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 5, marginBottom: spacing.xs }}>
-            <Ionicons name="sparkles-outline" size={12} color={colors.primary} />
+            <Sparkle size={12} color={colors.primary} weight="regular" />
             <Text style={{ fontSize: 11, color: colors.primary, fontStyle: 'italic', flex: 1, lineHeight: 16 }}>
               {item.ai_recommendation}
             </Text>
@@ -726,7 +728,7 @@ export default function EventIntelligenceScreen() {
             )}
 
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-              <Ionicons name="card-outline" size={14} color={colors.textSecondary} />
+              <CreditCard size={14} color={colors.textSecondary} weight="duotone" />
               <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary }}>
                 Ticket: €{item.cost?.ticket ?? 0} · Totaal: €{item.cost?.total ?? 0}
               </Text>
@@ -742,7 +744,7 @@ export default function EventIntelligenceScreen() {
                   }}
                   onPress={() => Linking.openURL(item.website).catch(() => {})}
                 >
-                  <Ionicons name="globe-outline" size={14} color={colors.primary} />
+                  <Globe size={14} color={colors.primary} weight="duotone" />
                   <Text style={{ fontSize: fontSize.xs, color: colors.primary, fontWeight: fontWeight.medium }}>Website</Text>
                 </TouchableOpacity>
               )}
@@ -754,7 +756,7 @@ export default function EventIntelligenceScreen() {
                   borderRadius: borderRadius.full,
                   paddingHorizontal: spacing.md, paddingVertical: spacing.xs,
                 }}>
-                  <Ionicons name="checkmark-circle" size={16} color={colors.success} />
+                  <CheckCircle size={16} color={colors.success} weight="fill" />
                   <Text style={{ color: colors.success, fontWeight: fontWeight.bold, fontSize: fontSize.sm }}>Ingeschreven</Text>
                 </View>
               ) : (
@@ -772,7 +774,7 @@ export default function EventIntelligenceScreen() {
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
                     <>
-                      <Ionicons name="calendar-outline" size={16} color="#fff" />
+                      <Calendar size={16} color="#fff" weight="duotone" />
                       <Text style={{ color: '#fff', fontWeight: fontWeight.bold, fontSize: fontSize.sm }}>Bijwonen →</Text>
                     </>
                   )}
@@ -808,7 +810,7 @@ export default function EventIntelligenceScreen() {
           backgroundColor: colors.primary + '15', alignSelf: 'flex-start',
           paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12,
         }}>
-          <MaterialCommunityIcons name="radar" size={16} color={colors.primary} />
+          <Radioactive size={16} color={colors.primary} weight="duotone" />
           <Text style={{ fontSize: 11, color: colors.primary, fontWeight: fontWeight.semibold }}>Live AI Radar</Text>
         </View>
 
@@ -834,7 +836,7 @@ export default function EventIntelligenceScreen() {
           >
             {scanning
               ? <ActivityIndicator size="small" color="#fff" />
-              : <MaterialCommunityIcons name="radar" size={18} color="#fff" />}
+              : <Radioactive size={18} color="#fff" weight="duotone" />}
             <Text style={{ color: '#fff', fontWeight: fontWeight.bold, fontSize: fontSize.sm }}>
               {scanning ? 'Scannen...' : 'Scannen'}
             </Text>
@@ -848,7 +850,7 @@ export default function EventIntelligenceScreen() {
             }}
             onPress={() => (navigation as any).navigate('FollowedOrganizers')}
           >
-            <Ionicons name="star-outline" size={16} color={colors.primary} />
+            <Star size={16} color={colors.primary} weight="duotone" />
             <Text style={{ fontSize: fontSize.xs, color: colors.primary, fontWeight: fontWeight.medium }}>Organisatoren</Text>
           </TouchableOpacity>
         </View>
@@ -994,7 +996,7 @@ export default function EventIntelligenceScreen() {
         </View>
       ) : events.length === 0 ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing.sm, padding: spacing.xl }}>
-          <MaterialCommunityIcons name="radar" size={56} color={colors.textSecondary} />
+          <Radioactive size={56} color={colors.textSecondary} weight="duotone" />
           <Text style={{ fontSize: fontSize.lg, fontWeight: fontWeight.bold, color: colors.text }}>Nog geen events gevonden</Text>
           <Text style={{ fontSize: fontSize.sm, color: colors.textSecondary, textAlign: 'center', lineHeight: 20 }}>
             Tik op "Scannen" om events te ontdekken in jouw regio

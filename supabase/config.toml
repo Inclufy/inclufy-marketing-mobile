@@ -118,8 +118,11 @@ verify_jwt = true
 verify_jwt = true
 [functions.ai-image]
 verify_jwt = true
+# sales-chat: landing-page chat widget for ANONYMOUS prospects. Must be
+# public — gating on JWT would 401 every visitor before they sign up. Fn
+# itself uses a per-IP soft rate-limit via the shared middleware.
 [functions.sales-chat]
-verify_jwt = true
+verify_jwt = false
 [functions.content-social]
 verify_jwt = true
 [functions.content-email]

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: opt.icon as any> | MaterialCommunityIcons name=<dynamic: iconName as any> | MaterialCommunityIcons name=<dynamic: opt.icon as any>
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -31,6 +32,7 @@ import {
 } from '../hooks/useAutomations';
 import { useMarketingStrategy } from '../hooks/useMarketingStrategy';
 
+import { CaretRight, ChartLineUp, Lightning, Plus, Robot, WarningCircle } from 'phosphor-react-native';
 type AutopilotMode = 'manual' | 'assisted' | 'autopilot';
 
 const AUTOPILOT_OPTIONS: Array<{ mode: AutopilotMode; label: string; desc: string; icon: string }> = [
@@ -387,16 +389,16 @@ export default function MarketingAutomationScreen() {
             style={styles.strategyLink}
             onPress={() => navigation.navigate('MarketingStrategy')}
           >
-            <MaterialCommunityIcons name="chart-timeline-variant-shimmer" size={24} color={colors.primary} />
+            <ChartLineUp size={24} color={colors.primary} weight="duotone" />
             <Text style={styles.strategyLinkText}>
               <Text style={styles.strategyLinkBold}>Strategie actief</Text>
               {' · '}€{strategy.monthly_budget}/mnd · {strategy.posts_per_week} posts/week
             </Text>
-            <Ionicons name="chevron-forward" size={18} color={colors.textTertiary} />
+            <CaretRight size={18} color={colors.textTertiary} weight="bold" />
           </TouchableOpacity>
         ) : (
           <View style={styles.noStrategy}>
-            <MaterialCommunityIcons name="alert-circle-outline" size={28} color="#D97706" />
+            <WarningCircle size={28} color="#D97706" weight="regular" />
             <Text style={styles.noStrategyText}>
               Stel eerst je Marketing Strategie in zodat AMOS weet wat, wanneer en hoeveel te automatiseren.
             </Text>
@@ -459,14 +461,14 @@ export default function MarketingAutomationScreen() {
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionLabel}>AUTOMATISERINGEN</Text>
             <TouchableOpacity onPress={() => setShowCreateModal(true)} style={styles.addBtn}>
-              <Ionicons name="add" size={16} color={colors.primary} />
+              <Plus size={16} color={colors.primary} weight="bold" />
               <Text style={styles.addBtnText}>Toevoegen</Text>
             </TouchableOpacity>
           </View>
 
           {autoList.length === 0 ? (
             <View style={styles.emptyState}>
-              <MaterialCommunityIcons name="robot-outline" size={48} color={colors.textTertiary} style={styles.emptyIcon as any} />
+              <Robot size={48} color={colors.textTertiary} style={styles.emptyIcon as any} weight="duotone" />
               <Text style={styles.emptyText}>
                 Geen automatiseringen gevonden.{'\n'}Standaard workflows worden aangemaakt...
               </Text>
@@ -501,7 +503,7 @@ export default function MarketingAutomationScreen() {
                         <Text style={styles.autoDesc} numberOfLines={2}>{auto.description}</Text>
                       ) : null}
                       <View style={styles.autoTriggerBadge}>
-                        <MaterialCommunityIcons name="lightning-bolt" size={10} color={colors.textTertiary} />
+                        <Lightning size={10} color={colors.textTertiary} weight="fill" />
                         <Text style={styles.autoTriggerText}>
                           {triggerOpt?.label ?? auto.trigger_type}
                         </Text>

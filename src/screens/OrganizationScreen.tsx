@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: editMode ? 'close' : 'pencil'> | MaterialCommunityIcons name=<dynamic: icon as any> | MaterialCommunityIcons name=<dynamic: sp.icon>
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -23,6 +24,7 @@ import { subtleShadow } from '../utils/shadows';
 import { useOrganization, useUpdateOrganization, OrganizationProfile } from '../hooks/useOrganization';
 import * as Clipboard from 'expo-clipboard';
 
+import { ArrowLeft, ArrowSquareOut, Buildings, Calendar, Copy, File, FloppyDisk, Lightning, MapPin, SealCheck, ShareNetwork, UsersThree, X, XCircle } from 'phosphor-react-native';
 // ─── Social Platform Config ─────────────────────────────────────────
 const SOCIAL_PLATFORMS = [
   { key: 'linkedin', label: 'LinkedIn', icon: 'linkedin' as const, color: '#0A66C2', placeholder: 'https://linkedin.com/company/jouwbedrijf' },
@@ -188,7 +190,7 @@ export default function OrganizationScreen() {
           <Text style={styles.fieldLabel}>{label}</Text>
           <Text style={[styles.fieldValue, onPress && { color: colors.primary }]}>{value}</Text>
         </View>
-        {onPress && <MaterialCommunityIcons name="open-in-new" size={14} color={colors.textTertiary} />}
+        {onPress && <ArrowSquareOut size={14} color={colors.textTertiary} weight="duotone" />}
       </TouchableOpacity>
     );
   };
@@ -215,7 +217,7 @@ export default function OrganizationScreen() {
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+            <ArrowLeft size={24} color={colors.text} weight="bold" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Organisatie</Text>
         </View>
@@ -259,7 +261,7 @@ export default function OrganizationScreen() {
                   backgroundColor: colors.primary + '18',
                   justifyContent: 'center', alignItems: 'center', marginBottom: spacing.sm,
                 }}>
-                  <MaterialCommunityIcons name="office-building" size={32} color={colors.primary} />
+                  <Buildings size={32} color={colors.primary} weight="duotone" />
                 </View>
                 <Text style={{ fontSize: fontSize.xl, fontWeight: fontWeight.bold, color: colors.text, marginBottom: 4, textAlign: 'center' }}>
                   {form.company_name || 'Bedrijfsnaam'}
@@ -275,21 +277,21 @@ export default function OrganizationScreen() {
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.sm }}>
                 {form.founded_year ? (
                   <View style={styles.statBox}>
-                    <MaterialCommunityIcons name="calendar" size={18} color={colors.primary} style={{ marginBottom: 4 }} />
+                    <Calendar size={18} color={colors.primary} style={{ marginBottom: 4 }} weight="duotone" />
                     <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary }}>Opgericht</Text>
                     <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.bold, color: colors.text }}>{form.founded_year}</Text>
                   </View>
                 ) : null}
                 {form.team_size ? (
                   <View style={styles.statBox}>
-                    <MaterialCommunityIcons name="account-group" size={18} color={colors.primary} style={{ marginBottom: 4 }} />
+                    <UsersThree size={18} color={colors.primary} style={{ marginBottom: 4 }} weight="duotone" />
                     <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary }}>Team</Text>
                     <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.bold, color: colors.text }}>{form.team_size}</Text>
                   </View>
                 ) : null}
                 {form.location ? (
                   <View style={styles.statBox}>
-                    <MaterialCommunityIcons name="map-marker" size={18} color={colors.primary} style={{ marginBottom: 4 }} />
+                    <MapPin size={18} color={colors.primary} style={{ marginBottom: 4 }} weight="fill" />
                     <Text style={{ fontSize: fontSize.xs, color: colors.textSecondary }}>Locatie</Text>
                     <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.bold, color: colors.text }}>{form.location}</Text>
                   </View>
@@ -321,7 +323,7 @@ export default function OrganizationScreen() {
         <View style={styles.sectionCard}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.sm }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-              <MaterialCommunityIcons name="share-variant" size={18} color={colors.primary} />
+              <ShareNetwork size={18} color={colors.primary} weight="duotone" />
               <Text style={styles.sectionTitle}>Social Media</Text>
             </View>
             {!editMode && (
@@ -354,7 +356,7 @@ export default function OrganizationScreen() {
                   />
                   {socialLinks[sp.key] ? (
                     <TouchableOpacity onPress={() => updateSocialLink(sp.key, '')}>
-                      <MaterialCommunityIcons name="close-circle" size={18} color={colors.textTertiary} />
+                      <XCircle size={18} color={colors.textTertiary} weight="fill" />
                     </TouchableOpacity>
                   ) : null}
                 </View>
@@ -387,12 +389,12 @@ export default function OrganizationScreen() {
           <View style={styles.sectionCard}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.sm }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <MaterialCommunityIcons name="lightning-bolt" size={18} color={colors.primary} />
+                <Lightning size={18} color={colors.primary} weight="fill" />
                 <Text style={styles.sectionTitle}>Elevator Pitch</Text>
               </View>
               {!editMode && form.elevator_pitch ? (
                 <TouchableOpacity style={styles.copyBtn} onPress={() => copyToClipboard(form.elevator_pitch ?? '')}>
-                  <MaterialCommunityIcons name="content-copy" size={14} color={colors.primary} />
+                  <Copy size={14} color={colors.primary} weight="duotone" />
                   <Text style={{ fontSize: fontSize.xs, fontWeight: fontWeight.semibold, color: colors.primary }}>Kopieer</Text>
                 </TouchableOpacity>
               ) : null}
@@ -417,12 +419,12 @@ export default function OrganizationScreen() {
           <View style={styles.sectionCard}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.sm }}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                <MaterialCommunityIcons name="file-document-outline" size={18} color={colors.primary} />
+                <File size={18} color={colors.primary} weight="duotone" />
                 <Text style={styles.sectionTitle}>Boilerplate</Text>
               </View>
               {!editMode && form.boilerplate ? (
                 <TouchableOpacity style={styles.copyBtn} onPress={() => copyToClipboard(form.boilerplate ?? '')}>
-                  <MaterialCommunityIcons name="content-copy" size={14} color={colors.primary} />
+                  <Copy size={14} color={colors.primary} weight="duotone" />
                   <Text style={{ fontSize: fontSize.xs, fontWeight: fontWeight.semibold, color: colors.primary }}>Kopieer boilerplate</Text>
                 </TouchableOpacity>
               ) : null}
@@ -463,7 +465,7 @@ export default function OrganizationScreen() {
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                 {certifications.map((cert, i) => (
                   <View key={i} style={styles.certBadge}>
-                    <MaterialCommunityIcons name="check-decagram" size={14} color={colors.primary} />
+                    <SealCheck size={14} color={colors.primary} weight="fill" />
                     <Text style={{ fontSize: fontSize.xs, fontWeight: fontWeight.semibold, color: colors.primary }}>{cert}</Text>
                   </View>
                 ))}
@@ -479,14 +481,14 @@ export default function OrganizationScreen() {
               {updateOrg.isPending ? (
                 <ActivityIndicator size="small" color="#fff" />
               ) : (
-                <MaterialCommunityIcons name="content-save" size={18} color="#fff" />
+                <FloppyDisk size={18} color="#fff" weight="duotone" />
               )}
               <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.bold, color: '#fff' }}>
                 {updateOrg.isPending ? 'Opslaan...' : 'Opslaan'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.cancelBtn} onPress={handleCancel}>
-              <MaterialCommunityIcons name="close" size={18} color={colors.text} />
+              <X size={18} color={colors.text} weight="bold" />
               <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.bold, color: colors.text }}>Annuleren</Text>
             </TouchableOpacity>
           </View>

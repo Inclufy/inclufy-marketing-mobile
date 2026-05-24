@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: (m.icon + (m.iconLib === 'ionicons' ? '-outline' : '')) as any> | MaterialCommunityIcons name=<dynamic: m.icon as any>
 import React from 'react';
 import {
   View,
@@ -18,6 +19,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { subtleShadow } from '../utils/shadows';
 import { useTranslation } from '../i18n';
 
+import { CaretLeft, CaretRight, Robot } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 // ─── Module Definitions ──────────────────────────────────────────────────────
@@ -719,7 +721,7 @@ export default function AMOSHubScreen() {
             ) : null}
             {!isComingSoon && (
               <View style={[styles.arrowChip, { backgroundColor: m.color + '18' }]}>
-                <Ionicons name="arrow-forward" size={12} color={m.color} />
+                <CaretRight size={12} color={m.color} weight="bold" />
               </View>
             )}
           </View>
@@ -762,14 +764,14 @@ export default function AMOSHubScreen() {
             style={{ position: 'absolute' as const, top: Platform.OS === 'ios' ? 54 : 16, left: 16, zIndex: 10, padding: 8, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)' }}
             activeOpacity={0.7}
           >
-            <Ionicons name="chevron-back" size={22} color="#fff" />
+            <CaretLeft size={22} color="#fff" weight="bold" />
           </TouchableOpacity>
         )}
 
         {/* Logo row */}
         <View style={styles.amosLogoRow}>
           <View style={styles.amosLogoCircle}>
-            <MaterialCommunityIcons name="robot" size={22} color="#fff" />
+            <Robot size={22} color="#fff" weight="fill" />
           </View>
           <View>
             <Text style={styles.amosTitle}>AMOS</Text>

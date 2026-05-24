@@ -13,13 +13,13 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute, type RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLibraryPosts } from '../hooks/useLibraryPosts';
 import { useProducts } from '../hooks/useProducts';
 import type { RootStackParamList, LibraryPost, LibraryLanguage, LibraryPostStatus } from '../types';
 import { useTheme } from '../context/ThemeContext';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { CaretLeft, Clock, ImageBroken, Images, UploadSimple } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type R = RouteProp<RootStackParamList, 'Library'>;
 
@@ -77,7 +77,7 @@ export default function LibraryScreen() {
           <Image source={{ uri: imageUrl }} style={styles.cardImage} resizeMode="cover" />
         ) : (
           <View style={[styles.cardImage, styles.cardImagePlaceholder]}>
-            <MaterialCommunityIcons name="image-off-outline" size={32} color="#CBD5E1" />
+            <ImageBroken size={32} color="#CBD5E1" weight="duotone" />
           </View>
         )}
 
@@ -103,7 +103,7 @@ export default function LibraryScreen() {
 
           {item.scheduled_for && (
             <Text style={[styles.scheduledText, { color: colors.textSecondary }]}>
-              <Ionicons name="time-outline" size={11} /> {new Date(item.scheduled_for).toLocaleString('nl-NL')}
+              <Clock size={11} weight="duotone" /> {new Date(item.scheduled_for).toLocaleString('nl-NL')}
             </Text>
           )}
         </View>
@@ -116,14 +116,14 @@ export default function LibraryScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
+          <CaretLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]}>Content Library</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate('LibraryImport', { productId: productId ?? undefined })}
           style={[styles.importBtn, { backgroundColor: colors.primary }]}
         >
-          <Ionicons name="cloud-upload-outline" size={16} color="#fff" />
+          <UploadSimple size={16} color="#fff" weight="duotone" />
           <Text style={styles.importBtnText}>Import ZIP</Text>
         </TouchableOpacity>
       </View>
@@ -192,7 +192,7 @@ export default function LibraryScreen() {
         <View style={styles.center}><ActivityIndicator color={colors.primary} /></View>
       ) : posts.length === 0 ? (
         <View style={styles.center}>
-          <MaterialCommunityIcons name="image-multiple-outline" size={56} color={colors.textSecondary} />
+          <Images size={56} color={colors.textSecondary} weight="duotone" />
           <Text style={[styles.emptyTitle, { color: colors.text }]}>Geen posts in library</Text>
           <Text style={[styles.emptyBody, { color: colors.textSecondary }]}>
             Importeer een ZIP-bestand met gegenereerde post visuals.

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: MaterialCommunityIcons name=<dynamic: a.icon as any> | MaterialCommunityIcons name=<dynamic: m.icon as any> | MaterialCommunityIcons name=<dynamic: opt.key === 'conservative' ? 'shield-check' : opt.key === 'balanced' ? 'scale-balance' : 'rocket-launch'>
 // src/screens/GoalSetupScreen.tsx
 // Goal Mode (Tier-2) — 3-step wizard.
 //
@@ -25,6 +26,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { subtleShadow } from '../utils/shadows';
 import { supabase } from '../services/supabase';
 import { useTranslation } from '../i18n';
+import { ArrowLeft, CaretLeft, CaretRight, Check, FlagCheckered } from 'phosphor-react-native';
 import {
   useCreateGoal, useTransitionGoal,
   type GoalMetric, type GoalTargetKind, type GoalAutonomy, type GoalAgentKind,
@@ -564,7 +566,7 @@ export default function GoalSetupScreen() {
             onPress={() => { if (i <= step) setStep(i); }}
           >
             {step > i
-              ? <MaterialCommunityIcons name="check" size={14} color="#fff" />
+              ? <Check size={14} color="#fff" weight="bold" />
               : <Text style={[s.stepNum, step === i && s.stepNumActive]}>{i + 1}</Text>}
           </TouchableOpacity>
         </React.Fragment>
@@ -577,7 +579,7 @@ export default function GoalSetupScreen() {
       <View style={s.header}>
         <View style={s.headerRow}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+            <ArrowLeft size={24} color={colors.text} weight="bold" />
           </TouchableOpacity>
           <Text style={s.headerTitle}>{STEP_TITLES[step]}</Text>
         </View>
@@ -594,7 +596,7 @@ export default function GoalSetupScreen() {
       <View style={s.navBar}>
         {step > 0 ? (
           <TouchableOpacity style={s.navBtn} onPress={() => setStep(step - 1)}>
-            <MaterialCommunityIcons name="chevron-left" size={18} color={colors.textSecondary} />
+            <CaretLeft size={18} color={colors.textSecondary} weight="bold" />
             <Text style={s.navBtnText}>{isNl ? 'Vorige' : 'Back'}</Text>
           </TouchableOpacity>
         ) : <View />}
@@ -607,7 +609,7 @@ export default function GoalSetupScreen() {
             <Text style={[s.navBtnText, s.navBtnTextPrimary]}>
               {isNl ? 'Volgende' : 'Next'}
             </Text>
-            <MaterialCommunityIcons name="chevron-right" size={18} color="#fff" />
+            <CaretRight size={18} color="#fff" weight="bold" />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -619,7 +621,7 @@ export default function GoalSetupScreen() {
               ? <ActivityIndicator size="small" color="#fff" />
               : (
                 <>
-                  <MaterialCommunityIcons name="flag-checkered" size={16} color="#fff" />
+                  <FlagCheckered size={16} color="#fff" weight="fill" />
                   <Text style={[s.navBtnText, s.navBtnTextPrimary]}>
                     {isNl ? 'Activeer doel' : 'Activate Goal'}
                   </Text>

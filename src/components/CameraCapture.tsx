@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import { CameraView, useCameraPermissions, useMicrophonePermissions } from 'expo-camera';
 import type { CameraMode } from 'expo-camera';
-import { Ionicons } from '@expo/vector-icons';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { Camera, CameraRotate, Microphone, Scan } from 'phosphor-react-native';
 interface Props {
   onCapture: (uri: string, exif?: Record<string, any>) => void;
   onVideoStart?: () => void;
@@ -87,7 +87,7 @@ export default function CameraCapture({ onCapture, onVideoStart, onVideoEnd, mod
   if (!permission.granted) {
     return (
       <View style={styles.permissionContainer}>
-        <Ionicons name="camera-outline" size={48} color="rgba(255,255,255,0.4)" />
+        <Camera size={48} color="rgba(255,255,255,0.4)" weight="duotone" />
         <Text style={styles.permissionText}>Camera toegang nodig</Text>
         <TouchableOpacity style={styles.permissionBtn} onPress={requestPermission}>
           <Text style={styles.permissionBtnText}>Geef toegang</Text>
@@ -101,7 +101,7 @@ export default function CameraCapture({ onCapture, onVideoStart, onVideoEnd, mod
   if (mode === 'video' && micPermission && !micPermission.granted) {
     return (
       <View style={styles.permissionContainer}>
-        <Ionicons name="mic-outline" size={48} color="rgba(255,255,255,0.4)" />
+        <Microphone size={48} color="rgba(255,255,255,0.4)" weight="duotone" />
         <Text style={styles.permissionText}>Microfoon toegang nodig voor video</Text>
         <TouchableOpacity style={styles.permissionBtn} onPress={requestMicPermission}>
           <Text style={styles.permissionBtnText}>Geef toegang</Text>
@@ -195,7 +195,7 @@ export default function CameraCapture({ onCapture, onVideoStart, onVideoEnd, mod
           onPress={() => setFacing((prev) => (prev === 'back' ? 'front' : 'back'))}
           activeOpacity={0.7}
         >
-          <Ionicons name="camera-reverse-outline" size={24} color="#fff" />
+          <CameraRotate size={24} color="#fff" weight="duotone" />
         </TouchableOpacity>
 
         {/* Capture button */}
@@ -221,7 +221,7 @@ export default function CameraCapture({ onCapture, onVideoStart, onVideoEnd, mod
           onPress={() => { setZoom(0); }}
           activeOpacity={0.7}
         >
-          <Ionicons name="scan-outline" size={22} color={zoom > 0 ? colors.primary : 'rgba(255,255,255,0.5)'} />
+          <Scan size={22} color={zoom > 0 ? colors.primary : 'rgba(255,255,255,0.5)'} weight="regular" />
         </TouchableOpacity>
       </View>
 

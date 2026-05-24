@@ -17,8 +17,13 @@ serve(async (req) => {
   if (req.method !== 'POST') return jsonResp({ error: 'POST only' }, 405);
 
   try {
+    // sales-chat is PUBLIC (verify_jwt=false). Authenticated users get
+    // tracked against their user_id; anonymous prospects all share a
+    // single sentinel UUID so rate-limit + logging still work without
+    // tripping ai_call_log's uuid-typed user_id column.
     const user = await getAuthUser(req, SUPABASE_URL, SUPABASE_ANON_KEY);
-    if (!user) return jsonResp({ error: 'unauthenticated' }, 401);
+    const ANON_SENTINEL_UUID = '00000000-0000-0000-0000-000000000000';
+    const callerId = user?.id ?? ANON_SENTINEL_UUID;
 
     const body = await req.json().catch(() => ({}));
     const userMessages = Array.isArray(body.messages) ? body.messages : [];
@@ -26,7 +31,7 @@ serve(async (req) => {
     const ctx = body.context ?? {};
 
     const admin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    const quota = await checkAiQuota(admin, { userId: user.id, functionName: FN_NAME });
+    const quota = await checkAiQuota(admin, { userId: callerId, functionName: FN_NAME });
     if (!quota.ok) return jsonResp({ error: 'rate_limited', ...quota }, 429);
 
     const sysParts = [
@@ -50,7 +55,7 @@ serve(async (req) => {
     });
 
     await logAiCall(admin, {
-      userId: user.id, functionName: FN_NAME, provider: 'openai',
+      userId: callerId, functionName: FN_NAME, provider: 'openai',
       model: result.model, inputTokens: result.inputTokens, outputTokens: result.outputTokens, status: 'sent',
     });
 

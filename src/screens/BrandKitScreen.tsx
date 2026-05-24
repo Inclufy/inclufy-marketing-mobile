@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: item.is_default ? 'star' : 'star-outline'>
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -29,6 +30,7 @@ import type { BrandKit } from '../types';
 import { pickAndUploadLogo } from '../utils/uploadLogo';
 import { supabase } from '../services/supabase';
 
+import { Diamond, Image as ImageIcon, Palette, PencilSimple, Plus, Trash, UploadSimple } from 'phosphor-react-native';
 // ─── Color Presets ──────────────────────────────────────────────────
 const COLOR_PRESETS = [
   '#DB2777', // Pink
@@ -89,7 +91,7 @@ function LogoImage({ uri, style, fallbackColor }: { uri: string; style: any; fal
   if (failed || !uri) {
     return (
       <View style={[style, { justifyContent: 'center', alignItems: 'center', backgroundColor: (fallbackColor || colors.primary) + '20' }]}>
-        <Ionicons name="image-outline" size={Math.min(style.width || 40, style.height || 40) / 2} color={fallbackColor || colors.primary} />
+        <ImageIcon size={Math.min(style.width || 40, style.height || 40) / 2} color={fallbackColor || colors.primary} weight="duotone" />
       </View>
     );
   }
@@ -216,7 +218,7 @@ export default function BrandKitScreen() {
             <LogoImage uri={item.logo_url} style={styles.logoThumb} fallbackColor={item.primary_color} />
           ) : (
             <View style={[styles.logoPlaceholder, { backgroundColor: item.primary_color + '20' }]}>
-              <Ionicons name="color-palette" size={20} color={item.primary_color} />
+              <Palette size={20} color={item.primary_color} weight="fill" />
             </View>
           )}
           <View style={styles.cardText}>
@@ -269,7 +271,7 @@ export default function BrandKitScreen() {
           style={styles.actionBtn}
           onPress={() => openEdit(item)}
         >
-          <Ionicons name="pencil-outline" size={18} color={colors.textSecondary} />
+          <PencilSimple size={18} color={colors.textSecondary} weight="duotone" />
           <Text style={[styles.actionText, { color: colors.textSecondary }]}>
             {bk.editKit}
           </Text>
@@ -279,7 +281,7 @@ export default function BrandKitScreen() {
           style={styles.actionBtn}
           onPress={() => handleDelete(item)}
         >
-          <Ionicons name="trash-outline" size={18} color={colors.error} />
+          <Trash size={18} color={colors.error} weight="duotone" />
           <Text style={[styles.actionText, { color: colors.error }]}>
             {bk.deleteKit}
           </Text>
@@ -291,7 +293,7 @@ export default function BrandKitScreen() {
   // ─── Empty State ────────────────────────────────────────────────
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Ionicons name="color-palette-outline" size={64} color={colors.textTertiary} />
+      <Palette size={64} color={colors.textTertiary} weight="duotone" />
       <Text style={[styles.emptyTitle, { color: colors.textSecondary }]}>{bk.noKits}</Text>
       <Text style={[styles.emptySubtitle, { color: colors.textTertiary }]}>{bk.createFirst}</Text>
     </View>
@@ -348,7 +350,7 @@ export default function BrandKitScreen() {
         onPress={openCreate}
         activeOpacity={0.85}
       >
-        <Ionicons name="add" size={28} color="#fff" />
+        <Plus size={28} color="#fff" weight="bold" />
       </TouchableOpacity>
 
       {/* ─── Create / Edit Modal ───────────────────────────────── */}
@@ -418,7 +420,7 @@ export default function BrandKitScreen() {
                   <LogoImage uri={form.logo_url} style={styles.logoPreview} />
                 ) : (
                   <>
-                    <Ionicons name="cloud-upload-outline" size={28} color={colors.textTertiary} />
+                    <UploadSimple size={28} color={colors.textTertiary} weight="duotone" />
                     <Text style={[styles.uploadText, { color: colors.textTertiary }]}>{bk.uploadLogo}</Text>
                   </>
                 )}
@@ -503,7 +505,7 @@ export default function BrandKitScreen() {
                   {form.logo_url ? (
                     <LogoImage uri={form.logo_url} style={styles.previewLogo} />
                   ) : (
-                    <Ionicons name="diamond" size={24} color="#fff" />
+                    <Diamond size={24} color="#fff" weight="fill" />
                   )}
                 </View>
                 <View style={styles.previewBody}>

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: statusCfg.icon> | Ionicons name=<dynamic: step.status === 'completed' ? 'checkmark-circle' : 'ellipse-outline'>
 // src/screens/SetupWizardScreen.tsx
 // Setup Wizard — Set up your AMOS platform step by step
 
@@ -11,6 +12,7 @@ import { useThemedStyles } from '../utils/themedStyles';
 import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 
+import { CaretLeft, Check, MagicWand } from 'phosphor-react-native';
 // ─── Setup Step Definitions ─────────────────────────────────────────────────
 
 interface SetupStep {
@@ -290,7 +292,7 @@ export default function SetupWizardScreen() {
           {/* Nav */}
           <View style={styles.navRow}>
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-              <Ionicons name="chevron-back" size={20} color="#fff" />
+              <CaretLeft size={20} color="#fff" weight="bold" />
               <Text style={styles.backLabel}>{isNl ? 'Terug' : 'Back'}</Text>
             </TouchableOpacity>
             <View style={{ width: 40 }} />
@@ -303,7 +305,7 @@ export default function SetupWizardScreen() {
               backgroundColor: 'rgba(255,255,255,0.15)',
               justifyContent: 'center', alignItems: 'center',
             }}>
-              <MaterialCommunityIcons name="wizard-hat" size={24} color="#fff" />
+              <MagicWand size={24} color="#fff" weight="duotone" />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={styles.headerTitle}>
@@ -359,7 +361,7 @@ export default function SetupWizardScreen() {
                   <View style={styles.stepHeader}>
                     <View style={[styles.stepNumberCircle, { backgroundColor: step.color }]}>
                       {step.status === 'completed' ? (
-                        <Ionicons name="checkmark" size={20} color="#fff" />
+                        <Check size={20} color="#fff" weight="bold" />
                       ) : (
                         <Text style={styles.stepNumberText}>{step.step}</Text>
                       )}

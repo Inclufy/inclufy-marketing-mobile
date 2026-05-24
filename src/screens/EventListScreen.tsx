@@ -8,7 +8,6 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEvents, useDeleteEvent } from '../hooks/useEvents';
@@ -20,6 +19,7 @@ import { useTranslation } from '../i18n';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
+import { Calendar, Camera, MapPin, Plus } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function EventListScreen() {
@@ -151,11 +151,11 @@ export default function EventListScreen() {
 
       <View style={styles.eventMeta}>
         <View style={styles.metaRow}>
-          <Ionicons name="location-outline" size={12} color={colors.textSecondary} />
+          <MapPin size={12} color={colors.textSecondary} weight="duotone" />
           <Text style={styles.metaText}> {item.location || t.common.noLocation}</Text>
         </View>
         <View style={styles.metaRow}>
-          <Ionicons name="calendar-outline" size={12} color={colors.textSecondary} />
+          <Calendar size={12} color={colors.textSecondary} weight="duotone" />
           <Text style={styles.metaText}> {new Date(item.event_date).toLocaleDateString(dateLocale, {
             day: 'numeric', month: 'short', year: 'numeric',
           })}</Text>
@@ -214,7 +214,7 @@ export default function EventListScreen() {
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} tintColor={colors.primary} />}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Ionicons name="camera-outline" size={48} color={colors.textSecondary} />
+            <Camera size={48} color={colors.textSecondary} weight="duotone" />
             <Text style={styles.emptyTitle}>{t.eventList.noEvents}</Text>
             <Text style={styles.emptyText}>{t.eventList.noEventsDesc}</Text>
           </View>
@@ -226,7 +226,7 @@ export default function EventListScreen() {
         style={styles.fab}
         onPress={() => navigation.navigate('EventSetup', {})}
       >
-        <Ionicons name="add" size={28} color={colors.textOnPrimary} />
+        <Plus size={28} color={colors.textOnPrimary} weight="bold" />
       </TouchableOpacity>
     </View>
   );

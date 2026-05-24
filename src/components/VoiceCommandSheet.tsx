@@ -42,7 +42,6 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import {
   useAudioRecorder,
   useAudioRecorderState,
@@ -57,6 +56,7 @@ import { spacing, borderRadius, fontSize, fontWeight } from '../theme';
 import { useTranslation } from '../i18n';
 import { supabase } from '../services/supabase';
 
+import { ArrowsClockwise, Microphone, PaperPlaneTilt, Stop, WarningCircle, X } from 'phosphor-react-native';
 // ─── Props ───────────────────────────────────────────────────────────
 export interface VoiceCommandSheetProps {
   /** Controls modal visibility. Parent owns this state. */
@@ -521,7 +521,7 @@ export default function VoiceCommandSheet({
                 <Text style={styles.subtitle}>{subtitleText}</Text>
               </View>
               <TouchableOpacity onPress={handleClose} style={styles.closeBtn}>
-                <Ionicons name="close" size={24} color={colors.textSecondary} />
+                <X size={24} color={colors.textSecondary} weight="bold" />
               </TouchableOpacity>
             </View>
 
@@ -533,7 +533,7 @@ export default function VoiceCommandSheet({
                   onPress={startRecording}
                   accessibilityLabel={isNl ? 'Begin opname' : 'Start recording'}
                 >
-                  <Ionicons name="mic" size={40} color="#fff" />
+                  <Microphone size={40} color="#fff" weight="duotone" />
                 </TouchableOpacity>
                 <Text style={styles.micHint}>
                   {isNl ? 'Tik om op te nemen' : 'Tap to record'}
@@ -548,7 +548,7 @@ export default function VoiceCommandSheet({
                   onPress={stopAndTranscribe}
                   accessibilityLabel={isNl ? 'Stop opname' : 'Stop recording'}
                 >
-                  <Ionicons name="stop" size={36} color="#fff" />
+                  <Stop size={36} color="#fff" weight="fill" />
                 </TouchableOpacity>
                 <View style={styles.recRow}>
                   <Animated.View style={[styles.recDot, { opacity: pulse }]} />
@@ -585,7 +585,7 @@ export default function VoiceCommandSheet({
                     style={styles.secondaryBtn}
                     onPress={startRecording}
                   >
-                    <Ionicons name="refresh" size={16} color={colors.text} />
+                    <ArrowsClockwise size={16} color={colors.text} weight="bold" />
                     <Text style={styles.secondaryBtnText}>
                       {isNl ? 'Opnieuw' : 'Re-record'}
                     </Text>
@@ -598,7 +598,7 @@ export default function VoiceCommandSheet({
                     onPress={dispatchToOrchestrator}
                     disabled={!transcript.trim()}
                   >
-                    <Ionicons name="send" size={16} color="#fff" />
+                    <PaperPlaneTilt size={16} color="#fff" weight="duotone" />
                     <Text style={styles.primaryBtnText}>
                       {isNl ? 'Versturen' : 'Send'}
                     </Text>
@@ -619,7 +619,7 @@ export default function VoiceCommandSheet({
             {phase === 'error' && (
               <>
                 <View style={styles.statusBlock}>
-                  <Ionicons name="alert-circle" size={20} color={colors.error} />
+                  <WarningCircle size={20} color={colors.error} weight="fill" />
                   <Text style={styles.errorText}>
                     {errorMsg ||
                       (isNl ? 'Er ging iets mis.' : 'Something went wrong.')}
@@ -641,7 +641,7 @@ export default function VoiceCommandSheet({
                       setPhase('idle');
                     }}
                   >
-                    <Ionicons name="refresh" size={16} color="#fff" />
+                    <ArrowsClockwise size={16} color="#fff" weight="bold" />
                     <Text style={styles.primaryBtnText}>
                       {isNl ? 'Probeer opnieuw' : 'Try again'}
                     </Text>

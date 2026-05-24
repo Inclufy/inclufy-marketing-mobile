@@ -3,7 +3,6 @@ import {
   View, Text, ScrollView, TouchableOpacity, TextInput, Alert,
   SafeAreaView, StyleSheet, ActivityIndicator,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useTheme } from '../context/ThemeContext';
@@ -14,6 +13,7 @@ import {
 } from '../hooks/useMarketingStrategy';
 import type { RootStackParamList, Channel } from '../types';
 
+import { CaretLeft, PencilLine, Plus, Trash, UsersThree, X } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 const CHANNELS: { key: Channel; label: string }[] = [
@@ -97,11 +97,11 @@ export default function PersonasScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={10}>
-          <Ionicons name="chevron-back" size={28} color={colors.text} />
+          <CaretLeft size={28} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]}>Persona's</Text>
         <TouchableOpacity onPress={() => setEditing(newPersona())} hitSlop={10}>
-          <Ionicons name="add" size={28} color={colors.text} />
+          <Plus size={28} color={colors.text} weight="bold" />
         </TouchableOpacity>
       </View>
 
@@ -113,7 +113,7 @@ export default function PersonasScreen() {
 
         {personas.length === 0 && (
           <View style={[styles.empty, { borderColor: colors.border }]}>
-            <MaterialCommunityIcons name="account-group-outline" size={36} color={colors.textSecondary} />
+            <UsersThree size={36} color={colors.textSecondary} weight="duotone" />
             <Text style={[styles.emptyTitle, { color: colors.text }]}>Nog geen persona's</Text>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
               Voeg er één toe om channel-fit op doelgroep te beoordelen.
@@ -135,10 +135,10 @@ export default function PersonasScreen() {
                 {p.role ? <Text style={[styles.cardRole, { color: colors.textSecondary }]}>{p.role}</Text> : null}
               </View>
               <TouchableOpacity onPress={() => setEditing(p)} hitSlop={10}>
-                <Ionicons name="create-outline" size={22} color={colors.text} />
+                <PencilLine size={22} color={colors.text} weight="duotone" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => removePersona(p.id)} hitSlop={10}>
-                <Ionicons name="trash-outline" size={22} color="#EF4444" />
+                <Trash size={22} color="#EF4444" weight="duotone" />
               </TouchableOpacity>
             </View>
 
@@ -188,7 +188,7 @@ function PersonaEditor({
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={onCancel} hitSlop={10}>
-          <Ionicons name="close" size={28} color={colors.text} />
+          <X size={28} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]}>Persona bewerken</Text>
         <TouchableOpacity onPress={handleSave} hitSlop={10}>

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: cmd.icon> | Ionicons name=<dynamic: isRecording ? 'stop' : 'mic'>
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
@@ -12,7 +13,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,6 +29,7 @@ import { useTheme } from '../context/ThemeContext';
 import { api } from '../services/api';
 import type { RootStackParamList } from '../types';
 
+import { Microphone, PaperPlaneTilt, Robot } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 interface Message {
@@ -271,7 +273,7 @@ export default function CopilotScreen() {
         }}
       >
         <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.2)', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.3)' }}>
-          <MaterialCommunityIcons name="robot" size={22} color="#fff" />
+          <Robot size={22} color="#fff" weight="fill" />
         </View>
         <View style={{ flex: 1 }}>
           <Text style={{ color: '#fff', fontWeight: fontWeight.bold, fontSize: fontSize.lg, letterSpacing: 0.5 }}>
@@ -306,7 +308,7 @@ export default function CopilotScreen() {
             {/* Avatar */}
             {msg.role === 'assistant' && (
               <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#E8317A' + '20', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#E8317A' + '40', flexShrink: 0 }}>
-                <MaterialCommunityIcons name="robot" size={16} color="#E8317A" />
+                <Robot size={16} color="#E8317A" weight="fill" />
               </View>
             )}
 
@@ -324,7 +326,7 @@ export default function CopilotScreen() {
               }}>
                 {msg.isVoice && msg.role === 'user' && (
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 4 }}>
-                    <Ionicons name="mic" size={11} color="rgba(255,255,255,0.7)" />
+                    <Microphone size={11} color="rgba(255,255,255,0.7)" weight="duotone" />
                     <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: 10 }}>Spraakbericht</Text>
                   </View>
                 )}
@@ -347,7 +349,7 @@ export default function CopilotScreen() {
         {loading && (
           <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
             <View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: '#E8317A' + '20', justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#E8317A' + '40' }}>
-              <MaterialCommunityIcons name="robot" size={16} color="#E8317A" />
+              <Robot size={16} color="#E8317A" weight="fill" />
             </View>
             <View style={{ backgroundColor: colors.surface, borderRadius: 18, borderBottomLeftRadius: 4, borderWidth: 1, borderColor: colors.border }}>
               <TypingDots />
@@ -440,7 +442,7 @@ export default function CopilotScreen() {
               colors={['#E8317A', '#F7941D']}
               style={{ width: 44, height: 44, borderRadius: 22, justifyContent: 'center', alignItems: 'center' }}
             >
-              <Ionicons name="send" size={18} color="#fff" />
+              <PaperPlaneTilt size={18} color="#fff" weight="duotone" />
             </LinearGradient>
           </TouchableOpacity>
         ) : null}

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize, fontWeight } from '../theme';
 
+import { FileText } from 'phosphor-react-native';
 interface Props {
   onSubmit: (quote: string, speaker: string) => void;
 }
@@ -20,7 +20,7 @@ export default function QuoteCapture({ onSubmit }: Props) {
 
   return (
     <View style={styles.container}>
-      <Ionicons name="document-text-outline" size={32} color={colors.primary} />
+      <FileText size={32} color={colors.primary} weight="duotone" />
       <Text style={styles.title}>Quote Capture</Text>
       <Text style={styles.subtitle}>Typ een quote en AI maakt er een branded post van</Text>
 

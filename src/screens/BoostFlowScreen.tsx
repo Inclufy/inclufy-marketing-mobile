@@ -19,7 +19,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert, Linking } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { spacing, fontSize, fontWeight, borderRadius } from '../theme';
@@ -27,6 +26,7 @@ import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../services/supabase';
 import type { RootStackParamList } from '../types';
 
+import { CaretLeft, CheckCircle, Sparkle } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Rt = RouteProp<RootStackParamList, 'BoostFlow'>;
 
@@ -200,7 +200,7 @@ export default function BoostFlowScreen() {
       {/* Header */}
       <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: spacing.lg }}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: spacing.md }}>
-          <Ionicons name="arrow-back" size={24} color={colors.text} />
+          <CaretLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: fontSize.xxl, fontWeight: fontWeight.bold, color: colors.text }}>
@@ -234,7 +234,7 @@ export default function BoostFlowScreen() {
           marginBottom: spacing.md,
           flexDirection: 'row', alignItems: 'center', gap: 6,
         }}>
-          <Ionicons name="sparkles" size={14} color="#A855F7" />
+          <Sparkle size={14} color="#A855F7" weight="fill" />
           <Text style={{ fontSize: fontSize.sm, color: '#A855F7', fontWeight: fontWeight.semibold }}>
             {params.prefillSourceLabel}
           </Text>
@@ -267,7 +267,7 @@ export default function BoostFlowScreen() {
                   <Text style={{ flex: 1, fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.text }}>
                     {p.label}
                   </Text>
-                  {selected && <Ionicons name="checkmark-circle" size={22} color={accent} />}
+                  {selected && <CheckCircle size={22} color={accent} weight="fill" />}
                 </TouchableOpacity>
               );
             })}
@@ -301,7 +301,7 @@ export default function BoostFlowScreen() {
                     <Text style={{ flex: 1, fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.text }}>
                       {a.label}
                     </Text>
-                    {selected && <Ionicons name="checkmark-circle" size={22} color={accent} />}
+                    {selected && <CheckCircle size={22} color={accent} weight="fill" />}
                   </View>
                   <Text style={{ fontSize: fontSize.sm, color: colors.textSecondary, lineHeight: 18 }}>
                     {a.description}
@@ -361,7 +361,7 @@ export default function BoostFlowScreen() {
                           {v.ai_rationale}
                         </Text>
                       </View>
-                      {selected && <Ionicons name="checkmark-circle" size={22} color={accent} />}
+                      {selected && <CheckCircle size={22} color={accent} weight="fill" />}
                     </View>
                     {v.headline ? (
                       <Text style={{ fontSize: fontSize.md, fontWeight: fontWeight.semibold, color: colors.text, marginBottom: 4 }}>

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: (channelIcons[item.channel] || 'phone-portrait-outline') as any> | Ionicons name=<dynamic: (contentTypeIcons[item.content_type] || 'camera-outline') as any> | Ionicons name=<dynamic: (phaseIcons[item.phase] || 'ellipse-outline') as any>
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -21,6 +22,7 @@ import { useThemedStyles } from '../utils/themedStyles';
 import AIConsentModal from '../components/AIConsentModal';
 import { useAIConsent } from '../hooks/useAIConsent';
 
+import { ArrowsClockwise, Camera, GitBranch, Lightbulb } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'StoryArc'>;
 
@@ -342,7 +344,7 @@ export default function StoryArcScreen() {
       <View style={styles.header}>
         <View style={styles.headerRow}>
           <View style={styles.headerIcon}>
-            <Ionicons name="git-branch-outline" size={22} color={colors.primary} />
+            <GitBranch size={22} color={colors.primary} weight="duotone" />
           </View>
           <View>
             <Text style={styles.headerTitle}>Story Arc</Text>
@@ -396,7 +398,7 @@ export default function StoryArcScreen() {
                 </View>
                 <Text style={styles.cardTheme}>{item.theme}</Text>
                 <View style={styles.tipRow}>
-                  <Ionicons name="bulb-outline" size={13} color={colors.textSecondary} />
+                  <Lightbulb size={13} color={colors.textSecondary} weight="duotone" />
                   <Text style={styles.cardTip}>{item.tip}</Text>
                 </View>
               </View>
@@ -413,7 +415,7 @@ export default function StoryArcScreen() {
                 style={styles.captureBtn}
                 onPress={() => navigation.navigate('LiveCapture', { eventId })}
               >
-                <Ionicons name="camera-outline" size={15} color={colors.primary} />
+                <Camera size={15} color={colors.primary} weight="duotone" />
                 <Text style={styles.captureBtnText}>Vastleggen</Text>
               </TouchableOpacity>
             </View>
@@ -423,7 +425,7 @@ export default function StoryArcScreen() {
 
       {/* Regenerate */}
       <TouchableOpacity style={styles.regenerateBtn} onPress={generateArc}>
-        <Ionicons name="refresh-outline" size={16} color={colors.primary} />
+        <ArrowsClockwise size={16} color={colors.primary} weight="bold" />
         <Text style={styles.regenerateText}>Nieuwe Story Arc genereren</Text>
       </TouchableOpacity>
       <AIConsentModal visible={showConsentModal} onAccept={onConsentAccept} onDecline={onConsentDecline} />

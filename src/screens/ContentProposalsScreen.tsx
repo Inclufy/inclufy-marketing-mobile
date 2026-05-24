@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: item.status === 'approved' ? 'checkmark-circle' : item.status === 'rejected' ? 'close-circle' : item.status === 'published' ? 'rocket' : 'time'> | MaterialCommunityIcons name=<dynamic: autoPublishEnabled ? 'rocket-launch' : 'shield-check-outline'> | MaterialCommunityIcons name=<dynamic: opt.icon as any> | MaterialCommunityIcons name=<dynamic: plat.icon as any> | MaterialCommunityIcons name=<dynamic: platform.icon as any>
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -33,6 +34,7 @@ import {
 } from '../hooks/useContentProposals';
 import { useMarketingStrategy, useUpdateMarketingStrategy } from '../hooks/useMarketingStrategy';
 
+import { CaretLeft, CheckCircle, PaperPlaneTilt, PencilLine, Robot, Sparkle, XCircle } from 'phosphor-react-native';
 // ═══════════════════════════════════════════════════════
 // Constants
 // ═══════════════════════════════════════════════════════
@@ -631,14 +633,14 @@ export default function ContentProposalsScreen() {
               onPress={() => handleApprove(item)}
               disabled={approveMut.isPending}
             >
-              <Ionicons name="checkmark-circle" size={16} color="#fff" />
+              <CheckCircle size={16} color="#fff" weight="fill" />
               <Text style={styles.approveBtnText}>Goedkeuren</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.actionBtn, styles.editBtn]}
               onPress={() => openEditModal(item)}
             >
-              <Ionicons name="create-outline" size={16} color="#3B82F6" />
+              <PencilLine size={16} color="#3B82F6" weight="duotone" />
               <Text style={styles.editBtnText}>Bewerken</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -646,7 +648,7 @@ export default function ContentProposalsScreen() {
               onPress={() => handleReject(item)}
               disabled={rejectMut.isPending}
             >
-              <Ionicons name="close-circle" size={16} color="#EF4444" />
+              <XCircle size={16} color="#EF4444" weight="fill" />
               <Text style={styles.rejectBtnText}>Afwijzen</Text>
             </TouchableOpacity>
           </View>
@@ -679,7 +681,7 @@ export default function ContentProposalsScreen() {
                     <ActivityIndicator size="small" color="#fff" />
                   ) : (
                     <>
-                      <Ionicons name="paper-plane" size={14} color="#fff" />
+                      <PaperPlaneTilt size={14} color="#fff" weight="fill" />
                       <Text style={{ color: '#fff', fontSize: fontSize.xs, fontWeight: fontWeight.bold }}>Publiceren</Text>
                     </>
                   )}
@@ -700,12 +702,10 @@ export default function ContentProposalsScreen() {
 
   const renderEmpty = () => (
     <View style={styles.emptyState}>
-      <MaterialCommunityIcons
-        name="robot-happy-outline"
+      <Robot
         size={64}
         color={colors.textTertiary}
-        style={styles.emptyIcon as any}
-      />
+        style={styles.emptyIcon as any} weight="duotone" />
       <Text style={styles.emptyTitle}>AMOS heeft nog geen voorstellen gegenereerd.</Text>
       <Text style={styles.emptyText}>
         Genereer voorstellen op basis van je marketing strategie.
@@ -719,7 +719,7 @@ export default function ContentProposalsScreen() {
           <ActivityIndicator size="small" color="#fff" />
         ) : (
           <>
-            <MaterialCommunityIcons name="creation" size={18} color="#fff" />
+            <Sparkle size={18} color="#fff" weight="fill" />
             <Text style={styles.generateBtnText}>Voorstellen Genereren</Text>
           </>
         )}
@@ -794,7 +794,7 @@ export default function ContentProposalsScreen() {
                 <Text style={[styles.trustChannelText, { color: ch.trustReady ? '#10B981' : colors.textTertiary }]}>
                   {ch.publishedCount}/{TRUST_THRESHOLD}
                 </Text>
-                {ch.trustReady && <Ionicons name="checkmark-circle" size={12} color="#10B981" />}
+                {ch.trustReady && <CheckCircle size={12} color="#10B981" weight="fill" />}
               </View>
             );
           })}
@@ -846,7 +846,7 @@ export default function ContentProposalsScreen() {
             <ActivityIndicator size="small" color={colors.primary} />
           ) : (
             <>
-              <MaterialCommunityIcons name="creation" size={14} color={colors.primary} />
+              <Sparkle size={14} color={colors.primary} weight="fill" />
               <Text style={styles.generateBtnSmallText}>Genereren</Text>
             </>
           )}
@@ -872,7 +872,7 @@ export default function ContentProposalsScreen() {
       {/* Navigation Header */}
       <View style={styles.navRow}>
         <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color={colors.text} />
+          <CaretLeft size={24} color={colors.text} weight="bold" />
         </TouchableOpacity>
         <Text style={styles.navTitle}>Content Voorstellen</Text>
         <View style={{ width: 36 }} />

@@ -1,3 +1,4 @@
+// TODO: migrate to Phosphor — unmapped icons: Ionicons name=<dynamic: ch.icon as any>
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -22,7 +23,7 @@ import { useTranslation } from '../i18n';
 import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 import { Ionicons } from '@expo/vector-icons';
-
+import { Calendar, Camera, Image as ImageIcon, MapPin } from 'phosphor-react-native';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Route = RouteProp<RootStackParamList, 'EventSetup'>;
 
@@ -290,12 +291,12 @@ export default function EventSetupScreen() {
           <>
             <Image source={{ uri: coverImageUri }} style={styles.coverImage} resizeMode="cover" />
             <View style={{ position: 'absolute', bottom: 8, right: 8, backgroundColor: 'rgba(0,0,0,0.55)', borderRadius: 12, padding: 6 }}>
-              <Ionicons name="camera" size={14} color="#fff" />
+              <Camera size={14} color="#fff" weight="duotone" />
             </View>
           </>
         ) : (
           <View style={{ alignItems: 'center', gap: 6 }}>
-            <Ionicons name="image-outline" size={32} color={colors.textTertiary} />
+            <ImageIcon size={32} color={colors.textTertiary} weight="duotone" />
             <Text style={{ fontSize: fontSize.sm, color: colors.textTertiary }}>Kies omslagfoto (optioneel)</Text>
             <Text style={{ fontSize: fontSize.xs, color: colors.textTertiary }}>Aanbevolen 16:9</Text>
           </View>
@@ -313,8 +314,8 @@ export default function EventSetupScreen() {
       <View style={{ position: 'relative' }}>
         <TextInput style={[styles.input, { paddingRight: 40 }]} value={location} onChangeText={setLocation}
           placeholder={t.eventSetup.locationPlaceholder} placeholderTextColor={colors.textTertiary} />
-        <Ionicons name="location-outline" size={16} color={colors.textTertiary}
-          style={{ position: 'absolute', right: 12, top: 14 }} />
+        <MapPin size={16} color={colors.textTertiary}
+          style={{ position: 'absolute', right: 12, top: 14 }} weight="duotone" />
       </View>
 
       <Text style={styles.label}>{t.eventSetup.description}</Text>
@@ -330,8 +331,8 @@ export default function EventSetupScreen() {
         <TextInput style={[styles.input, { paddingRight: 40 }]} value={eventDate} onChangeText={setEventDate}
           placeholder="15-03-2026" placeholderTextColor={colors.textTertiary}
           keyboardType="numbers-and-punctuation" maxLength={10} />
-        <Ionicons name="calendar-outline" size={16} color={colors.textTertiary}
-          style={{ position: 'absolute', right: 12, top: 14 }} />
+        <Calendar size={16} color={colors.textTertiary}
+          style={{ position: 'absolute', right: 12, top: 14 }} weight="duotone" />
       </View>
 
       <View style={styles.rowInputs}>
