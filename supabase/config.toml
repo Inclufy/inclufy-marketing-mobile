@@ -167,3 +167,10 @@ verify_jwt = true
 # Seed demo content into the caller's organization.
 [functions.seed-demo-content]
 verify_jwt = true
+
+# oauth-init: builds the provider-specific OAuth authorization URL server-side
+# so the marketing-web SPA can start the connect flow for 6 platforms (LinkedIn,
+# Facebook, Instagram, TikTok, Pinterest, Threads). Caller must be authenticated
+# so we can scope state to the caller's user_id + organization_id.
+[functions.oauth-init]
+verify_jwt = true

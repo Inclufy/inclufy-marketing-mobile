@@ -30,6 +30,36 @@ function esc(s: string | null | undefined): string {
     .replace(/'/g, '&#39;');
 }
 
+// Web-caller success: return a 302 redirect to the marketing-web SPA's
+// /oauth/return route so the SPA can show its own toast + invalidate
+// React Query caches. Unlike the mobile flow we don't need an HTML page
+// with deep-link JS — browser redirect works cleanly.
+function webSuccessRedirect(platform: string, accountName: string) {
+  const webBase = Deno.env.get('WEB_APP_BASE_URL') ?? 'https://marketing.inclufy.com';
+  const params = new URLSearchParams({
+    status: 'success',
+    platform,
+    account: accountName ?? '',
+  });
+  return new Response(null, {
+    status: 302,
+    headers: { 'Location': `${webBase}/oauth/return?${params.toString()}` },
+  });
+}
+
+function webErrorRedirect(platform: string, message: string) {
+  const webBase = Deno.env.get('WEB_APP_BASE_URL') ?? 'https://marketing.inclufy.com';
+  const params = new URLSearchParams({
+    status: 'error',
+    platform: platform ?? '',
+    message: message ?? '',
+  });
+  return new Response(null, {
+    status: 302,
+    headers: { 'Location': `${webBase}/oauth/return?${params.toString()}` },
+  });
+}
+
 function successPage(platform: string, accountName: string, pages?: Array<{id: string, name: string}>) {
   const platformLabel = platform.charAt(0).toUpperCase() + platform.slice(1);
   const platformColor: Record<string, string> = {
@@ -511,7 +541,9 @@ Deno.serve(async (req) => {
     return errorPage('social media', 'Geen autorisatiecode ontvangen');
   }
 
-  // Parse state → "user_id:organization_id:platform"
+  // Parse state → "user_id:organization_id:platform[:caller]"
+  // Optional 4th part: 'web' = marketing-web SPA (redirect to web URL after success)
+  //                    omitted = AMOS mobile (default, redirect to inclufy-go:// deep link)
   const parts = state.split(':');
   if (parts.length < 2 || !parts[0] || !parts[1]) {
     console.error('Invalid state parameter:', state);
@@ -519,6 +551,8 @@ Deno.serve(async (req) => {
   }
   const userId = parts[0];
   const platform = parts[2] || parts[1] || 'facebook';
+  const callerHint = (parts[3] ?? '').toLowerCase();
+  const isWebCaller = callerHint === 'web';
 
   try {
     let accessToken: string;
@@ -838,6 +872,7 @@ Deno.serve(async (req) => {
       );
 
       console.log(`Instagram Direct connected: ${profileName} (${accountTypeForDb})`);
+      if (isWebCaller) return webSuccessRedirect('instagram', profileName);
       return successPage('Instagram', profileName);
 
     } else {
@@ -1057,10 +1092,12 @@ Deno.serve(async (req) => {
       );
     }
 
+    if (isWebCaller) return webSuccessRedirect(platform, profileName);
     return successPage(platform, profileName, connectedPages.length > 0 ? connectedPages : undefined);
 
   } catch (err: any) {
     console.error('OAuth callback error:', err);
+    if (isWebCaller) return webErrorRedirect(platform, err?.message ?? 'Server error');
     return errorPage(platform, 'Server error', err?.message);
   }
 });
