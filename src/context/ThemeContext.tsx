@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useColorScheme, Appearance } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { _syncThemeColors } from '../theme';
+import { useUserSettings, useSetTheme } from '../hooks/useUserSettings';
 
 // ─── Light Colors — AMOS Brand (pink #E8317A + orange #F7941D) ─────────────
 export const lightColors = {
@@ -116,6 +117,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [scheme, setSchemeState] = useState<ColorScheme>('dark');
   const [themeKey, setThemeKey] = useState('dark');
 
+  // Cross-device sync: hydrate from shared user_settings.theme so a
+  // theme switch on marketing-web shows up here on next foreground.
+  // AsyncStorage stays as fast-path so first paint isn't blocked on the
+  // DB round-trip.
+  const { data: serverSettings } = useUserSettings();
+  const setThemeInDb = useSetTheme();
+
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY).then(stored => {
       if (stored === 'light' || stored === 'dark' || stored === 'system') {
@@ -127,6 +135,20 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       }
     });
   }, []);
+
+  // Whenever the DB-side theme resolves (or changes-on-other-device),
+  // adopt it. Skip when it matches what we already have to avoid loops.
+  useEffect(() => {
+    const serverTheme = serverSettings?.theme;
+    if (!serverTheme || serverTheme === scheme) return;
+    setSchemeState(serverTheme);
+    AsyncStorage.setItem(STORAGE_KEY, serverTheme);
+    applyNativeScheme(serverTheme, (systemScheme === 'dark' ? 'dark' : 'light'));
+    const willBeDark = serverTheme === 'system' ? (systemScheme === 'dark') : serverTheme === 'dark';
+    _syncThemeColors(willBeDark);
+    setThemeKey(`${serverTheme}-${Date.now()}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serverSettings?.theme]);
 
   const applyNativeScheme = (s: ColorScheme, sys: 'light' | 'dark') => {
     // Tell the OS which color scheme to use — this makes native components
@@ -142,6 +164,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setSchemeState(s);
     applyNativeScheme(s, (systemScheme === 'dark' ? 'dark' : 'light'));
     AsyncStorage.setItem(STORAGE_KEY, s);
+    // Persist to user_settings so web + other devices pick it up.
+    setThemeInDb(s).catch((e: any) => {
+      console.warn('[ThemeContext] persist failed (UI still updated):', e?.message);
+    });
     // Sync the static colors object in theme/index.ts BEFORE bumping themeKey
     // so that when NavigationContainer remounts all screens, inline colors.xxx
     // refs already read the correct palette.
