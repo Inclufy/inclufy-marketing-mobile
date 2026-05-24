@@ -64,7 +64,47 @@ export function useMarketingStrategy() {
         .eq('user_id', user.id)
         .maybeSingle();
       if (error) { console.warn('[useMarketingStrategy] error:', error.message); return null; }
-      return data as MarketingStrategy | null;
+      if (!data) return null;
+
+      // Fork-bridge: the marketing-web TargetAudience page writes personas
+      // to a standalone `personas` table (per session 2026-05-23 decision
+      // to keep the table). Merge those rows into MarketingStrategy.personas
+      // so AMOS-mobile sees them regardless of whether the user filled
+      // personas via the web wizard JSONB path or the standalone page.
+      let extraPersonas: Persona[] = [];
+      try {
+        const { data: rows } = await supabase
+          .from('personas')
+          .select('id, name, demographics, psychographics, behavioral')
+          .eq('user_id', user.id);
+        if (rows?.length) {
+          extraPersonas = rows.map((r: any) => ({
+            id: r.id,
+            name: r.name ?? 'Persona',
+            role: r.demographics?.occupation ?? '',
+            pain_points: r.behavioral?.pain_points
+              ? (Array.isArray(r.behavioral.pain_points) ? r.behavioral.pain_points : [r.behavioral.pain_points])
+              : [],
+            tone: 'casual',
+            channels: [],
+          })) as Persona[];
+        }
+      } catch (e) {
+        // Standalone personas table is best-effort; AMOS still works without it.
+        console.warn('[useMarketingStrategy] standalone personas read failed:', e);
+      }
+
+      const jsonbPersonas = (data as any).personas ?? [];
+      // Deduplicate by id when both sources have the same persona.
+      const seenIds = new Set<string>();
+      const mergedPersonas = [...jsonbPersonas, ...extraPersonas].filter((p: any) => {
+        if (!p?.id) return true;
+        if (seenIds.has(p.id)) return false;
+        seenIds.add(p.id);
+        return true;
+      });
+
+      return { ...(data as any), personas: mergedPersonas } as MarketingStrategy;
     },
     staleTime: 60_000,
   });

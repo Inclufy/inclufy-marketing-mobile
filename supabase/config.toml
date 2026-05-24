@@ -106,3 +106,61 @@ verify_jwt = true
 # {response}. Uses OpenAI gpt-4o-mini, rate-limited via shared middleware.
 [functions.ai-chat]
 verify_jwt = true
+
+# ═══════════════════════════════════════════════════════
+# Phase D — 17 newly-deployed edge fns (2026-05-24)
+# All require a user JWT (verify_jwt = true) except payments-plans
+# which is a public read of the pricing catalogue.
+# ═══════════════════════════════════════════════════════
+
+# AI content family — OpenAI gpt-4o-mini, rate-limited per user.
+[functions.ai-write]
+verify_jwt = true
+[functions.ai-image]
+verify_jwt = true
+[functions.sales-chat]
+verify_jwt = true
+[functions.content-social]
+verify_jwt = true
+[functions.content-email]
+verify_jwt = true
+[functions.content-improve]
+verify_jwt = true
+[functions.content-analyze-url]
+verify_jwt = true
+[functions.generate-mascot]
+verify_jwt = true
+
+# Setup-agent orchestrator — multi-action AI for onboarding.
+[functions.setup-agent]
+verify_jwt = true
+
+# Pricing — public read so anonymous visitors see plans on /pricing.
+[functions.payments-plans]
+verify_jwt = false
+
+# Stripe checkout — caller must be authenticated so the subscription
+# is tied to their user_id; STRIPE_SECRET_KEY must be set in secrets.
+[functions.create-checkout]
+verify_jwt = true
+
+# Bulk email — Resend API. Caller-scoped, rate via Resend's own quotas.
+[functions.email-send-campaign]
+verify_jwt = true
+
+# Contacts CSV/JSON import. User-scoped via JWT.
+[functions.contacts-import]
+verify_jwt = true
+
+# Admin functions — superadmin gate enforced inside each fn via
+# SUPERADMIN_EMAILS env var (additional to JWT).
+[functions.admin-create-user]
+verify_jwt = true
+[functions.admin-delete-user]
+verify_jwt = true
+[functions.admin-invite]
+verify_jwt = true
+
+# Seed demo content into the caller's organization.
+[functions.seed-demo-content]
+verify_jwt = true
