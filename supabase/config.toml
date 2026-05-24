@@ -174,3 +174,11 @@ verify_jwt = true
 # so we can scope state to the caller's user_id + organization_id.
 [functions.oauth-init]
 verify_jwt = true
+
+# finance-invoice-sync: server-to-server bridge to the Inclufy Finance app.
+# Triggered by DB trigger on invoices INSERT (also callable manually from
+# AdminInvoices). Sends invoice to FINANCE_APP_BASE_URL/api/invoices/intake
+# with FINANCE_INTAKE_SECRET bearer. verify_jwt=false because the DB trigger
+# uses pg_net which doesn't carry a user JWT.
+[functions.finance-invoice-sync]
+verify_jwt = false
