@@ -95,6 +95,14 @@ verify_jwt = true
 [functions.product-issue-lifecycle]
 verify_jwt = false
 
+# triage-product-issues: automated ProductIssue triage (ProjeXtPal pattern port).
+# Phase A catalog cross-match + Phase B OpenAI classify, dual public/internal
+# comments, one digest email. JWT off — the fn authorizes itself via the
+# service-role bearer (pg_cron, migration 20260603120000) or X-Triage-Token
+# (manual curl). Never called from a user token.
+[functions.triage-product-issues]
+verify_jwt = false
+
 # growth-blueprint: synchronous website scan + AI analysis for the
 # marketing-web Growth Blueprint feature. Called from authenticated SPA
 # (sami@inclufy.com etc.), so JWT required. Uses OpenAI gpt-4o-mini.

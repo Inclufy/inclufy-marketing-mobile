@@ -1,0 +1,115 @@
+{
+  "_comment": "AMOS Phase-A triage catalog. Equivalent of ProjeXtPal tests/regression/known_issues.json. Lives in the edge-fn dir because edge functions only deploy their own directory. Edit here + redeploy the function to update the catalog. An open product_issue is auto-RESOLVED when it matches an entry whose status is fixed_verified or fix_pending_deploy (match = endpoint substring in error_trace, OR >=2 previous_error_contains keywords across title+description+actual_behavior+error_trace).",
+  "issues": [
+    {
+      "id": "AMOS-INTEGRATIONS-0CONNECTED",
+      "title": "IntegrationsScreen shows 0 connected channels despite live OAuth",
+      "endpoint": "IntegrationsScreen",
+      "previous_error_contains": ["integrations", "0 connected", "connected channels", "no channels", "social_accounts"],
+      "severity": "P0",
+      "status": "fixed_verified",
+      "fix_location": "src/screens/IntegrationsScreen.tsx (commit 2e8fc2a — now reads useConnectedChannels())"
+    },
+    {
+      "id": "AMOS-DUPLICATE-ISSUE-EMAIL",
+      "title": "Duplicate magenta 'AMOS by Inclufy' emails on issue report",
+      "endpoint": "notify-issue-reported",
+      "previous_error_contains": ["duplicate email", "two emails", "twice", "magenta", "issue reported", "double notification"],
+      "severity": "P2",
+      "status": "fixed_verified",
+      "fix_location": "Dashboard Database Webhook product-issues-to-support deleted 2026-05-12; product-issue-lifecycle SQL trigger is now sole path"
+    },
+    {
+      "id": "AMOS-CAPTURE-ROTATION",
+      "title": "Captured photo saved rotated / upside-down on some devices",
+      "endpoint": "LiveCaptureScreen",
+      "previous_error_contains": ["rotate", "rotation", "upside down", "sideways", "landscape", "orientation", "exif"],
+      "severity": "P1",
+      "status": "fixed_verified",
+      "fix_location": "see docs/deploy-roadmaps/2026-05-07-rotate-regression-case-study.md (expo-image-manipulator orientation normalize)"
+    },
+    {
+      "id": "AMOS-ROTATE-REPEATED",
+      "title": "Draaien / Spiegelen works only the first time, second tap does nothing",
+      "_endpoint_note": "endpoint intentionally blank — PostReviewScreen is shared by 4 entries; keyword-only match avoids false auto-resolve of unrelated PostReview crashes",
+      "endpoint": "",
+      "previous_error_contains": ["draaien werkt maar 1", "rotate only once", "rotate works once", "second tap", "spiegelen", "flip again", "can't rotate again", "rotate twice"],
+      "severity": "P1",
+      "status": "fixed_verified",
+      "fix_location": "PostReviewScreen rotate/flip handlers set localMediaUri = result.uri in BOTH paths (regression after 401fdb6 channels-default; see docs/deploy-roadmaps/2026-05-07-rotate-regression-case-study.md)"
+    },
+    {
+      "id": "AMOS-POSTREVIEW-CHANNEL-TABS",
+      "title": "PostReview shows no channel tabs / channels not pre-selected",
+      "endpoint": "",
+      "previous_error_contains": ["no channel tabs", "channel tabs missing", "no platforms", "channels not selected", "geen kanalen", "linkedin instagram facebook whatsapp", "review posts empty"],
+      "severity": "P1",
+      "status": "fixed_verified",
+      "fix_location": "commit 401fdb6 — capture defaults channels [linkedin, instagram, facebook, whatsapp]; PostReviewScreen renders all 9 platform tabs"
+    },
+    {
+      "id": "AMOS-LINKEDIN-ACCOUNT-PICKER",
+      "title": "Publishing to LinkedIn doesn't show personal + company account picker",
+      "_endpoint_note": "endpoint intentionally blank — publish-social is shared by 2 entries; keyword-only match avoids false auto-resolve of unrelated publish failures",
+      "endpoint": "",
+      "previous_error_contains": ["linkedin picker", "account picker", "no account choice", "personal company", "wrong linkedin account", "couldn't pick account", "publish to wrong account"],
+      "severity": "P1",
+      "status": "fixed_verified",
+      "fix_location": "commit 401fdb6 — multi-account picker; pickAccount uses exact id match (N2 fix)"
+    },
+    {
+      "id": "AMOS-PREVIEW-IMAGE-MISSING",
+      "title": "Captured image not visible in LinkedIn / Instagram preview card",
+      "endpoint": "",
+      "previous_error_contains": ["image not visible", "no image in preview", "blank preview", "missing image", "preview empty", "mock-card no image", "foto niet zichtbaar"],
+      "severity": "P2",
+      "status": "fixed_verified",
+      "fix_location": "commit 401fdb6 — Bug 5/6 fixed; toExternalMediaUrl media-URL strategy (proxy → sign → passthrough)"
+    },
+    {
+      "id": "AMOS-VIDEO-PREVIEW",
+      "title": "Recorded video preview is black / doesn't play in PostReview",
+      "endpoint": "",
+      "previous_error_contains": ["video black", "video won't play", "video preview", "video doesn't play", "blank video", "video niet afspelen", "expo-av", "expo-video"],
+      "severity": "P2",
+      "status": "fixed_verified",
+      "fix_location": "commit 401fdb6 (Bug 8) + expo-video migration (9a3852e) — VideoPreview uses expo-video"
+    },
+    {
+      "id": "AMOS-PUBLISH-TOKEN-EXPIRY",
+      "title": "Publishing with an expired OAuth token fails with no reconnect prompt",
+      "endpoint": "",
+      "previous_error_contains": ["token expired", "expired token", "reconnect", "verbind opnieuw", "publish failed silently", "no error shown", "session expired publish"],
+      "severity": "P1",
+      "status": "fixed_verified",
+      "fix_location": "commit 401fdb6 — useEventPosts surfaces typed token-expiry error → 'verbind opnieuw' Alert (E3 fix)"
+    },
+    {
+      "id": "AMOS-AGENTDETAIL-RUNS-SCOPE",
+      "title": "AgentDetail shows runs belonging to other agents",
+      "endpoint": "AgentDetailScreen",
+      "previous_error_contains": ["wrong runs", "other agent runs", "runs not scoped", "runs from another agent", "agent detail mixed runs", "shows all runs"],
+      "severity": "P2",
+      "status": "fixed_verified",
+      "fix_location": "commit 51b53f4 — AgentDetailScreen.tsx runs query filters by agent_id (BUG-2026-11)"
+    },
+    {
+      "id": "AMOS-BOOSTFLOW-AUDIENCE",
+      "title": "BoostFlow opens with empty / wrong audience after approving an Ads Agent run",
+      "endpoint": "BoostFlowScreen",
+      "previous_error_contains": ["boostflow audience", "empty audience", "wrong audience", "audience not prefilled", "boost no targeting", "ads audience missing", "approve boost audience"],
+      "severity": "P2",
+      "status": "fixed_verified",
+      "fix_location": "commit 048de6a — AgentRunDetailScreen maps Ads Agent draft.audience (4-key) to BoostFlow preset (BUG-2026-14)"
+    },
+    {
+      "id": "AMOS-AGENTADS-DRAFT-CAMPAIGN",
+      "title": "Ads Agent fails to create a draft campaign",
+      "endpoint": "agent-ads",
+      "previous_error_contains": ["draft campaign error", "draft_campaign", "ads agent error", "campaign creation failed", "is_active column", "social_accounts.is_active"],
+      "severity": "P2",
+      "status": "fixed_verified",
+      "fix_location": "commit d5cc7fe — agent-ads draft_campaign no longer queries nonexistent social_accounts.is_active"
+    }
+  ]
+}
