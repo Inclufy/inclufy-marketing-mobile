@@ -16,14 +16,39 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useShakeToReport } from './src/hooks/useShakeToReport';
 import { ShakeReportSheet } from './src/components/ShakeReportSheet';
 import { usePushNotifications } from './src/hooks/usePushNotifications';
+import { startOfflineCache, rehydrateOfflineCache } from './src/lib/offlineCache';
+import { useOnlineStatus } from './src/hooks/useOnlineStatus';
+import { flushQueue } from './src/lib/mutationQueue';
 
 // Initialize Sentry as early as possible
 initSentry();
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: 1, staleTime: 60_000 },
+    queries: {
+      retry: 1,
+      staleTime: 60_000,
+      // Closes P0-5 cache-rehydrate edge case: when we restore from
+      // AsyncStorage we mark queries as 'success' immediately; React Query
+      // will still refetch in the background if isStale. networkMode
+      // 'offlineFirst' means a query returns cached data even when
+      // offline, instead of staying in 'pending' forever.
+      networkMode: 'offlineFirst',
+    },
+    mutations: {
+      networkMode: 'offlineFirst',
+    },
   },
+});
+
+// Kick off the offline-cache rehydrate + snapshot loop. This runs once
+// at module scope so it's set up before React mounts. The rehydrate
+// promise resolves before the first render so the user sees their last
+// data even without network. The snapshot loop persists every 30s.
+let offlineReady: Promise<void> = rehydrateOfflineCache(queryClient).then(() => {
+  startOfflineCache(queryClient);
+}).catch((e) => {
+  console.warn('[offlineCache] init failed:', e);
 });
 
 const BIOMETRIC_ENABLED_KEY = 'inclufy_go_biometric_enabled';
@@ -63,6 +88,28 @@ function AppInner({ session, biometricPassed, showBiometric, onBiometricSuccess,
 
   // Native push registration — fires once per logged-in user, idempotent.
   usePushNotifications(session);
+
+  // P0-5 — flush the offline mutation queue whenever we detect a
+  // reconnect. The hook polls a heartbeat every 15s + on AppState change,
+  // so the user doesn't need to manually kick a sync.
+  const { isOnline } = useOnlineStatus();
+  const wasOfflineRef = useRef(false);
+  useEffect(() => {
+    if (!session) return;
+    if (!isOnline) {
+      wasOfflineRef.current = true;
+      return;
+    }
+    // We just transitioned from offline→online — flush
+    if (wasOfflineRef.current) {
+      wasOfflineRef.current = false;
+      flushQueue().then((res) => {
+        if (res.attempted > 0) {
+          console.log(`[mutationQueue] flushed ${res.succeeded}/${res.attempted}, ${res.remaining} pending`);
+        }
+      }).catch((e) => console.warn('[mutationQueue] flush failed:', e));
+    }
+  }, [isOnline, session]);
 
   if (session && showBiometric && !biometricPassed) {
     return (
