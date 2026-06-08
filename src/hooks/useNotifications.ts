@@ -16,7 +16,11 @@ export type NotificationType =
   | 'boost_failed'     // Meta Marketing API rejection
   // Post approval lifecycle — written by submit-post-for-approval / process-post-approval edge fns
   | 'post_approval_needed'   // sent to admins when a user submits a draft for review
-  | 'post_approval_decided'; // sent to submitter when an admin approves/rejects
+  | 'post_approval_decided'  // sent to submitter when an admin approves/rejects
+  // Comment + @mention lifecycle — written by entity_comments_extract_mentions
+  // DB trigger (see 20260524140000_entity_comments.sql)
+  | 'mention'                // user @-mentioned in an entity comment
+  | 'comment_reply';         // someone replied to a thread the user started
 
 export interface AppNotification {
   id: string;
