@@ -183,6 +183,12 @@ verify_jwt = true
 [functions.oauth-init]
 verify_jwt = true
 
+# api-key-mint: mints a new long-lived API key for an organization. The plain
+# key is returned ONCE; only SHA-256 hash is persisted. Caller must be
+# owner/admin of the target org (RLS + re-check inside the fn).
+[functions.api-key-mint]
+verify_jwt = true
+
 # mfa-recovery-generate: mints 8 single-use recovery codes for the user
 # in case they lose their TOTP device. Caller must already be aal2 to
 # prevent a password-only attacker from minting fresh codes.
