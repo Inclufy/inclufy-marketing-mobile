@@ -27,6 +27,11 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   const [biometricType, setBiometricType] = useState('Face ID');
+  // MFA inline state — when Supabase requires AAL2 escalation after a
+  // successful password sign-in, we capture the factorId here and show
+  // a 6-digit code input instead of the email/password form.
+  const [mfaFactorId, setMfaFactorId] = useState<string | null>(null);
+  const [mfaCode, setMfaCode] = useState('');
 
   const checkBiometrics = useCallback(async () => {
     try {
@@ -84,10 +89,60 @@ export default function LoginScreen() {
 
     if (error) {
       Alert.alert(t.login.loginFailed, error.message);
-    } else {
-      // Lazy org sync (fire-and-forget)
-      import('../utils/resolveOrganizationId').then(m => m.resolveOrganizationId()).catch(() => {});
+      return;
     }
+
+    // MFA gate — if the user has a verified TOTP factor, Supabase puts the
+    // session at AAL1 and we need AAL2. Render the inline challenge form
+    // instead of advancing to the authenticated stack.
+    try {
+      const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aal?.nextLevel === 'aal2' && aal.currentLevel !== 'aal2') {
+        const { data: factors } = await supabase.auth.mfa.listFactors();
+        const verifiedFactor = factors?.totp?.find((f) => f.status === 'verified');
+        if (verifiedFactor) {
+          setMfaFactorId(verifiedFactor.id);
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('[LoginScreen] MFA gate check failed:', e);
+      // Fail-open — AAL2 check is best-effort.
+    }
+
+    // Lazy org sync (fire-and-forget)
+    import('../utils/resolveOrganizationId').then(m => m.resolveOrganizationId()).catch(() => {});
+  };
+
+  // ─── MFA inline challenge handlers ─────────────────────────────
+  const handleMfaVerify = async () => {
+    if (!mfaFactorId || mfaCode.length !== 6) return;
+    setLoading(true);
+    try {
+      const challenge = await supabase.auth.mfa.challenge({ factorId: mfaFactorId });
+      if (challenge.error) throw challenge.error;
+      const verify = await supabase.auth.mfa.verify({
+        factorId: mfaFactorId,
+        challengeId: challenge.data.id,
+        code: mfaCode,
+      });
+      if (verify.error) throw verify.error;
+      // AAL2 reached — proceed to authenticated stack
+      setMfaFactorId(null);
+      setMfaCode('');
+      import('../utils/resolveOrganizationId').then(m => m.resolveOrganizationId()).catch(() => {});
+    } catch (e: any) {
+      Alert.alert('MFA', e?.message ?? 'Invalid code');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMfaCancel = async () => {
+    // Sign out the AAL1 session so the unauth'd-user can't bypass.
+    try { await supabase.auth.signOut(); } catch { /* ignore */ }
+    setMfaFactorId(null);
+    setMfaCode('');
   };
 
   const handleForgotPassword = async () => {
@@ -118,6 +173,49 @@ export default function LoginScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        {/* MFA inline challenge — covers the whole login form when
+            Supabase returns AAL1 and the user has a verified TOTP. */}
+        {mfaFactorId && (
+          <View style={{ width: '100%', maxWidth: 360, alignSelf: 'center', paddingTop: 60 }}>
+            <Text style={{ fontSize: 22, fontWeight: '700', color: colors.text, textAlign: 'center', marginBottom: 8 }}>
+              2FA verificatie
+            </Text>
+            <Text style={{ fontSize: 14, color: colors.textSecondary, textAlign: 'center', marginBottom: 24 }}>
+              Voer de 6-cijferige code uit je Authenticator-app in.
+            </Text>
+            <TextInput
+              value={mfaCode}
+              onChangeText={(s) => setMfaCode(s.replace(/[^0-9]/g, '').slice(0, 6))}
+              keyboardType="number-pad"
+              placeholder="123456"
+              placeholderTextColor={colors.textTertiary}
+              maxLength={6}
+              autoFocus
+              style={{
+                backgroundColor: colors.surface,
+                borderWidth: 1, borderColor: colors.border,
+                borderRadius: 12, padding: 16, fontSize: 24,
+                color: colors.text, textAlign: 'center',
+                letterSpacing: 8, fontFamily: 'Menlo', marginBottom: 16,
+              }}
+            />
+            <TouchableOpacity
+              onPress={handleMfaVerify}
+              disabled={loading || mfaCode.length !== 6}
+              style={{ backgroundColor: colors.primary, padding: 16, borderRadius: 12, alignItems: 'center', opacity: mfaCode.length === 6 ? 1 : 0.5 }}
+            >
+              {loading
+                ? <ActivityIndicator color={colors.textOnPrimary} />
+                : <Text style={{ color: colors.textOnPrimary, fontSize: 16, fontWeight: '600' }}>Verifiëren</Text>}
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleMfaCancel} style={{ padding: 16, alignItems: 'center', marginTop: 8 }}>
+              <Text style={{ color: colors.textSecondary, fontSize: 14 }}>Annuleren</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {/* Normal login form — hidden while MFA challenge is open */}
+        {!mfaFactorId && <>
         {/* Logo / Brand */}
         <View style={styles.logoContainer}>
           <LinearGradient
@@ -262,6 +360,7 @@ export default function LoginScreen() {
             </TouchableOpacity>
           </View>
         </View>
+        </>}
       </ScrollView>
     </KeyboardAvoidingView>
   );

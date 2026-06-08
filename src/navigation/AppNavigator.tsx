@@ -28,6 +28,7 @@ import EventListScreen from '../screens/EventListScreen';
 import AutonomousHubScreen from '../screens/AutonomousHubScreen';
 import NetworkingEngineScreen from '../screens/NetworkingEngineScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import MFASetupScreen from '../screens/MFASetupScreen';
 import CampaignListScreen from '../screens/CampaignListScreen';
 import AICommandScreen from '../screens/AICommandScreen';
 import EventSetupScreen from '../screens/EventSetupScreen';
@@ -456,6 +457,7 @@ export default function AppNavigator({ isLoggedIn }: { isLoggedIn: boolean }) {
 
           {/* ─── Settings & Notifications ─── */}
           <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: t.screenTitles.settings }} />
+          <Stack.Screen name={'MFASetup' as any} component={MFASetupScreen} options={{ title: '2FA' }} />
           <Stack.Screen name="WhatsAppSettings" component={WhatsAppSettingsScreen} options={{ title: 'WhatsApp Business' }} />
           <Stack.Screen name="BrandKit" component={BrandKitScreen} options={{ title: t.screenTitles.brandKit ?? 'Brand Kit' }} />
           <Stack.Screen name="SocialMediaWizard" component={SocialMediaWizard} options={{ headerShown: false }} />
