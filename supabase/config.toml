@@ -183,6 +183,18 @@ verify_jwt = true
 [functions.oauth-init]
 verify_jwt = true
 
+# mfa-recovery-generate: mints 8 single-use recovery codes for the user
+# in case they lose their TOTP device. Caller must already be aal2 to
+# prevent a password-only attacker from minting fresh codes.
+[functions.mfa-recovery-generate]
+verify_jwt = true
+
+# mfa-recovery-consume: verifies a recovery code at login time when the
+# user can't access their authenticator app. Marks the row used and
+# returns codes_remaining count.
+[functions.mfa-recovery-consume]
+verify_jwt = true
+
 # finance-invoice-sync: server-to-server bridge to the Inclufy Finance app.
 # Triggered by DB trigger on invoices INSERT (also callable manually from
 # AdminInvoices). Sends invoice to FINANCE_APP_BASE_URL/api/invoices/intake

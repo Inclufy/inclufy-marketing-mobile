@@ -93,14 +93,23 @@ export default function LoginScreen() {
     }
 
     // MFA gate — if the user has a verified TOTP factor, Supabase puts the
-    // session at AAL1 and we need AAL2. Render the inline challenge form
-    // instead of advancing to the authenticated stack.
+    // session at AAL1 and we need AAL2. First try the "trust this device"
+    // shortcut: if the user previously checked "trust for 30 days" after a
+    // successful TOTP verify, the device-local blob lets us skip the prompt
+    // when Face/Touch ID succeeds AND the blob isn't expired.
     try {
       const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
       if (aal?.nextLevel === 'aal2' && aal.currentLevel !== 'aal2') {
         const { data: factors } = await supabase.auth.mfa.listFactors();
         const verifiedFactor = factors?.totp?.find((f) => f.status === 'verified');
         if (verifiedFactor) {
+          // Try the device-trust shortcut first
+          const trustHit = await tryDeviceTrust(verifiedFactor.id);
+          if (trustHit) {
+            // Biometric-verified shortcut — proceed to authenticated stack
+            import('../utils/resolveOrganizationId').then(m => m.resolveOrganizationId()).catch(() => {});
+            return;
+          }
           setMfaFactorId(verifiedFactor.id);
           return;
         }
@@ -112,6 +121,73 @@ export default function LoginScreen() {
 
     // Lazy org sync (fire-and-forget)
     import('../utils/resolveOrganizationId').then(m => m.resolveOrganizationId()).catch(() => {});
+  };
+
+  // ─── Device-trust helpers (biometric shortcut, 30 days) ────────
+  // Stored in AsyncStorage rather than expo-secure-store to avoid adding
+  // a hard dep — for AMOS users a 30-day device-trust window is
+  // proportionate to the device-bound nature of the data. If the user
+  // ever changes the Face/Touch ID enrollment on the device, biometric
+  // will fail (expo-local-authentication invalidates), trust is voided.
+  const DEVICE_TRUST_KEY = '@inclufy_mfa_device_trust';
+  const DEVICE_TRUST_DAYS = 30;
+
+  const tryDeviceTrust = async (factorId: string): Promise<boolean> => {
+    try {
+      const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
+      const raw = await AsyncStorage.getItem(DEVICE_TRUST_KEY);
+      if (!raw) return false;
+      const blob = JSON.parse(raw) as { user_id: string; factor_id: string; expires_at: string };
+      const { data: { user: cur } } = await supabase.auth.getUser();
+      if (!cur || blob.user_id !== cur.id) return false;
+      if (blob.factor_id !== factorId) return false;
+      if (new Date(blob.expires_at) < new Date()) return false;
+      // Prompt biometric — must succeed before we honor the trust
+      const LocalAuth = await import('expo-local-authentication');
+      const ok = await LocalAuth.authenticateAsync({
+        promptMessage: 'Bevestig je identiteit',
+        fallbackLabel: 'Gebruik TOTP code',
+        disableDeviceFallback: false,
+      });
+      return !!ok.success;
+    } catch (e) {
+      console.warn('[tryDeviceTrust]', e);
+      return false;
+    }
+  };
+
+  const offerDeviceTrust = async (factorId: string) => {
+    try {
+      const LocalAuth = await import('expo-local-authentication');
+      const compatible = await LocalAuth.hasHardwareAsync();
+      const enrolled = await LocalAuth.isEnrolledAsync();
+      if (!compatible || !enrolled) return; // no biometric available — silent skip
+      // Prompt the user
+      const accept = await new Promise<boolean>((resolve) => {
+        Alert.alert(
+          'Vertrouw dit toestel?',
+          `Skip de 6-cijferige code op dit toestel voor ${DEVICE_TRUST_DAYS} dagen door alleen ${biometricType} te gebruiken.`,
+          [
+            { text: 'Nee, vraag elke keer', style: 'cancel', onPress: () => resolve(false) },
+            { text: `Ja, ${biometricType}`, onPress: () => resolve(true) },
+          ],
+        );
+      });
+      if (!accept) return;
+      // Confirm biometric before storing the trust
+      const auth = await LocalAuth.authenticateAsync({ promptMessage: 'Bevestig om device te vertrouwen' });
+      if (!auth.success) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
+      await AsyncStorage.setItem(DEVICE_TRUST_KEY, JSON.stringify({
+        user_id: user.id,
+        factor_id: factorId,
+        expires_at: new Date(Date.now() + DEVICE_TRUST_DAYS * 86400 * 1000).toISOString(),
+      }));
+    } catch (e) {
+      console.warn('[offerDeviceTrust]', e);
+    }
   };
 
   // ─── MFA inline challenge handlers ─────────────────────────────
@@ -127,9 +203,12 @@ export default function LoginScreen() {
         code: mfaCode,
       });
       if (verify.error) throw verify.error;
-      // AAL2 reached — proceed to authenticated stack
+      // AAL2 reached — offer biometric device-trust then proceed
+      const fid = mfaFactorId;
       setMfaFactorId(null);
       setMfaCode('');
+      // Fire-and-forget — user can decline without blocking login
+      offerDeviceTrust(fid).catch(() => {});
       import('../utils/resolveOrganizationId').then(m => m.resolveOrganizationId()).catch(() => {});
     } catch (e: any) {
       Alert.alert('MFA', e?.message ?? 'Invalid code');
