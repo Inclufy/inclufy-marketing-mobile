@@ -224,6 +224,49 @@ export default function LoginScreen() {
     setMfaCode('');
   };
 
+  // ─── Microsoft / Azure AD SSO ─────────────────────────────────
+  const handleMicrosoftLogin = async () => {
+    setLoading(true);
+    try {
+      const WebBrowser = await import('expo-web-browser');
+      const Linking = await import('expo-linking');
+      const redirectUri = Linking.createURL('auth-callback'); // → inclufy-go://auth-callback
+
+      // 1. Get the OAuth URL from Supabase (skipBrowserRedirect = mobile mode)
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'azure',
+        options: {
+          redirectTo: redirectUri,
+          scopes: 'email offline_access openid profile',
+          skipBrowserRedirect: true,
+        },
+      });
+      if (error) throw error;
+      if (!data?.url) throw new Error('No OAuth URL returned');
+
+      // 2. Open in the in-app browser; wait for the inclufy-go:// bounce-back
+      const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUri);
+      if (result.type !== 'success' || !result.url) {
+        if (result.type === 'cancel') return; // user backed out
+        throw new Error(`OAuth flow ${result.type}`);
+      }
+
+      // 3. Exchange the returned code for a Supabase session
+      const url = new URL(result.url);
+      const code = url.searchParams.get('code');
+      if (!code) throw new Error('No code in callback URL');
+      const exch = await supabase.auth.exchangeCodeForSession(code);
+      if (exch.error) throw exch.error;
+
+      // 4. Org sync — same fire-and-forget as the password path
+      import('../utils/resolveOrganizationId').then(m => m.resolveOrganizationId()).catch(() => {});
+    } catch (e: any) {
+      Alert.alert('Microsoft login', e?.message ?? 'OAuth failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleForgotPassword = async () => {
     if (!email.trim()) {
       Alert.alert(t.login.fillEmailFirst, t.login.resetLinkSent);
@@ -422,6 +465,31 @@ export default function LoginScreen() {
               </TouchableOpacity>
             </>
           )}
+
+          {/* Microsoft / Azure AD SSO — closes P0-2 from baseline audit.
+              Enterprise users on M365 / Entra ID can sign in with one tap.
+              Uses expo-web-browser auth session + the inclufy-go:// scheme
+              registered in app.json:9. Supabase dashboard must have Azure
+              provider enabled with an Entra app registration whose redirect
+              URI includes both
+                https://mpxkugfqzmxydxnlxqoj.supabase.co/auth/v1/callback
+              (Supabase finishes the code-exchange there) and
+                inclufy-go://auth-callback
+              (browser bounce-back into the app). */}
+          <TouchableOpacity
+            style={[styles.biometricButton, { marginTop: 12 }]}
+            onPress={handleMicrosoftLogin}
+            disabled={loading}
+            activeOpacity={0.8}
+          >
+            <View style={{ width: 18, height: 18, flexDirection: 'row', flexWrap: 'wrap', marginRight: 8 }}>
+              <View style={{ width: 8, height: 8, backgroundColor: '#F25022' }} />
+              <View style={{ width: 8, height: 8, backgroundColor: '#7FBA00', marginLeft: 2 }} />
+              <View style={{ width: 8, height: 8, backgroundColor: '#00A4EF', marginTop: 2 }} />
+              <View style={{ width: 8, height: 8, backgroundColor: '#FFB900', marginTop: 2, marginLeft: 2 }} />
+            </View>
+            <Text style={styles.biometricButtonText}>Inloggen met Microsoft</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Footer */}
