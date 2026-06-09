@@ -136,6 +136,22 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Emit webhook event for downstream customer integrations.
+    try {
+      await admin.rpc('enqueue_webhook_event_for_org', {
+        p_org: authorOrgIds[0],
+        p_event: 'post.approved',
+        p_payload: {
+          post_id: post.id,
+          channel: post.channel,
+          approved_by_user_id: user.id,
+          approved_at: now,
+        },
+      });
+    } catch (e) {
+      console.warn('[process-post-approval] webhook emit (approve) failed', (e as Error).message);
+    }
+
     return json({ ok: true, post_id: post.id, status: 'approved', notified_submitter: !!submitterId });
   }
 
@@ -169,6 +185,23 @@ Deno.serve(async (req) => {
       },
       read: false,
     });
+  }
+
+  // Emit webhook event for the rejection.
+  try {
+    await admin.rpc('enqueue_webhook_event_for_org', {
+      p_org: authorOrgIds[0],
+      p_event: 'post.rejected',
+      p_payload: {
+        post_id: post.id,
+        channel: post.channel,
+        rejected_by_user_id: user.id,
+        rejected_at: now,
+        reason: body.reason!.slice(0, 500),
+      },
+    });
+  } catch (e) {
+    console.warn('[process-post-approval] webhook emit (reject) failed', (e as Error).message);
   }
 
   return json({ ok: true, post_id: post.id, status: 'draft', rejection_reason: body.reason });

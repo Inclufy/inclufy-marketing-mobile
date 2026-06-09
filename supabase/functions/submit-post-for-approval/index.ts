@@ -143,6 +143,25 @@ Deno.serve(async (req) => {
     if (notifErr) console.warn('[submit-post-for-approval] notify failed', notifErr.message);
   }
 
+  // Emit webhook event — customers integrated via webhooks-dispatch get
+  // the approval-request notification. Fire-and-forget — must not block.
+  try {
+    await admin.rpc('enqueue_webhook_event_for_org', {
+      p_org: orgId,
+      p_event: 'post.approval_requested',
+      p_payload: {
+        post_id: post.id,
+        channel: post.channel,
+        author_user_id: post.user_id,
+        submitted_by_user_id: user.id,
+        note: body.note ?? null,
+        notified_admins: recipients.length,
+      },
+    });
+  } catch (e) {
+    console.warn('[submit-post-for-approval] webhook emit failed', (e as Error).message);
+  }
+
   return json({
     ok: true,
     post_id: post.id,

@@ -59,8 +59,8 @@ Subscribe to specific events or leave the `events` array empty to receive everyt
 | `campaign.created` | New ad campaign queued in dry-run | `campaign_id`, `channel`, `budget` |
 | `campaign.approved` | Campaign moves from dry-run to live | `campaign_id`, `approved_by` |
 | `campaign.metric_threshold` | Spend/CPL/ROAS crosses a configured threshold | `campaign_id`, `metric`, `value`, `threshold` |
-| `event.scanned` | Event scanner extracts a new lead via QR/OCR | `event_id`, `lead_id`, `confidence` |
-| `lead.scored` | Predictive lead-scoring assigns/updates a score | `lead_id`, `score`, `tier` |
+| `event.scanned` | Event scanner extracts a new lead via QR/OCR | `event_id`, `lead_id`, `confidence` | *(planned: persistence layer ships Q3 2026)* |
+| `lead.scored` | Predictive lead-scoring assigns/updates a score | `lead_id`, `score`, `tier` | *(planned: persistence layer ships Q3 2026)* |
 | `agent.run_completed` | A multi-agent run finishes (success or fail) | `run_id`, `agent_name`, `outcome` |
 
 New events are added without breaking existing subscriptions — your handler should ignore events it doesn't recognise.
