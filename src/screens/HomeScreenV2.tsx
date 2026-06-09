@@ -83,6 +83,7 @@ import { supabase } from '../services/supabase';
 import AgentActivityTile from '../components/AgentActivityTile';
 import GoalModeTile from '../components/GoalModeTile';
 import CounterfactualNudge from '../components/CounterfactualNudge';
+import { SyncStatusBadge } from '../components/SyncStatusBadge';
 
 // ─── Types ───────────────────────────────────────────────────────────────
 
@@ -986,6 +987,8 @@ export default function HomeScreenV2() {
               <Text style={styles.heroSub}>{heroSub}</Text>
             </View>
             <View style={styles.headerActions}>
+              {/* Silent when online + queue empty; shows offline / pending-write state otherwise */}
+              <SyncStatusBadge />
               <TouchableOpacity
                 style={styles.iconBtn}
                 onPress={() => navigation.navigate('Notifications' as any)}
