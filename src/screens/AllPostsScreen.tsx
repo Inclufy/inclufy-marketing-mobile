@@ -24,6 +24,8 @@ import { useThemedStyles } from '../utils/themedStyles';
 
 import { ArrowsClockwise, Article, Calendar, ChatCircle, Copy, FileText, Heart, PaperPlaneTilt, PencilLine, ShareNetwork, Trash } from 'phosphor-react-native';
 import { SavedViewsSelector } from '../components/SavedViewsSelector';
+import { useBulkSelect } from '../hooks/useBulkSelect';
+import { BulkActionBar } from '../components/BulkActionBar';
 
 // Filter-shape persisted into saved_views.filters JSONB. Keep in sync
 // with the local filter state shape (status + channel).
@@ -70,6 +72,44 @@ export default function AllPostsScreen() {
   const duplicatePost = useDuplicatePost();
   const publishPost = usePublishPost();
   const fetchEngagement = useFetchEngagement();
+
+  // Bulk-select state — closes P2 #19 mobile parity gap. Long-press a
+  // row to enter selection mode; tap subsequent rows to add/remove.
+  const sel = useBulkSelect(posts, (p) => p.id);
+
+  const handleBulkDelete = React.useCallback(() => {
+    const ids = sel.selectedIds;
+    if (ids.length === 0) return;
+    Alert.alert(
+      `${ids.length} posts verwijderen?`,
+      'Dit kan niet ongedaan worden gemaakt.',
+      [
+        { text: 'Annuleren', style: 'cancel' },
+        {
+          text: 'Verwijder',
+          style: 'destructive',
+          onPress: async () => {
+            // Sequential to keep RLS + cache invalidation predictable
+            for (const id of ids) {
+              try { await deletePost.mutateAsync(id); } catch { /* swallow per-row */ }
+            }
+            sel.clear();
+            refetch();
+          },
+        },
+      ],
+    );
+  }, [sel, deletePost, refetch]);
+
+  const handleBulkDuplicate = React.useCallback(async () => {
+    const items = sel.selectedItems;
+    if (items.length === 0) return;
+    for (const post of items) {
+      try { await duplicatePost.mutateAsync(post); } catch { /* swallow */ }
+    }
+    sel.clear();
+    refetch();
+  }, [sel, duplicatePost, refetch]);
 
   // Track which post IDs are currently fetching engagement (for per-card spinner)
   const [fetchingEngagementIds, setFetchingEngagementIds] = useState<Set<string>>(new Set());
@@ -178,12 +218,21 @@ export default function AllPostsScreen() {
     });
     const canPublish = post.status === 'draft' || post.status === 'approved';
 
+    const selected = sel.isSelected(post.id);
+    const inSelectionMode = sel.count > 0;
     return (
       <TouchableOpacity
-        style={styles.card}
+        style={[
+          styles.card,
+          selected && { backgroundColor: colors.primary + '12', borderColor: colors.primary, borderWidth: 1 },
+        ]}
         activeOpacity={0.85}
-        onPress={() => handleEdit(post)}
-        accessibilityLabel="Open post"
+        onPress={() => {
+          if (inSelectionMode) sel.toggle(post.id);
+          else handleEdit(post);
+        }}
+        onLongPress={() => sel.toggle(post.id)}
+        accessibilityLabel={inSelectionMode ? (selected ? 'Deselecteer post' : 'Selecteer post') : 'Open post'}
       >
         {/* Color accent strip */}
         <View style={[styles.cardAccent, { backgroundColor: ch?.color || colors.primary }]} />
@@ -369,6 +418,16 @@ export default function AllPostsScreen() {
           />
         )}
       </View>
+      {/* Bulk-action sticky bar — only visible when sel.count > 0.
+          Long-press a row to enter selection mode. */}
+      <BulkActionBar
+        count={sel.count}
+        onClear={sel.clear}
+        actions={[
+          { label: 'Dupliceer', icon: 'copy-outline', onPress: handleBulkDuplicate },
+          { label: 'Verwijder', icon: 'trash-outline', variant: 'destructive', onPress: handleBulkDelete },
+        ]}
+      />
     </SafeAreaView>
   );
 }
