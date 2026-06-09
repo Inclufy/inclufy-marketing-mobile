@@ -44,7 +44,7 @@ Status legend:
 | A.5.18 | Access rights | Y | FULL | RLS on every public table; quarterly access review |
 | A.5.19 | Information security in supplier relationships | Y | FULL | DPAs signed with all sub-processors |
 | A.5.20 | Addressing information security within supplier agreements | Y | FULL | DPA template references SCCs |
-| A.5.21 | Managing information security in the ICT supply chain | Y | PARTIAL | SBOM not yet generated. Gap: add `cyclonedx-npm` to CI 2026-Q3. |
+| A.5.21 | Managing information security in the ICT supply chain | Y | FULL | CycloneDX SBOM generated per build via `.github/workflows/ci.yml` `sbom` job; artifact retained 90 days |
 | A.5.22 | Monitoring, review and change management of supplier services | Y | PARTIAL | Annual sub-processor review; SOC 2 reports requested. Gap: codify cadence. |
 | A.5.23 | Information security for use of cloud services | Y | FULL | Supabase region pinned to EU; Cloudflare; Sentry EU pending DSN |
 | A.5.24 | Information security incident management planning and preparation | Y | FULL | `docs/BREACH_RESPONSE_RUNBOOK.md` |

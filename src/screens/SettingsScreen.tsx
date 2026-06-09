@@ -860,6 +860,15 @@ export default function SettingsScreen() {
             showChevron={false}
           />
           <View style={styles.separator} />
+          {/* Sessions — web ↔ mobile parity (P1 closed 2026-06-09) */}
+          <SettingsRow
+            icon="phone-portrait-outline"
+            iconColor={colors.primary}
+            label="Sessies & apparaten"
+            value="Op alle apparaten uitloggen"
+            onPress={() => navigation.navigate('Sessions' as any)}
+          />
+          <View style={styles.separator} />
           <TouchableOpacity style={styles.row} onPress={handleLogout} activeOpacity={0.7}>
             <View style={[styles.rowIconWrap, { backgroundColor: colors.error + '15' }]}>
               <SignOut size={20} color={colors.error} weight="duotone" />
