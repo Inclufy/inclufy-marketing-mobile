@@ -23,6 +23,14 @@ import { useTheme } from '../context/ThemeContext';
 import { useThemedStyles } from '../utils/themedStyles';
 
 import { ArrowsClockwise, Article, Calendar, ChatCircle, Copy, FileText, Heart, PaperPlaneTilt, PencilLine, ShareNetwork, Trash } from 'phosphor-react-native';
+import { SavedViewsSelector } from '../components/SavedViewsSelector';
+
+// Filter-shape persisted into saved_views.filters JSONB. Keep in sync
+// with the local filter state shape (status + channel).
+interface PostsFilters {
+  status?: PostStatus | null;
+  channel?: Channel | null;
+}
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 const channelConfig: Record<Channel, { label: string; color: string; icon: string }> = {
@@ -283,6 +291,19 @@ export default function AllPostsScreen() {
           <Text style={styles.headerTitle}>{t.allPosts.title}</Text>
           <Text style={styles.headerCount}>{posts.length} posts</Text>
         </View>
+
+        {/* Saved views — closes P1 #8 web↔mobile parity gap.
+            Filters set here roundtrip with web's AllPosts via shared
+            saved_views table. */}
+        <SavedViewsSelector<PostsFilters>
+          entityType="post"
+          currentFilters={{ status: statusFilter, channel: channelFilter }}
+          onApply={(v) => {
+            setStatusFilter(v.filters?.status ?? null);
+            setChannelFilter(v.filters?.channel ?? null);
+          }}
+          label="Weergaven"
+        />
 
         {/* Filter bar */}
         <View style={styles.filterSection}>

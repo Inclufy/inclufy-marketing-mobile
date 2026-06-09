@@ -27,6 +27,7 @@ import { supabase } from '../services/supabase';
 import type { RootStackParamList } from '../types';
 
 import { CaretLeft, CheckCircle, Sparkle } from 'phosphor-react-native';
+import { CommentThread } from '../components/CommentThread';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 type Rt = RouteProp<RootStackParamList, 'BoostFlow'>;
 
@@ -463,6 +464,31 @@ export default function BoostFlowScreen() {
               </TouchableOpacity>
             </View>
           )}
+        </View>
+      )}
+
+      {/* Team discussion on this campaign — only when we have a campaign id.
+          Mirrors the web PostBoostFlow CommentThread card. Closes P1 #7
+          parity gap from the 2026-06-09 audit. */}
+      {step === 4 && campaignId && (
+        <View style={{
+          marginTop: spacing.lg,
+          borderWidth: 1,
+          borderColor: colors.border,
+          borderRadius: borderRadius.lg,
+          overflow: 'hidden',
+        }}>
+          <View style={{
+            paddingHorizontal: spacing.md,
+            paddingVertical: spacing.sm,
+            borderBottomWidth: 1,
+            borderBottomColor: colors.border,
+          }}>
+            <Text style={{ color: colors.text, fontWeight: '600' as const, fontSize: fontSize.md }}>
+              Discussie
+            </Text>
+          </View>
+          <CommentThread entityType="campaign" entityId={campaignId} />
         </View>
       )}
 
