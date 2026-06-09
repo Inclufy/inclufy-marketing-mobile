@@ -16,9 +16,72 @@
 
 ## Headline coverage post-correction
 
+After verifying Finance + IQ-Helix + Ignite the same way (looking
+beyond Settings.tsx for dedicated route pages and beyond the main router
+file for the full route table), the original audit also under-counted
+those apps. Verified evidence below.
+
 | App | Surface(s) | Coverage (corrected) | Δ vs original audit |
 |---|---|---|---|
 | **ProjeXtPal (web)** | web | **~72%** | +8 pts (was 64%) |
+| **Inclufy Finance (web)** | web | **~78%** | +7 pts (was 71%) |
+| **IQ-Helix (web)** | web | **~68%** | **+33 pts** (was 35%) |
+| **Ignite (web)** | web | **~30%** | unchanged — landing site, not full SaaS |
+
+### Finance — verified evidence
+
+| Feature | Audit said | Reality | Evidence |
+|---|---|---|---|
+| MFA TOTP | "already shipped" | ✅ FULL | `src/components/MFAStatus.tsx` mounted in `src/pages/Profile.tsx:487` |
+| Azure SSO | "already shipped" | ✅ FULL | `src/pages/Auth.tsx:92` — `handleOAuth("azure")` with email/openid/profile scopes; mounted as button at L334 |
+| Sessions / sign-out-everywhere | "MISSING" — **WRONG** | ✅ FULL | `src/components/DeviceSessionsCard.tsx` (164 LOC) — revoke mutation + `supabase.auth.signOut({scope:'global'})` |
+| GDPR Art. 15 export | "PRESENT — UI reachability unconfirmed" | ✅ FULL — UI reachable | `Profile.tsx:239` `handleExportData()` calls `gdpr-export` edge fn; mounted as button at L575 ("Exporteren") |
+| GDPR Art. 17 delete | "PRESENT — UI reachability unconfirmed" | ✅ FULL — UI reachable | `Profile.tsx:289` `handleDeleteAccount()` calls `gdpr-account-delete` edge fn |
+| Cookie banner | "localStorage-only — not demonstrable" | ⚠️ PARTIAL — accurate | `src/components/CookieConsent.tsx` still localStorage-only; no consents audit table |
+| /status public page | MISSING | ❌ MISSING — accurate | No `StatusPage.tsx` |
+| /sub-processors public page | MISSING | ❌ MISSING — accurate | No `SubProcessors.tsx` |
+
+### IQ-Helix — verified evidence (biggest correction)
+
+The auditor saw 3 routers because they only scanned `app/routers/` subfolder. The real backend lives at `iq-helix-backend/routers/` and has **71 routers**.
+
+| Feature | Audit said | Reality | Evidence |
+|---|---|---|---|
+| Backend router count | "3 only — minimal SaaS" | **71 routers — mature SaaS** | `routers/{auth,admin,gdpr,sessions,sso,webauthn,mfa_recovery,status,user_api_keys,compliance_*,...}.py` |
+| MFA TOTP | MISSING | ✅ FULL | 5 frontend components: `MFASetup.tsx`, `MFAManagePanel.tsx`, `MFAVerify.tsx`, `MFARecoveryCodesPanel.tsx`, `Login.tsx` MFA challenge + backend `routers/mfa_recovery.py` |
+| Biometric / WebAuthn | MISSING | ✅ FULL | `routers/webauthn.py` |
+| SSO | MISSING | ✅ PRESENT | `routers/sso.py` |
+| GDPR Art. 15 export | MISSING | ✅ FULL | `routers/gdpr.py` — `GET /api/gdpr/me/export` + admin variant `/api/gdpr/users/{id}/export` |
+| GDPR Art. 17 erase | MISSING | ✅ FULL | `routers/gdpr.py` — `POST /api/gdpr/me/erase` cascading delete |
+| Sessions / revoke | MISSING | ✅ FULL | `routers/sessions.py` — `GET /api/auth/me/sessions` + `DELETE /api/auth/me/sessions/{id}` |
+| Status page | MISSING | ✅ PRESENT (backend) | `routers/status.py` |
+| API keys | MISSING | ✅ FULL | `routers/user_api_keys.py` |
+| Compliance dashboards | MISSING | ✅ FULL | `routers/compliance_overview.py` + `routers/compliance_nl.py` + frontend `AdminCompliance.tsx` |
+| Notifications in-app | MISSING | ✅ PRESENT | `routers/notifications_inapp.py` |
+| AI Act compliance hooks | not assessed | ✅ PRESENT | `routers/ai_act.py` |
+
+IQ-Helix is in fact one of the most compliance-mature apps in the Inclufy ecosystem — not the weakest. The audit had it almost exactly backwards.
+
+### Ignite — verified accurate
+
+| Feature | Audit said | Reality | Evidence |
+|---|---|---|---|
+| Site type | "30% — minimal SaaS" | ✅ accurate — landing + onboarding only | 21 frontend pages: LandingPage, CheckoutSuccess, DemoEnvironment, PrivacyPolicy, NotFound, Index + `auth/` + `onboarding/` folders. Not a multi-tenant SaaS app. |
+| Cookie consent | not assessed | ⚠️ PARTIAL | `src/components/CookieConsent.tsx` present |
+
+## Revised P0 backlog (post-correction)
+
+The original P0 #1 (MFA TOTP across all non-Marketing apps) and #4 (ProjeXtPal GDPR UI wiring) should be **removed entirely** — already done:
+
+| # | Original target | After correction |
+|---|---|---|
+| **P0-1 MFA** | Finance, ProjeXtPal, IQ-Helix, Ignite | **Ignite ONLY** (no Finance, no ProX, no IQH — all real) |
+| **P0-2 Azure SSO** | Finance, ProjeXtPal, IQ-Helix | **ProjeXtPal + IQ-Helix verify** (Finance already real; IQH has `routers/sso.py` — confirm Azure provider specifically) |
+| **P0-3 Sessions** | Finance, ProjeXtPal | **ProjeXtPal ONLY** (Finance already real; IQH already real) |
+| **P0-4 ProX GDPR UI** | ProjeXtPal | **REMOVED — already real** |
+| **P0-5 /status + /sub-processors** | All except Marketing | unchanged — only Marketing has both web pages |
+
+The total P0 workload across the ecosystem is **~60% smaller** than the original audit indicated. The single biggest remaining cross-app P1 is still the customer-facing webhook v1 portability — that one stands.
 
 ---
 
