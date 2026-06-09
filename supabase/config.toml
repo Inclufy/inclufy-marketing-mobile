@@ -197,6 +197,16 @@ verify_jwt = true
 [functions.api-key-verify]
 verify_jwt = false
 
+# webhooks-dispatch: drains the webhook_deliveries queue and POSTs each
+# pending payload to the customer URL with HMAC-SHA256 signature. Three
+# modes: drain (empty body), specific delivery (body.webhook_delivery_id),
+# enqueue + drain (body.enqueue + body.organization_id). Service-role
+# only — verify_jwt = false so a cron trigger can call it without a user
+# JWT, but every code path requires the service_role key in the auth
+# header (enforced by config below + per-mode checks in the fn itself).
+[functions.webhooks-dispatch]
+verify_jwt = false
+
 # mfa-recovery-generate: mints 8 single-use recovery codes for the user
 # in case they lose their TOTP device. Caller must already be aal2 to
 # prevent a password-only attacker from minting fresh codes.
