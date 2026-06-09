@@ -189,6 +189,14 @@ verify_jwt = true
 [functions.api-key-mint]
 verify_jwt = true
 
+# api-key-verify: verifies a presented sk_inclufy_ key against api_keys.
+# verify_jwt = false because the API key IS the credential — no end-user
+# JWT is present in third-party ingress. Used (a) as a standalone endpoint
+# for ingress gateways and (b) as an importable helper from other edge fns
+# that want to accept API-key auth.
+[functions.api-key-verify]
+verify_jwt = false
+
 # mfa-recovery-generate: mints 8 single-use recovery codes for the user
 # in case they lose their TOTP device. Caller must already be aal2 to
 # prevent a password-only attacker from minting fresh codes.
