@@ -44,6 +44,7 @@ const MAX_BATCH = 25;
 const MAX_ATTEMPTS = 5;
 const BACKOFF_SECONDS = [30, 120, 600, 3600, 21600]; // 30s, 2m, 10m, 1h, 6h
 const DELIVERY_TIMEOUT_MS = 10_000;
+const AUTOPAUSE_FAILURE_THRESHOLD = 10; // consecutive dead-letters before active=false
 
 function jsonResp(d: unknown, s = 200) {
   return new Response(JSON.stringify(d), {
@@ -78,6 +79,8 @@ interface WebhookRow {
   id: string;
   url: string;
   secret: string;
+  secret_previous?: string | null;
+  secret_previous_until?: string | null;
   failure_count: number;
 }
 
@@ -100,7 +103,21 @@ async function deliverOne(d: DeliveryRow, w: WebhookRow): Promise<DeliveryResult
     payload: d.payload,
   });
   const ts = Math.floor(Date.now() / 1000);
-  const sig = await hmacSha256Hex(w.secret, `${ts}.${body}`);
+  const signed = `${ts}.${body}`;
+  const sigV1 = await hmacSha256Hex(w.secret, signed);
+
+  // During a 24h rotation window we also sign with the previous secret
+  // and emit v0=<old> so the customer can verify with either key while
+  // they roll the new one out to their endpoint. After the window the
+  // janitor cron clears secret_previous and we revert to v1-only.
+  let sigHeader = `t=${ts},v1=${sigV1}`;
+  if (w.secret_previous && w.secret_previous_until) {
+    const expiresAt = new Date(w.secret_previous_until).getTime();
+    if (!Number.isNaN(expiresAt) && expiresAt > Date.now()) {
+      const sigV0 = await hmacSha256Hex(w.secret_previous, signed);
+      sigHeader = `t=${ts},v0=${sigV0},v1=${sigV1}`;
+    }
+  }
 
   const ac = new AbortController();
   const timeout = setTimeout(() => ac.abort(), DELIVERY_TIMEOUT_MS);
@@ -116,7 +133,7 @@ async function deliverOne(d: DeliveryRow, w: WebhookRow): Promise<DeliveryResult
         'User-Agent': 'Inclufy-Webhooks/1.0',
         'X-Inclufy-Event': d.event,
         'X-Inclufy-Delivery': d.id,
-        'X-Inclufy-Signature': `t=${ts},v1=${sig}`,
+        'X-Inclufy-Signature': sigHeader,
       },
       body,
       signal: ac.signal,
@@ -166,11 +183,20 @@ async function deliverOne(d: DeliveryRow, w: WebhookRow): Promise<DeliveryResult
       failure_count: 0,
     }).eq('id', w.id);
   } else if (nextStatus === 'dead_letter') {
-    await admin.from('webhooks').update({
+    const newFailureCount = (w.failure_count ?? 0) + 1;
+    const update: Record<string, unknown> = {
       last_triggered_at: new Date().toISOString(),
       last_status: httpStatus,
-      failure_count: (w.failure_count ?? 0) + 1,
-    }).eq('id', w.id);
+      failure_count: newFailureCount,
+    };
+    // Auto-pause if the endpoint keeps dead-lettering — protects the
+    // customer's server from a feedback loop AND saves our edge-fn budget.
+    // Customer re-enables manually from Settings → Integrations → Webhooks.
+    if (newFailureCount >= AUTOPAUSE_FAILURE_THRESHOLD) {
+      update.active = false;
+      console.log(`[webhooks-dispatch] auto-paused webhook ${w.id} after ${newFailureCount} dead-letters`);
+    }
+    await admin.from('webhooks').update(update).eq('id', w.id);
   }
 
   return {
@@ -209,7 +235,7 @@ async function drainBatch(specificDeliveryId?: string): Promise<DeliveryResult[]
   const webhookIds = [...new Set(rows.map((r) => r.webhook_id))];
   const { data: webhooks, error: whErr } = await admin
     .from('webhooks')
-    .select('id, url, secret, failure_count, active')
+    .select('id, url, secret, secret_previous, secret_previous_until, failure_count, active')
     .in('id', webhookIds);
   if (whErr) throw new Error(`webhook_select_failed: ${whErr.message}`);
 
