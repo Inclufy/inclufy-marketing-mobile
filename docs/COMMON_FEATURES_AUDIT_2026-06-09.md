@@ -6,6 +6,22 @@
 
 ---
 
+> **CORRECTION 2026-06-09 (post-publish):** Original audit incorrectly flagged ProjeXtPal as having STUB 2FA and PARTIAL GDPR (endpoint without UI). User verified via live screenshot that **all four security/privacy features are real**:
+> - `frontend/src/pages/settings/TwoFactorAuth.tsx` (171 LOC) + backend `Setup2FAView`/`Verify2FASetupView`/`Disable2FAView`/`Check2FAStatusView` — full TOTP flow
+> - `frontend/src/pages/settings/BiometricAuth.tsx` (320 LOC) + `lib/biometric.ts` (300 LOC WebAuthn) + backend `BiometricRegisterOptionsView`/`CompleteView` + `biometric_credentials` Django model
+> - `frontend/src/components/PrivacyDataSettings.tsx` → `/api/v1/auth/me/export/` (Art. 15) AND `/api/v1/auth/me/delete/` (Art. 17 anonymize + 30d grace)
+> - Backend `core/compliance_views.py` documents G3+G4 as `pass` with evidence pointers.
+>
+> Root cause of false-flag: auditor grep'd `Settings.tsx` for inline impl and missed the dedicated route pages under `pages/settings/`. ProjeXtPal coverage corrected upward — see § Headline coverage post-correction.
+
+## Headline coverage post-correction
+
+| App | Surface(s) | Coverage (corrected) | Δ vs original audit |
+|---|---|---|---|
+| **ProjeXtPal (web)** | web | **~72%** | +8 pts (was 64%) |
+
+---
+
 ## Headline coverage (overall, A–I, %)
 
 | App | Surface(s) | Coverage | Δ vs yesterday |
