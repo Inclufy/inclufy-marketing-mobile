@@ -226,3 +226,9 @@ verify_jwt = true
 # uses pg_net which doesn't carry a user JWT.
 [functions.finance-invoice-sync]
 verify_jwt = false
+
+# send-sandbox-invitation: invites a prospect to a time-boxed sandbox
+# workspace pre-seeded with industry-pack data (Linear/Stripe sales pattern).
+# verify_jwt = true because the caller (org owner/admin) must be authenticated.
+[functions.send-sandbox-invitation]
+verify_jwt = true
