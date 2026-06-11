@@ -74,7 +74,7 @@
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR"
       ],
-      "versionCode": 104
+      "versionCode": 105
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -89,16 +89,6 @@
       "router": {}
     },
     "plugins": [
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "compileSdkVersion": 35,
-            "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0"
-          }
-        }
-      ],
       [
         "expo-camera",
         {
