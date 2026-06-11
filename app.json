@@ -2,8 +2,8 @@
   "expo": {
     "name": "AMOS by Inclufy",
     "slug": "inclufy-go",
-    "version": "1.0.2",
-    "orientation": "portrait",
+    "version": "1.0.3",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "inclufy-go",
@@ -42,6 +42,8 @@
     },
     "android": {
       "package": "com.inclufy.go",
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": true,
       "adaptiveIcon": {
         "backgroundColor": "#9333EA",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -72,7 +74,7 @@
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR"
       ],
-      "versionCode": 103
+      "versionCode": 104
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -87,6 +89,16 @@
       "router": {}
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0"
+          }
+        }
+      ],
       [
         "expo-camera",
         {
@@ -107,7 +119,6 @@
           "photosPermission": "AMOS by Inclufy slaat branded afbeeldingen op in je fotobibliotheek."
         }
       ],
-      "expo-router",
       [
         "expo-location",
         {

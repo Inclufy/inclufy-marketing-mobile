@@ -1280,7 +1280,10 @@ export default function HomeScreenV2() {
                     <View style={{ flex: 1, minWidth: 0 }}>
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                         <Text style={styles.feedPlatform} numberOfLines={1}>
-                          {platform.charAt(0).toUpperCase() + platform.slice(1) || 'Channel'}
+                          {/* Crash-fix 1.0.3: precedence bug — || 'Channel' only applied
+                              to slice(1), not the whole expression. Null `platform` from
+                              useConnectedChannels() would throw on .charAt(0). */}
+                          {(platform || 'channel').charAt(0).toUpperCase() + (platform || 'channel').slice(1)}
                         </Text>
                         <Text style={styles.feedDot}>·</Text>
                         <Text style={styles.feedTime}>{ago}</Text>
