@@ -74,7 +74,7 @@
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR"
       ],
-      "versionCode": 108
+      "versionCode": 109
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -142,7 +142,7 @@
         "@sentry/react-native/expo",
         {
           "organization": "inclufy",
-          "project": "react-native",
+          "project": "marketing-mobile",
           "url": "https://de.sentry.io"
         }
       ]
