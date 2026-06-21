@@ -2,7 +2,7 @@
   "expo": {
     "name": "AMOS by Inclufy",
     "slug": "inclufy-go",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -74,7 +74,7 @@
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR"
       ],
-      "versionCode": 106
+      "versionCode": 108
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -137,7 +137,15 @@
       "expo-web-browser",
       "expo-font",
       "expo-asset",
-      "expo-video"
+      "expo-video",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "inclufy",
+          "project": "react-native",
+          "url": "https://de.sentry.io"
+        }
+      ]
     ]
   }
 }
