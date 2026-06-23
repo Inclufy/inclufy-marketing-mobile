@@ -23,5 +23,13 @@ export function initSentry() {
       'servers. See src/lib/sentry.ts for migration steps.',
     );
   }
-  Sentry.init({ dsn, tracesSampleRate: 0.1, enableAutoSessionTracking: true });
+  try {
+    Sentry.init({ dsn, tracesSampleRate: 0.1, enableAutoSessionTracking: true });
+  } catch (e) {
+    // Never let Sentry's own native init crash app startup. If it throws
+    // (e.g. native module timing under the New Architecture), degrade to
+    // "no Sentry" instead of a white-screen crash on launch.
+    // eslint-disable-next-line no-console
+    console.warn('[sentry] init failed; continuing without Sentry:', e);
+  }
 }

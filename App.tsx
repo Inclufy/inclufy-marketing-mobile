@@ -20,8 +20,10 @@ import { startOfflineCache, rehydrateOfflineCache } from './src/lib/offlineCache
 import { useOnlineStatus } from './src/hooks/useOnlineStatus';
 import { flushQueue } from './src/lib/mutationQueue';
 
-// Initialize Sentry as early as possible
-initSentry();
+// NOTE: Sentry is initialized inside App()'s mount effect (deferred), NOT at
+// module top-level. Calling Sentry.init() synchronously during JS bundle eval
+// crashed startup on RN 0.83 (New Architecture) — the native bridge isn't ready
+// yet. Deferring to a post-mount effect + try/catch makes init non-fatal.
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -201,6 +203,10 @@ export default function App() {
   const [biometricPassed, setBiometricPassed] = useState(false);
 
   useEffect(() => {
+    // Deferred Sentry init (see note near top of file). Guarded so a failure
+    // never blocks startup.
+    try { initSentry(); } catch { /* non-fatal */ }
+
     const timeout = setTimeout(() => setLoading(false), 5000);
 
     supabase.auth.getSession().then(async ({ data: { session } }) => {
