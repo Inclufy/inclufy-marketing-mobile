@@ -82,3 +82,6 @@ _archive/web/dist/
 
 # Supabase CLI ephemeral state — must not be tracked
 supabase/.temp/
+
+# build artifacts (Xcode archives etc.)
+build/

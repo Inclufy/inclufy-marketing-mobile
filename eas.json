@@ -36,6 +36,10 @@
         "appleId": "s.loukile@eprocure.eu",
         "appleTeamId": "3238TB3BMF",
         "ascAppId": "6760412100"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./play-service-account.json",
+        "track": "internal"
       }
     }
   }
