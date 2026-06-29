@@ -4,18 +4,20 @@ name: SonarQube
 # de Control Tower SonarQube. Maakt findings reproduceerbaar buiten de
 # host-side scan op de Mac Studio.
 #
+# Draait op een SELF-HOSTED runner óp de Mac Studio, zodat de SonarQube-server
+# op http://localhost:9000 direct bereikbaar is (een GitHub-hosted runner kan
+# die private URL niet bereiken).
+#
+# Eenmalige setup van de runner (Mac Studio):
+#   Repo → Settings → Actions → Runners → "New self-hosted runner" (macOS),
+#   volg de install-stappen en start 'm (`./run.sh` of als service via
+#   `./svc.sh install && ./svc.sh start`). Label `self-hosted` is default.
+#
 # Vereiste repo-secrets (Settings → Secrets and variables → Actions):
-#   SONAR_TOKEN     — analysis-token uit SonarQube (User > Security > Tokens)
-#   SONAR_HOST_URL  — URL van de SonarQube-server, bereikbaar vanaf de runner
+#   SONAR_TOKEN     — analysis-token uit SonarQube (My Account > Security > Tokens)
+#   SONAR_HOST_URL  — optioneel; default http://localhost:9000 (zie hieronder)
 #
-# ⚠️  Bereikbaarheid: een GitHub-hosted runner kan http://localhost:9000 op de
-#     Mac Studio NIET bereiken. Kies één van:
-#       (a) zet SONAR_HOST_URL op een publiek bereikbare URL (bv. via de
-#           ict.inclufy.com reverse-proxy of een tunnel), of
-#       (b) draai dit op een self-hosted runner óp de Mac Studio: vervang
-#           `runs-on: ubuntu-latest` door `runs-on: [self-hosted]`.
-#
-# Zonder SONAR_TOKEN wordt de job overgeslagen (blokkeert andere PR's niet).
+# Zonder SONAR_TOKEN wordt de scan overgeslagen (blokkeert andere PR's niet).
 
 on:
   push:
@@ -26,8 +28,9 @@ on:
 
 jobs:
   sonarqube:
-    runs-on: ubuntu-latest
-    # Skip op forks / wanneer het secret ontbreekt — anders faalt de scan hard.
+    # Self-hosted runner op de Mac Studio → localhost:9000 bereikbaar.
+    runs-on: [self-hosted]
+    # Skip op forks (secrets zijn daar niet beschikbaar).
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     steps:
       - uses: actions/checkout@v6
@@ -64,4 +67,6 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          # Default naar de lokale server op de Mac Studio; override via secret
+          # als SonarQube op een ander adres/poort draait.
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL || 'http://localhost:9000' }}
