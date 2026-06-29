@@ -494,7 +494,7 @@ export default function OpportunityFeedScreen() {
               </View>
             ) : null}
 
-            {item.suggested_action?.label && !item.is_actioned && (
+            {!!item.suggested_action?.label && !item.is_actioned && (
               <TouchableOpacity
                 style={[styles.actionBtn, { backgroundColor: cfg.color }]}
                 onPress={() => handleAction(item)}

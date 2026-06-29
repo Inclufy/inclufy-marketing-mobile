@@ -204,7 +204,7 @@ export default function PostReviewScreen() {
   const removeLuxuryIcons = (text: string): string => {
     // Remove common luxury emoji prefixes
     let result = text;
-    result = result.replace(/[✦✨🎯📣🧠📈👥💡🏆🎨🤝🚀📊📱📝🎪💬🔧🌐🖌️🔍⏰🏁💰🎤💭📚]\s*/g, '');
+    result = result.replace(/(?:✦|✨|🎯|📣|🧠|📈|👥|💡|🏆|🎨|🤝|🚀|📊|📱|📝|🎪|💬|🔧|🌐|🖌️|🔍|⏰|🏁|💰|🎤|💭|📚)\s*/gu, '');
     // Restore bullet points
     result = result.replace(/^\s*(?=#)/gm, '');
     return result;

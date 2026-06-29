@@ -96,7 +96,7 @@ export function usePublishStreak() {
       }
 
       // Longest streak in the window: scan sorted day keys
-      const sorted = Array.from(days).sort();
+      const sorted = Array.from(days).sort((a, b) => a.localeCompare(b));
       let longest = 0;
       let run = 0;
       let prev: string | null = null;
