@@ -325,7 +325,7 @@ export default function SettingsScreen() {
             Alert.prompt(
               'Bevestig verwijdering',
               'Typ VERWIJDER om door te gaan',
-              async (input) => {
+              (input) => { void (async () => {
                 if (input?.trim() !== 'VERWIJDER') {
                   Alert.alert('Geannuleerd', 'De tekst komt niet overeen. Account is niet verwijderd.');
                   return;
@@ -355,7 +355,7 @@ export default function SettingsScreen() {
                 } catch (err: any) {
                   Alert.alert('Fout', err?.message ?? 'Account kon niet worden verwijderd.');
                 }
-              },
+              })(); },
               'plain-text',
             );
           },
@@ -783,15 +783,15 @@ export default function SettingsScreen() {
         console.log('OAuth browser result:', result.type);
         // After the browser is dismissed, refresh social accounts
         // Small delay to let the edge function finish processing
-        setTimeout(() => refetchSocial(), 1500);
-        setTimeout(() => refetchSocial(), 4000);
+        setTimeout(() => { void refetchSocial(); }, 1500);
+        setTimeout(() => { void refetchSocial(); }, 4000);
       } catch (err: any) {
         // Fallback to Linking if WebBrowser fails
         console.log('WebBrowser failed, falling back to Linking:', err.message);
         try {
           await Linking.openURL(authUrl);
           // Also refetch after some time when using Linking
-          setTimeout(() => refetchSocial(), 5000);
+          setTimeout(() => { void refetchSocial(); }, 5000);
         } catch (linkErr: any) {
           Alert.alert('Error', linkErr?.message ?? 'Kon de browser niet openen.');
         }

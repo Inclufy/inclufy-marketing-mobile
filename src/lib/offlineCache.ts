@@ -91,7 +91,7 @@ export function startOfflineCache(qc: QueryClient): () => void {
   };
 
   // Periodic snapshot
-  interval = setInterval(snapshot, SNAPSHOT_INTERVAL_MS);
+  interval = setInterval(() => { void snapshot(); }, SNAPSHOT_INTERVAL_MS);
 
   // Snapshot on app backgrounding so the user's last interaction is saved
   const handleAppState = (state: AppStateStatus) => {

@@ -31,7 +31,7 @@ export function SyncStatusBadge() {
       if (alive) setPending(n);
     };
     refresh();
-    const id = setInterval(refresh, 5000);
+    const id = setInterval(() => { void refresh(); }, 5000);
     return () => { alive = false; clearInterval(id); };
   }, []);
 

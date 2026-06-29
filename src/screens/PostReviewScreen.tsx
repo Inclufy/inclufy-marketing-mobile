@@ -1249,7 +1249,7 @@ export default function PostReviewScreen() {
       if (pendingPublishAll) {
         setPendingPublishAll(false);
         // Re-run Publiceer Alles to check remaining channels
-        setTimeout(() => handlePublishAll(), 500);
+        setTimeout(() => { void handlePublishAll(); }, 500);
       } else if (pendingPublishPost) {
         const accounts = await fetchAccountsForChannel(pendingPublishPost.channel);
         const acc = accounts[0];
