@@ -1,0 +1,67 @@
+name: SonarQube
+
+# Pusht code-kwaliteit (bugs / vulns / smells / coverage / duplicatie) naar
+# de Control Tower SonarQube. Maakt findings reproduceerbaar buiten de
+# host-side scan op de Mac Studio.
+#
+# Vereiste repo-secrets (Settings → Secrets and variables → Actions):
+#   SONAR_TOKEN     — analysis-token uit SonarQube (User > Security > Tokens)
+#   SONAR_HOST_URL  — URL van de SonarQube-server, bereikbaar vanaf de runner
+#
+# ⚠️  Bereikbaarheid: een GitHub-hosted runner kan http://localhost:9000 op de
+#     Mac Studio NIET bereiken. Kies één van:
+#       (a) zet SONAR_HOST_URL op een publiek bereikbare URL (bv. via de
+#           ict.inclufy.com reverse-proxy of een tunnel), of
+#       (b) draai dit op een self-hosted runner óp de Mac Studio: vervang
+#           `runs-on: ubuntu-latest` door `runs-on: [self-hosted]`.
+#
+# Zonder SONAR_TOKEN wordt de job overgeslagen (blokkeert andere PR's niet).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
+    # Skip op forks / wanneer het secret ontbreekt — anders faalt de scan hard.
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # Volledige history → accurate "new code" / blame voor SonarQube.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      # Coverage best-effort: een falende test mag de scan niet blokkeren,
+      # we willen de lcov-rapportage hoe dan ook uploaden.
+      - name: Tests + coverage
+        run: npm run test:coverage -- --ci || true
+
+      - name: Guard — SONAR_TOKEN aanwezig?
+        id: guard
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "::warning::SONAR_TOKEN niet ingesteld — SonarQube-scan overgeslagen."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: SonarQube scan
+        if: steps.guard.outputs.run == 'true'
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
