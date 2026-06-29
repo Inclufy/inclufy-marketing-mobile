@@ -357,7 +357,7 @@ export default function AgentDetailScreen() {
           ) : (
             <>
               <Text style={styles.sectionTitle}>
-                {isNl ? 'Capabilities' : 'Capabilities'}
+                Capabilities
               </Text>
               <View style={[styles.card, { backgroundColor: 'transparent', borderWidth: 0, padding: 0 }]}>
                 <View style={styles.capabilitiesRow}>

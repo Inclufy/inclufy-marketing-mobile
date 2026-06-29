@@ -195,8 +195,7 @@ export default function GoalSetupScreen() {
       if (!Number.isFinite(tv) || tv <= 0) return false;
       if (!periodStart || !periodEnd) return false;
       const b = Number(budgetEur);
-      if (!Number.isFinite(b) || b < 0) return false;
-      return true;
+      return Number.isFinite(b) && b >= 0;
     }
     if (step === 2) return agentKinds.length > 0;
     return true;
@@ -416,7 +415,7 @@ export default function GoalSetupScreen() {
         </Text>
         <View style={{ flexDirection: R, gap: spacing.sm }}>
           <View style={{ flex: 1 }}>
-            <Text style={s.sectionSub}>{isNl ? 'Start' : 'Start'}</Text>
+            <Text style={s.sectionSub}>Start</Text>
             <TextInput
               style={s.input}
               value={periodStart}
@@ -440,7 +439,7 @@ export default function GoalSetupScreen() {
         </View>
       </View>
       <View style={s.section}>
-        <Text style={s.sectionTitle}>{isNl ? 'Budget (EUR)' : 'Budget (EUR)'}</Text>
+        <Text style={s.sectionTitle}>Budget (EUR)</Text>
         <TextInput
           style={s.input}
           value={budgetEur}
@@ -540,11 +539,11 @@ export default function GoalSetupScreen() {
           <Text style={s.summaryValue}>{periodStart} → {periodEnd}</Text>
         </View>
         <View style={s.summaryRow}>
-          <Text style={s.summaryLabel}>{isNl ? 'Budget' : 'Budget'}</Text>
+          <Text style={s.summaryLabel}>Budget</Text>
           <Text style={s.summaryValue}>€{budgetEur}</Text>
         </View>
         <View style={s.summaryRow}>
-          <Text style={s.summaryLabel}>{isNl ? 'Agents' : 'Agents'}</Text>
+          <Text style={s.summaryLabel}>Agents</Text>
           <Text style={s.summaryValue}>{agentLbl}</Text>
         </View>
         <View style={[s.summaryRow, { borderBottomWidth: 0 }]}>

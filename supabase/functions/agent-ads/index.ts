@@ -197,7 +197,7 @@ async function actionBoostPost(svc: SupabaseClient, body: ReqBody, aiCtx: AiCtx 
   if (post.campaign_id && dispatchMode === 'programmatic') {
     const { data: cost } = await svc.from('campaign_costs').insert({
       campaign_id: post.campaign_id,
-      user_id: body.run_id ? null : null,  // service-role insert: leave null until we resolve initiator
+      user_id: null,  // service-role insert: leave null until we resolve initiator
       category: 'ads',
       description: `[pending] ${body.channel} boost for post ${body.post_id}`,
       amount: body.budget_eur,

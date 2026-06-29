@@ -165,7 +165,7 @@ export default function ContentCalendarScreen() {
               <View
                 key={i}
                 style={{
-                  width: viewMode === 'week' ? '14.28%' : '14.28%',
+                  width: '14.28%',
                   minHeight: viewMode === 'week' ? 120 : 80,
                   borderWidth: 0.5, borderColor: colors.border,
                   padding: 3,

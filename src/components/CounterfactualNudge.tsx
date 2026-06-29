@@ -271,9 +271,6 @@ export default function CounterfactualNudge({
         <View style={styles.chevronWrap}>
           <CaretRight size={16} color="#fff" weight="bold" />
         </View>
-        {/* `colors` referenced so the themedStyles hook re-runs on theme change
-             without needing a full prop. */}
-        {colors ? null : null}
       </LinearGradient>
     </TouchableOpacity>
   );
