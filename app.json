@@ -42,6 +42,7 @@
     },
     "android": {
       "package": "com.inclufy.go",
+      "allowBackup": false,
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": true,
       "adaptiveIcon": {
