@@ -264,6 +264,21 @@ export default function GoalDetailScreen() {
     emptyText: { color: c.textSecondary, fontSize: fontSize.sm, fontStyle: 'italic' as const },
   }));
 
+  // Group child runs by day for the section under the timeline.
+  // NB: declared before the early return below so this hook runs on EVERY
+  // render (rules-of-hooks). childRuns is independent of `goal`, so moving it
+  // up is behaviour-preserving and fixes the "rendered fewer hooks" crash that
+  // hit when `goal` went from undefined → loaded.
+  const childByDay = useMemo(() => {
+    const map = new Map<string, ChildRun[]>();
+    for (const r of childRuns) {
+      const day = (r.created_at ?? '').slice(0, 10);
+      if (!map.has(day)) map.set(day, []);
+      map.get(day)!.push(r);
+    }
+    return Array.from(map.entries()).sort((a, b) => (a[0] < b[0] ? 1 : -1));
+  }, [childRuns]);
+
   if (goalLoading || !goal) {
     return (
       <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
@@ -291,17 +306,6 @@ export default function GoalDetailScreen() {
   const spent  = Number(goal.spent_eur)  || 0;
 
   const metricLbl = METRIC_LABEL[goal.metric]?.[isNl ? 'nl' : 'en'] ?? goal.metric;
-
-  // Group child runs by day for the section under the timeline.
-  const childByDay = useMemo(() => {
-    const map = new Map<string, ChildRun[]>();
-    for (const r of childRuns) {
-      const day = (r.created_at ?? '').slice(0, 10);
-      if (!map.has(day)) map.set(day, []);
-      map.get(day)!.push(r);
-    }
-    return Array.from(map.entries()).sort((a, b) => (a[0] < b[0] ? 1 : -1));
-  }, [childRuns]);
 
   return (
     <View style={styles.container}>

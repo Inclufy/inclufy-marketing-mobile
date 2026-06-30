@@ -50,7 +50,7 @@ export function useOnlineStatus(): OnlineStatus {
 
   useEffect(() => {
     void check();
-    const interval = setInterval(check, HEARTBEAT_INTERVAL_MS);
+    const interval = setInterval(() => { void check(); }, HEARTBEAT_INTERVAL_MS);
 
     const onAppState = (s: AppStateStatus) => {
       if (s === 'active') void check();

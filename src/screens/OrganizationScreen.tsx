@@ -312,9 +312,9 @@ export default function OrganizationScreen() {
             </>
           ) : (
             <>
-              {renderViewField('email-outline', 'E-mail', form.email, form.email ? () => Linking.openURL(`mailto:${form.email}`) : undefined)}
-              {renderViewField('phone-outline', 'Telefoon', form.phone, form.phone ? () => Linking.openURL(`tel:${form.phone}`) : undefined)}
-              {renderViewField('web', 'Website', form.website, form.website ? () => Linking.openURL(form.website!.startsWith('http') ? form.website! : `https://${form.website}`) : undefined)}
+              {renderViewField('email-outline', 'E-mail', form.email, form.email ? () => { void Linking.openURL(`mailto:${form.email}`); } : undefined)}
+              {renderViewField('phone-outline', 'Telefoon', form.phone, form.phone ? () => { void Linking.openURL(`tel:${form.phone}`); } : undefined)}
+              {renderViewField('web', 'Website', form.website, form.website ? () => { void Linking.openURL(form.website!.startsWith('http') ? form.website! : `https://${form.website}`); } : undefined)}
             </>
           )}
         </View>

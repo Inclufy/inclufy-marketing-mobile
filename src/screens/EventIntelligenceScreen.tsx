@@ -9,7 +9,6 @@ import {
   RefreshControl,
   Alert,
   Linking,
-  Platform,
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -799,7 +798,7 @@ export default function EventIntelligenceScreen() {
       <View style={{
         backgroundColor: colors.surface,
         paddingHorizontal: spacing.md,
-        paddingTop: Platform.OS === 'ios' ? spacing.md : spacing.md,
+        paddingTop: spacing.md,
         paddingBottom: spacing.md,
         gap: spacing.xs,
         borderBottomWidth: 1,

@@ -156,9 +156,9 @@ function timeAgoShort(iso: string | Date, locale: string): string {
   const hr = Math.floor(min / 60);
   if (hr < 24) return locale === 'fr' ? `il y a ${hr}h` : `${hr}u`;
   const day = Math.floor(hr / 24);
-  if (day < 7) return locale === 'fr' ? `il y a ${day}j` : locale === 'nl' ? `${day}d` : `${day}d`;
+  if (day < 7) return locale === 'fr' ? `il y a ${day}j` : `${day}d`;
   const wk = Math.floor(day / 7);
-  if (wk < 5) return locale === 'fr' ? `il y a ${wk}sem` : locale === 'nl' ? `${wk}w` : `${wk}w`;
+  if (wk < 5) return locale === 'fr' ? `il y a ${wk}sem` : `${wk}w`;
   return new Date(t).toLocaleDateString(locale === 'fr' ? 'fr-FR' : locale === 'nl' ? 'nl-NL' : 'en-US', { day: '2-digit', month: 'short' });
 }
 
@@ -1295,7 +1295,7 @@ export default function HomeScreenV2() {
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                       <StatusIcon size={14} color={statusTint} weight={status === 'published' ? 'fill' : 'bold'} />
                       <Text style={[styles.feedStatus, { color: statusTint }]}>
-                        {status === 'published' ? (locale === 'fr' ? 'Publié' : locale === 'nl' ? 'Live' : 'Live')
+                        {status === 'published' ? (locale === 'fr' ? 'Publié' : 'Live')
                           : status === 'failed' ? (locale === 'fr' ? 'Échec' : locale === 'nl' ? 'Mislukt' : 'Failed')
                           : status === 'scheduled' ? (locale === 'fr' ? 'Plan.' : locale === 'nl' ? 'Plan.' : 'Sched.')
                           : status === 'draft' ? (locale === 'fr' ? 'Brouillon' : locale === 'nl' ? 'Concept' : 'Draft')

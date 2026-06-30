@@ -130,7 +130,7 @@ export default function BiometricScreen({ onSuccess, onSkip }: Props) {
   useEffect(() => {
     if (isAvailable) {
       // Small delay to let the screen render first
-      const timer = setTimeout(() => handleAuthenticate(), 500);
+      const timer = setTimeout(() => { void handleAuthenticate(); }, 500);
       return () => clearTimeout(timer);
     }
   }, [isAvailable, handleAuthenticate]);

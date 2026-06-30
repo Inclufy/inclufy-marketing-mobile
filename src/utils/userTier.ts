@@ -128,8 +128,9 @@ interface UseUserTierResult {
   tier: Tier;
   loading: boolean;
   commissionPct: number;
-  /** Refetch — useful after Stripe webhook lag */
-  refetch: () => void;
+  /** Refetch — useful after Stripe webhook lag. Returns a Promise (react-query)
+   *  so callers can `await` it before reflecting the fresh tier. */
+  refetch: () => Promise<unknown>;
 }
 
 /**

@@ -92,12 +92,12 @@ Deno.serve(async (req) => {
       const text = await res.text();
       return json({ error: 'meta graph api error', status: res.status, detail: text }, 502);
     }
-    const json: MetaTemplatesResponse = await res.json();
-    if (json.error) {
-      return json({ error: 'meta graph api returned error', detail: json.error }, 502);
+    const payload: MetaTemplatesResponse = await res.json();
+    if (payload.error) {
+      return json({ error: 'meta graph api returned error', detail: payload.error }, 502);
     }
-    allTemplates.push(...(json.data ?? []));
-    nextUrl = json.paging?.next ?? null;
+    allTemplates.push(...(payload.data ?? []));
+    nextUrl = payload.paging?.next ?? null;
   }
 
   // ─── Upsert into whatsapp_templates ─────────────────────────────

@@ -234,7 +234,7 @@ export default function Step2Edit() {
               resizeMode="cover"
             />
             {/* Overlay text — top */}
-            {wiz.edit.overlayText && wiz.edit.overlayTextPosition === 'top' && (
+            {!!wiz.edit.overlayText && wiz.edit.overlayTextPosition === 'top' && (
               <View style={{ position: 'absolute', top: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.52)', paddingHorizontal: 12, paddingVertical: 8 }}>
                 <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: '700' }} numberOfLines={2}>
                   {wiz.edit.overlayText}
@@ -242,7 +242,7 @@ export default function Step2Edit() {
               </View>
             )}
             {/* Overlay text — bottom */}
-            {wiz.edit.overlayText && wiz.edit.overlayTextPosition === 'bottom' && (
+            {!!wiz.edit.overlayText && wiz.edit.overlayTextPosition === 'bottom' && (
               <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.52)', paddingHorizontal: 12, paddingVertical: 8 }}>
                 <Text style={{ color: '#fff', fontSize: fontSize.md, fontWeight: '700' }} numberOfLines={2}>
                   {wiz.edit.overlayText}

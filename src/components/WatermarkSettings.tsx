@@ -245,7 +245,7 @@ export default function WatermarkSettings() {
                       onChange={(p) => void saveChannel(ch.key, p)}
                       warnPositions={RISKY_POSITIONS_BY_CHANNEL[ch.key]}
                     />
-                    {RISKY_POSITIONS_BY_CHANNEL[ch.key]?.size && (
+                    {!!RISKY_POSITIONS_BY_CHANNEL[ch.key]?.size && (
                       <View
                         style={{
                           marginTop: 8,

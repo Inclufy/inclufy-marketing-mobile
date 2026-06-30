@@ -108,7 +108,7 @@ export default function Step4PerChannel() {
   // Auto-generate on mount (or when platforms change). Only fills empty
   // variants — won't overwrite anything the user already typed.
   useEffect(() => {
-    const key = platforms.slice().sort().join(',');
+    const key = platforms.slice().sort((a, b) => a.localeCompare(b)).join(',');
     if (!key || autoRanForRef.current === key) return;
     autoRanForRef.current = key;
     const missing = platforms.filter(p => !wiz.perChannel.textVariants[p]?.trim());

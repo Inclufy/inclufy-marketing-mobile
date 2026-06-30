@@ -450,7 +450,7 @@ export default function AgentRunDetailScreen() {
         {/* ── Live Receipts (Tier-1 #1) ─────────────────────── */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>
-            {isNl ? 'Live receipts' : 'Live receipts'}
+            Live receipts
           </Text>
           <View style={styles.receiptsRow}>
             <View style={styles.receiptCell}>
@@ -462,11 +462,11 @@ export default function AgentRunDetailScreen() {
               <Text style={styles.receiptValue}>{fmtTime(run.finished_at)}</Text>
             </View>
             <View style={styles.receiptCell}>
-              <Text style={styles.receiptLabel}>{isNl ? 'Prompt tokens' : 'Prompt tokens'}</Text>
+              <Text style={styles.receiptLabel}>Prompt tokens</Text>
               <Text style={styles.receiptValue}>{run.prompt_tokens.toLocaleString()}</Text>
             </View>
             <View style={styles.receiptCell}>
-              <Text style={styles.receiptLabel}>{isNl ? 'Output tokens' : 'Output tokens'}</Text>
+              <Text style={styles.receiptLabel}>Output tokens</Text>
               <Text style={styles.receiptValue}>{run.completion_tokens.toLocaleString()}</Text>
             </View>
             <View style={styles.receiptCell}>
@@ -474,7 +474,7 @@ export default function AgentRunDetailScreen() {
               <Text style={styles.receiptValue}>${run.cost_usd.toFixed(4)}</Text>
             </View>
             <View style={styles.receiptCell}>
-              <Text style={styles.receiptLabel}>{isNl ? 'Trigger' : 'Trigger'}</Text>
+              <Text style={styles.receiptLabel}>Trigger</Text>
               <Text style={styles.receiptValue}>{run.trigger}</Text>
             </View>
           </View>
@@ -493,7 +493,7 @@ export default function AgentRunDetailScreen() {
           {/* Tool calls expander */}
           <TouchableOpacity onPress={() => setShowToolCalls(s => !s)} style={[styles.card, styles.expanderRow]}>
             <Text style={styles.expanderLabel}>
-              {isNl ? `Tool calls (${run.tool_calls.length})` : `Tool calls (${run.tool_calls.length})`}
+              {`Tool calls (${run.tool_calls.length})`}
             </Text>
             <Ionicons name={showToolCalls ? 'chevron-up' : 'chevron-down'} size={18} color={colors.textSecondary} />
           </TouchableOpacity>
@@ -504,7 +504,7 @@ export default function AgentRunDetailScreen() {
           {/* Output expander (default open) */}
           <TouchableOpacity onPress={() => setShowOutput(s => !s)} style={[styles.card, styles.expanderRow]}>
             <Text style={styles.expanderLabel}>
-              {isNl ? 'Output' : 'Output'}
+              Output
             </Text>
             <Ionicons name={showOutput ? 'chevron-up' : 'chevron-down'} size={18} color={colors.textSecondary} />
           </TouchableOpacity>
