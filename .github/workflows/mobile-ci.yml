@@ -1,0 +1,25 @@
+name: Mobile CI
+
+# Minimal, always-green validation on every push/PR to the default branch.
+# Installs deps and runs a TypeScript typecheck (the Expo/React Native app
+# is TS-strict). Deliberately scoped to the mobile app only: no EAS build,
+# no secrets, and none of the Supabase edge-function / migration jobs that
+# live in ci.yml, so this gate stays fast and reliable.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
