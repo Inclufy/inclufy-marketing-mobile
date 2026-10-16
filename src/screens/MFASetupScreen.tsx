@@ -133,7 +133,7 @@ export default function MFASetupScreen() {
         </>
       )}
 
-      {step === 'verify' && qrUri && (
+      {!!(step === 'verify' && qrUri) && (
         <>
           <View style={styles.qrBox}>
             <QRCode value={qrUri} size={200} backgroundColor="#fff" />

@@ -2000,7 +2000,7 @@ export default function PostReviewScreen() {
                     {/* ── Overlay rendering ── */}
                     {overlayConfig[post.id] && (
                       <>
-                        {overlayConfig[post.id].text && overlayConfig[post.id].textPosition === 'top' && (
+                        {!!(overlayConfig[post.id].text && overlayConfig[post.id].textPosition === 'top') && (
                           <View style={{ position: 'absolute', top: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.52)', paddingHorizontal: 10, paddingVertical: 7, borderTopLeftRadius: borderRadius.lg, borderTopRightRadius: borderRadius.lg }}>
                             <Text style={{ color: '#fff', fontSize: fontSize.sm, fontWeight: fontWeight.semibold }} numberOfLines={2}>{overlayConfig[post.id].text}</Text>
                           </View>
@@ -2030,7 +2030,7 @@ export default function PostReviewScreen() {
                             </View>
                           );
                         })()}
-                        {overlayConfig[post.id].text && overlayConfig[post.id].textPosition === 'bottom' && (
+                        {!!(overlayConfig[post.id].text && overlayConfig[post.id].textPosition === 'bottom') && (
                           <View style={{ position: 'absolute', bottom: 22, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.52)', paddingHorizontal: 10, paddingVertical: 7 }}>
                             <Text style={{ color: '#fff', fontSize: fontSize.sm, fontWeight: fontWeight.semibold }} numberOfLines={2}>{overlayConfig[post.id].text}</Text>
                           </View>
@@ -2160,7 +2160,7 @@ export default function PostReviewScreen() {
                         ? 'Overlay aanpassen'
                         : 'Tekst / logo toevoegen'}
                     </Text>
-                    {(overlayConfig[post.id]?.text || overlayConfig[post.id]?.showLogo) && (
+                    {!!(overlayConfig[post.id]?.text || overlayConfig[post.id]?.showLogo) && (
                       <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.success }} />
                     )}
                   </TouchableOpacity>
@@ -2725,7 +2725,7 @@ export default function PostReviewScreen() {
                                 placeholderTextColor={colors.textTertiary}
                                 keyboardType="phone-pad"
                               />
-                              {phone.trim() && !isValidE164(phone) && (
+                              {!!(phone.trim() && !isValidE164(phone)) && (
                                 <Text style={{
                                   fontSize: 11,
                                   color: colors.error,
@@ -3279,7 +3279,7 @@ export default function PostReviewScreen() {
               return (
                 <>
                   {/* Top text — matches ViewShot style */}
-                  {ov.text && ov.textPosition === 'top' && (
+                  {!!(ov.text && ov.textPosition === 'top') && (
                     <View style={{
                       position: 'absolute', top: 0, left: 0, right: 0,
                       backgroundColor: 'rgba(0,0,0,0.52)',
@@ -3306,7 +3306,7 @@ export default function PostReviewScreen() {
                     </View>
                   )}
                   {/* Bottom text — matches ViewShot style */}
-                  {ov.text && ov.textPosition === 'bottom' && (
+                  {!!(ov.text && ov.textPosition === 'bottom') && (
                     <View style={{
                       position: 'absolute', bottom: 0, left: 0, right: 0,
                       backgroundColor: 'rgba(0,0,0,0.52)',
@@ -3790,9 +3790,9 @@ export default function PostReviewScreen() {
             )}
 
             {/* Preview strip */}
-            {(overlayDraft.text || overlayDraft.showLogo) && (
+            {!!(overlayDraft.text || overlayDraft.showLogo) && (
               <View style={{ borderRadius: borderRadius.md, overflow: 'hidden', height: 70, backgroundColor: '#1a1a2e', justifyContent: 'center', alignItems: 'center' }}>
-                {overlayDraft.text && overlayDraft.textPosition === 'top' && (
+                {!!(overlayDraft.text && overlayDraft.textPosition === 'top') && (
                   <View style={{ position: 'absolute', top: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.55)', paddingHorizontal: 10, paddingVertical: 5 }}>
                     <Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }} numberOfLines={1}>{overlayDraft.text}</Text>
                   </View>
@@ -3812,7 +3812,7 @@ export default function PostReviewScreen() {
                     <Buildings size={14} color="#fff" weight="duotone" />
                   </View>
                 )}
-                {overlayDraft.text && overlayDraft.textPosition === 'bottom' && (
+                {!!(overlayDraft.text && overlayDraft.textPosition === 'bottom') && (
                   <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.55)', paddingHorizontal: 10, paddingVertical: 5 }}>
                     <Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }} numberOfLines={1}>{overlayDraft.text}</Text>
                   </View>
