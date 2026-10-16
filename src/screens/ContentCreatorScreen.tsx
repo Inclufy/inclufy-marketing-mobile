@@ -1191,7 +1191,7 @@ export default function ContentCreatorScreen() {
       </View>
 
       {/* Content preview with media */}
-      {(generatedContent || selectedImages.length > 0) && (
+      {!!(generatedContent || selectedImages.length > 0) && (
         <View style={{ ...card, marginBottom: spacing.md }}>
           <Text style={{ fontSize: fontSize.sm, fontWeight: fontWeight.semibold, color: colors.text, marginBottom: spacing.sm }}>
             📱 Preview

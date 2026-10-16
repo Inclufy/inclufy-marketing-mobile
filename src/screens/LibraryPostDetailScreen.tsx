@@ -226,7 +226,7 @@ export default function LibraryPostDetailScreen() {
         {tr?.hashtags && tr.hashtags.length > 0 && (
           <Text style={[styles.hashtags, { color: colors.primary }]}>{tr.hashtags.join(' ')}</Text>
         )}
-        {tr?.cta && (
+        {!!tr?.cta && (
           <View style={[styles.ctaBox, { backgroundColor: colors.primary }]}>
             <Text style={styles.ctaText}>{tr.cta}</Text>
           </View>
